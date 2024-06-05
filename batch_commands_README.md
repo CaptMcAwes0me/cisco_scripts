@@ -12,4 +12,4 @@ exit
 2.) Run the script (ex. python3 batch_commands.py)  
 3.) Follow the prompts.  
   
-*** Note: Do not mix type(s) of devices and/or version(s) as you may receive unexpected results. ***
+*** Note: Do not mix types of devices and/or version(s) as you may receive unexpected results. Additionally, in the config file make sure you write the exact syntax of the commands you want to push, including 'configure terminal' and 'exit' as many times it takes to bring you back to privileged exec to run the verification 'show' commands. ***
