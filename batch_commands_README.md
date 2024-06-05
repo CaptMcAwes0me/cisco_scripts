@@ -1,6 +1,6 @@
 *** This script allows the usage of pushing commands to a single or multiple Cisco devices. ***  
 
-To run:
+To run:  
 1.) Create a text file of commands that you want to be pushed to the device(s).  Example:  
 
 configure terminal  
