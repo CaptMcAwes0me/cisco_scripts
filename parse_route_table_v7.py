@@ -1,3 +1,19 @@
+'''
+
+Legal Disclaimer:
+
+This script is provided for educational and informational purposes only. The author (programmer) makes no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability with respect to the script or the information, products, services, or related graphics contained in the script for any purpose. Any reliance you place on such information is therefore strictly at your own risk.
+
+In no event will the author be liable for any loss or damage including without limitation, indirect or consequential loss or damage, or any loss or damage whatsoever arising from loss of data or profits arising out of or in connection with the use of this script.
+
+By using this script, you agree that you are solely responsible for any consequences that may arise from its use. The author disclaims any responsibility for any actions taken by users of this script.
+
+Usage of this script constitutes acceptance of these terms and conditions.
+
+Authored by Garrett McCollum - Cisco Systems Inc. (2024)
+
+'''
+
 import re
 import ipaddress
 from collections import defaultdict
