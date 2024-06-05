@@ -1,4 +1,4 @@
-*** This script takes the output of 'show route' from an ASA/FTD and provides the output in a more readable fashion. ***  
+*** This script takes the output of 'show route all' from an ASA/FTD and provides the output in a more readable fashion. ***  
   
 To run:  
 1.) Gather the output of 'show route all' from ASA/FTD and save to a text file.  
