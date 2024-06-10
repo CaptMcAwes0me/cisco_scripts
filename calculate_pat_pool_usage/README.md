@@ -1,26 +1,19 @@
-================  
+
     TITLE  
-================  
-  
+
 - Calculates pat pool usage percentage based upon the unit(s) per protocol/IP address.  
   
-===================  
     DESCRIPTION  
-===================  
 
 - This script takes the output from "cluster exec show nat pool" from an ASA/FTD cluster member and determines the percentage of allocation of ports in use per IP address and protocol in the pat pool.  
 
-===================  
     INSTALL/RUN  
-===================  
   
 - Python3 (tested on Python 3.12.3) on Mac OSX.  
 - Download/save "calculate_pat_pool_usage_v16.py" script.  
 - To run "python3 calculate_pat_pool_usage_v16.py"
 
-===================  
     HOW TO USE  
-===================  
   
 - Gather output of 'cluster exec show nat pool' and save to a file.  
 - Run the script and follow the prompts.  
@@ -53,8 +46,6 @@ Unit: unit-1-1(LOCAL):******************************************************
   
 *** Output omitted for brevity. ***  
   
-===================  
     HOW TO USE  
-===================  
 
 - Author Garrett McCollum - Cisco Systems Inc. (2024)  
