@@ -1,4 +1,5 @@
 *** This script allows the usage of pushing commands to a single or multiple Cisco devices. ***  
+*** This script requires paramiko to run (pip3 install paramiko).***  
 
 To run:  
 1.) Create a text file of commands that you want to be pushed to the device(s). Example:
