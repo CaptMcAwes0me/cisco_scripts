@@ -46,6 +46,6 @@ Unit: unit-1-1(LOCAL):******************************************************
 ```  
 *** Output omitted for brevity. ***  
 
-## HOW TO USE  
+## AUTHOR  
 
 - Author Garrett McCollum - Cisco Systems Inc. (2024)  
