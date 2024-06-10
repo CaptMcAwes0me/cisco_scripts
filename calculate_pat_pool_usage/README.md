@@ -13,7 +13,7 @@
 - Download/save "calculate_pat_pool_usage_v16.py" script.  
 - To run "python3 calculate_pat_pool_usage_v16.py"
 
-    HOW TO USE  
+ ## HOW TO USE  
   
 - Gather output of 'cluster exec show nat pool' and save to a file.  
 - Run the script and follow the prompts.  
