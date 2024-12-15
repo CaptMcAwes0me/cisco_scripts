@@ -30,6 +30,21 @@ def verify_connectivity():
     role = input("Enter the role (client/server): ").strip().lower()
 
     if role == "server":
+        # Flag to signal when to stop the server
+        stop_event = threading.Event()
+
+        def monitor_input():
+            """Monitor for 'q' key press to stop the server."""
+            print("Press 'q' to stop the server gracefully...")
+            while not stop_event.is_set():
+                if sys.stdin.read(1).strip() == 'q':
+                    print("\nStopping the server...")
+                    stop_event.set()
+
+        # Start a separate thread to monitor user input
+        input_thread = threading.Thread(target=monitor_input, daemon=True)
+        input_thread.start()
+
         # Server: Open port 8305 and listen for incoming connections
         print("Starting the server and listening on port 8305...")
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
@@ -37,11 +52,22 @@ def verify_connectivity():
             server_socket.bind(('0.0.0.0', 8305))
             server_socket.listen(1)
             print("Server is now listening for incoming connections on port 8305...")
-            while True:
-                conn, addr = server_socket.accept()
-                print(f"Connection established with {addr[0]}:{addr[1]}")
-                conn.close()
-                break  # Accept only one connection for this test
+
+            try:
+                while not stop_event.is_set():
+                    # Use `select` to wait for connections with a timeout to check `stop_event`
+                    server_socket.settimeout(1)
+                    try:
+                        conn, addr = server_socket.accept()
+                        print(f"Connection established with {addr[0]}:{addr[1]}")
+                        conn.close()
+                        break  # Accept only one connection for this test
+                    except socket.timeout:
+                        continue  # Timeout allows us to check the stop_event
+            except Exception as e:
+                print(f"Error: {e}")
+            finally:
+                print("Server stopped. Returning to main menu...")
 
     elif role == "client":
         # Client: Prompt for server IP and test connectivity via telnet to port 8305
@@ -58,7 +84,7 @@ def verify_connectivity():
                 text=True,
                 timeout=10  # Timeout after 10 seconds
             )
-            
+
             elapsed_time = time.time() - start_time
 
             if "Connected" in result.stdout:
@@ -76,6 +102,7 @@ def verify_connectivity():
     # Revert to main menu after completion of connectivity test
     main()
 
+
 def run_bandwidth_test():
     """
     Run the bandwidth test for the client or server.
@@ -84,41 +111,65 @@ def run_bandwidth_test():
 
     if role == "server":
         print("Starting the server and listening on port 8305...")
+        stop_server = threading.Event()
+
+        def monitor_input():
+            """
+            Monitor for 'q' input to stop the server gracefully.
+            """
+            while not stop_server.is_set():
+                user_input = input()
+                if user_input.lower() == 'q':
+                    print("Stopping the server gracefully...")
+                    stop_server.set()
+
+        input_thread = threading.Thread(target=monitor_input, daemon=True)
+        input_thread.start()
+
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
-            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Allow port reuse
+            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             server_socket.bind(('0.0.0.0', 8305))
             server_socket.listen(1)
-            print("Server is now listening for incoming connections on port 8305...")
-            conn, addr = server_socket.accept()
-            print(f"Connection established with {addr[0]}:{addr[1]}")
-            start_time = time.time()
-            bytes_received = 0
+            print("Server is now listening for incoming connections on port 8305... (Press 'q' to exit)")
 
             try:
-                while True:
-                    data = conn.recv(1024 * 1024)  # Receive 1MB chunks
-                    if not data:
-                        break
-                    bytes_received += len(data)
+                while not stop_server.is_set():
+                    server_socket.settimeout(1)  # Check stop condition every second
+                    try:
+                        conn, addr = server_socket.accept()
+                        print(f"Connection established with {addr[0]}:{addr[1]}")
+                        start_time = time.time()
+                        bytes_received = 0
+
+                        while True:
+                            data = conn.recv(1024 * 1024)  # Receive 1MB chunks
+                            if not data:
+                                break
+                            bytes_received += len(data)
+
+                        elapsed_time = time.time() - start_time
+                        print(f"Total data received: {bytes_received / (1024 * 1024):.2f} MB")
+                        print(f"Elapsed time: {elapsed_time:.2f} seconds")
+                        print(f"Approx. Bandwidth: {bytes_received * 8 / (elapsed_time * 1_000_000):.2f} Mbps")
+                        conn.close()
+                        print("Test completed. Returning to main menu.")
+                        stop_server.set()  # Automatically stop the server after a test completes
+                    except socket.timeout:
+                        continue  # Check stop flag periodically
             except Exception as e:
-                print(f"Error: {e}")
+                print(f"Server error: {e}")
             finally:
-                elapsed_time = time.time() - start_time
-                print(f"Total data received: {bytes_received / (1024 * 1024):.2f} MB")
-                print(f"Elapsed time: {elapsed_time:.2f} seconds")
-                print(f"Approx. Bandwidth: {bytes_received * 8 / (elapsed_time * 1_000_000):.2f} Mbps")
-                conn.close()
-                print("Connection closed.\n")
+                print("Server has stopped.\n")
 
     elif role == "client":
         server_ip = input("Enter the server IP address: ").strip()
         test_duration = int(input("Enter the test duration in seconds: ").strip())
         print(f"Connecting to {server_ip} and starting bandwidth test for {test_duration} seconds...")
-        
+
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
             client_socket.connect((server_ip, 8305))
             print(f"Connected to server at {server_ip}:8305")
-            
+
             start_time = time.time()
             bytes_sent = 0
             while time.time() - start_time < test_duration:
@@ -138,8 +189,9 @@ def run_bandwidth_test():
     else:
         print("Invalid role selection. Please enter either 'client' or 'server'.")
 
-    # Revert to main menu after bandwidth test
+    # Return to main menu after test completes
     main()
+
 
 def verify_sftunnel_conf():
     """
@@ -170,17 +222,17 @@ def verify_sftunnel_json():
     """
     print("To verify the sftunnel.json file, you need to provide the peer's UUID.")
     print("The peer's UUID can be found by running the 'show version' command on the peer device.")
-    
+
     # Prompt the user to enter the UUID of the peer
     uuid = input("Enter the peer's UUID: ").strip()
-    
+
     if not uuid:
         print("UUID cannot be empty. Returning to the main menu.")
         main()  # Return to the main menu if UUID is not provided
-    
+
     # Construct the path to the sftunnel.json file
     json_path = f"/var/sf/peers/{uuid}/sftunnel.json"
-    
+
     print(f"Displaying the contents of {json_path}...")
 
     try:
@@ -207,7 +259,7 @@ def validate_sftunnel_certificate():
     Validate the sftunnel certificate by displaying its details.
     """
     print("Displaying the sftunnel certificate details...")
-    
+
     try:
         result = subprocess.run(
             ["openssl", "x509", "-text", "-in", "/etc/sf/ca_root/cacert.pem"],
@@ -232,14 +284,14 @@ def validate_database_table():
     """
     print("To validate the database table, you need to provide the peer's UUID.")
     print("The peer's UUID can be found by running the 'show version' command on the peer device.")
-    
+
     # Prompt the user to enter the UUID of the peer
     uuid = input("Enter the peer's UUID: ").strip()
-    
+
     if not uuid:
         print("UUID cannot be empty. Returning to the main menu.")
         main()  # Return to the main menu if UUID is not provided
-    
+
     # Construct the OmniQuery command to fetch peer data from the database
     query_command = f"OmniQuery.pl -db mdb -e \"select name,ip,uuid,role,active from EM_peers;\" | grep {uuid}"
 
@@ -248,7 +300,7 @@ def validate_database_table():
     try:
         # Execute the OmniQuery command and capture the output
         result = subprocess.run(
-            query_command, 
+            query_command,
             shell=True,  # Using shell=True to allow pipes and multi-part commands
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -286,7 +338,7 @@ def tail_logs():
     """
     uuid = input("Enter the UUID of the peer: ").strip()
     ip_address = input("Enter the IP address of the peer: ").strip()
-    
+
     if not uuid or not ip_address:
         print("UUID or IP address cannot be empty. Returning to main menu.")
         main()
@@ -304,7 +356,7 @@ def tail_logs():
     # Start a thread to monitor the user input
     input_thread = threading.Thread(target=monitor_input)
     input_thread.daemon = True  # This allows the thread to exit when the main program exits
-    
+
     # Start the subprocess to tail the logs
     tail_process = subprocess.Popen(
         f"pigtail --outfile /var/log/{time.strftime('%Y%m%d_%H%M%S')}_pigtail_registration | grep -E {uuid}|{ip_address}|sftunneld",
@@ -312,10 +364,10 @@ def tail_logs():
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE
     )
-    
+
     pid = tail_process.pid
     input_thread.start()
-    
+
     # Wait for the tail process to finish
     tail_process.wait()
 
@@ -335,7 +387,7 @@ def main():
     print("6) Validate sftunnel Certificate")
     print("7) Tail Logs")
     print("0) Exit")
-    
+
     choice = input("Enter your choice: ").strip()
 
     if choice == '1':
