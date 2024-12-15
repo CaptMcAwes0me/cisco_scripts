@@ -10,7 +10,7 @@
 ## INSTALL/RUN  
   
 - Python3 (tested on Python 3.12.3) on Mac OSX. 
-- Download/save "parse_route_table.py" script.  
+- Download/save "troubleshoot_registration.py" script.  
 - To run "python3 parse_route_table.py"
 
  ## HOW TO USE  
