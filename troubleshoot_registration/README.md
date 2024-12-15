@@ -9,9 +9,8 @@
 
 ## INSTALL/RUN  
   
-- Python3 (tested on Python 3.12.3) on Mac OSX. 
-- Download/save "troubleshoot_registration.py" script.  
-- To run "python3 parse_route_table.py"
+- Download/save "troubleshoot_registration.py" script on FMC and FTD that troubleshooting is to be done.
+- To run "python3 troubleshoot_registration.py"
 
  ## HOW TO USE  
   
