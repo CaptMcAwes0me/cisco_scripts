@@ -374,7 +374,7 @@ def tail_logs():
 
         # Start the subprocess to tail logs
         tail_process = subprocess.Popen(
-            f"pigtail --outfile /var/log/{time.strftime('%Y%m%d_%H%M%S')}_pigtail_registration",
+            f"pigtail --outfile /var/log/{time.strftime('%Y%m%d_%H%M%S')}_pigtail_registration | grep -E {uuid}|{ip_address}|sftunneld",
             shell=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
