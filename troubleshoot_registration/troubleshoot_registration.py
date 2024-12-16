@@ -26,6 +26,15 @@ import select
 import termios
 import tty
 
+def flush_stdin():
+    """
+    Flush stdin to clear any leftover input.
+    """
+    try:
+        termios.tcflush(sys.stdin, termios.TCIFLUSH)
+    except:
+        pass  # Ignore if flushing fails (e.g., on non-Unix systems)
+
 def verify_connectivity():
     """
     Verify connectivity based on client or server role selection with a 10-second timeout.
@@ -38,7 +47,6 @@ def verify_connectivity():
 
         def monitor_input():
             """Monitor for 'q' key press to stop the server gracefully."""
-            print("Press 'q' to stop the server gracefully...")
             while not stop_event.is_set():
                 user_input = input()  # Use input() instead of blocking sys.stdin.read
                 if user_input.strip().lower() == 'q':
@@ -50,7 +58,7 @@ def verify_connectivity():
         input_thread.start()
 
         # Server: Open port 8305 and listen for incoming connections
-        print("Starting the server and listening on port 8305...")
+        print("Starting the server and listening on port 8305...(Press 'q' to stop)")
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
             server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Allow port reuse
             server_socket.bind(('0.0.0.0', 8305))
@@ -64,14 +72,16 @@ def verify_connectivity():
                     try:
                         conn, addr = server_socket.accept()
                         print(f"Connection established with {addr[0]}:{addr[1]}")
+                        print("Press 'q' to stop the server.")
                         conn.close()
-                        break  # Accept only one connection for this test
                     except socket.timeout:
                         continue  # Timeout allows us to check the stop_event
+
             except Exception as e:
                 print(f"Error: {e}")
-            finally:
-                print("Server stopped. Returning to main menu...")
+
+        # Stop the server and ensure only one "Stopping the server..." message is shown
+        print("Stopping the server...")
 
     elif role == "client":
         # Client: Prompt for server IP and test connectivity via telnet to port 8305
@@ -104,7 +114,8 @@ def verify_connectivity():
         print("Invalid role selection. Please enter either 'client' or 'server'.")
 
     # Revert to main menu after completion of connectivity test
-    main()
+    return  # main() will be called after this function ends
+
 
 def run_bandwidth_test():
     """
@@ -113,12 +124,10 @@ def run_bandwidth_test():
     role = input("Enter the role (client/server): ").strip().lower()
 
     if role == "server":
-        print("Starting the server and listening on port 8305...")
         stop_server = threading.Event()
 
         def monitor_input():
             """Monitor for 'q' key press to stop the server gracefully."""
-            print("Press 'q' to stop the server gracefully...")
             while not stop_server.is_set():
                 # Use select for non-blocking input
                 if sys.stdin in select.select([sys.stdin], [], [], 0.1)[0]:
@@ -194,8 +203,8 @@ def run_bandwidth_test():
         print("Invalid role selection. Please enter either 'client' or 'server'.")
 
     # Return to main menu after test completes
-    main()
-
+    input("\nPress Enter to return to the main menu...")
+    return
 
 def verify_sftunnel_conf():
     """
@@ -218,7 +227,8 @@ def verify_sftunnel_conf():
         print(f"An error occurred while trying to read sftunnel.conf: {e}")
 
     # Revert to main menu after checking sftunnel.conf
-    main()
+    input("\nPress Enter to return to the main menu...")
+    return
 
 def verify_sftunnel_json():
     """
@@ -231,8 +241,9 @@ def verify_sftunnel_json():
     uuid = input("Enter the peer's UUID: ").strip()
 
     if not uuid:
-        print("UUID cannot be empty. Returning to the main menu.")
-        main()  # Return to the main menu if UUID is not provided
+        print("UUID cannot be empty.")
+        input("\nPress Enter to return to the main menu...")
+        return  # Return to the main menu if UUID is not provided
 
     # Construct the path to the sftunnel.json file
     json_path = f"/var/sf/peers/{uuid}/sftunnel.json"
@@ -256,7 +267,8 @@ def verify_sftunnel_json():
         print(f"An error occurred while trying to read {json_path}: {e}")
 
     # Revert to main menu after checking sftunnel.json
-    main()
+    input("\nPress Enter to return to the main menu...")
+    return
 
 def validate_sftunnel_certificate():
     """
@@ -280,7 +292,8 @@ def validate_sftunnel_certificate():
         print(f"An error occurred while trying to read the certificate: {e}")
 
     # Revert to main menu after checking the certificate
-    main()
+    input("\nPress Enter to return to the main menu...")
+    return
 
 def validate_database_table():
     """
@@ -293,8 +306,9 @@ def validate_database_table():
     uuid = input("Enter the peer's UUID: ").strip()
 
     if not uuid:
-        print("UUID cannot be empty. Returning to the main menu.")
-        main()  # Return to the main menu if UUID is not provided
+        print("UUID cannot be empty.")
+        input("\nPress Enter to return to the main menu...")
+        return  # Return to the main menu if UUID is not provided
 
     # Construct the OmniQuery command to fetch peer data from the database
     query_command = f"OmniQuery.pl -db mdb -e \"select name,ip,uuid,role,active from EM_peers;\" | grep {uuid}"
@@ -334,7 +348,8 @@ def validate_database_table():
         print(f"An error occurred while querying the database: {e}")
 
     # Revert to main menu after validating the database table
-    main()
+    input("\nPress Enter to return to the main menu...")
+    return
 
 def tail_logs():
     """
@@ -344,7 +359,8 @@ def tail_logs():
     ip_address = input("Enter the IP address of the peer: ").strip()
 
     if not uuid or not ip_address:
-        print("UUID or IP address cannot be empty. Returning to main menu.")
+        print("UUID or IP address cannot be empty.")
+        input("\nPress Enter to return to the main menu...")
         return
 
     print(f"Tailing logs for UUID: {uuid}, IP Address: {ip_address}... (Press 'q' to stop)")
@@ -353,12 +369,12 @@ def tail_logs():
     orig_settings = termios.tcgetattr(sys.stdin)
 
     try:
-        # Set terminal to raw mode
+        # Set terminal to raw mode to capture single-character inputs
         tty.setraw(sys.stdin.fileno())
 
         # Start the subprocess to tail logs
         tail_process = subprocess.Popen(
-            f"pigtail --outfile /var/log/{time.strftime('%Y%m%d_%H%M%S')}_pigtail_registration | grep -E {uuid}|{ip_address}|sftunneld",
+            f"pigtail --outfile /var/log/{time.strftime('%Y%m%d_%H%M%S')}_pigtail_registration",
             shell=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
@@ -366,7 +382,7 @@ def tail_logs():
 
         # Monitor for 'q' key press
         while True:
-            if sys.stdin.read(1) == 'q':
+            if sys.stdin.read(1) == 'q':  # Capture single character input
                 print("\nStopping log tailing...")
                 tail_process.terminate()
                 break
@@ -378,45 +394,54 @@ def tail_logs():
     finally:
         # Restore original terminal settings
         termios.tcsetattr(sys.stdin, termios.TCSADRAIN, orig_settings)
+        print("\nTerminal settings restored.")
+
+        # Flush any leftover input
+        sys.stdin.flush()
+
 
     # Revert to main menu after tailing logs
-    main()
+    input("\nPress Enter to return to the main menu...")
+    return
 
 def main():
     """
     Main menu for the script.
     """
-    print("\n----- Main Menu -----")
-    print("1) Verify Connectivity")
-    print("2) Run Bandwidth Test")
-    print("3) Verify sftunnel.conf")
-    print("4) Verify sftunnel.json")
-    print("5) Validate Database Table")
-    print("6) Validate sftunnel Certificate")
-    print("7) Tail Logs")
-    print("0) Exit")
+    while True:  # Replace recursion with a loop for better performance
+        flush_stdin()  # Ensure the input buffer is clean
+        print("\n----- Main Menu -----")
+        print("1) Verify Connectivity")
+        print("2) Run Bandwidth Test")
+        print("3) Verify sftunnel.conf")
+        print("4) Verify sftunnel.json")
+        print("5) Validate Database Table")
+        print("6) Validate sftunnel Certificate")
+        print("7) Tail Logs")
+        print("0) Exit")
 
-    choice = input("Enter your choice: ").strip()
+        choice = input("Enter your choice: ").strip()
 
-    if choice == '1':
-        verify_connectivity()
-    elif choice == '2':
-        run_bandwidth_test()
-    elif choice == '3':
-        verify_sftunnel_conf()
-    elif choice == '4':
-        verify_sftunnel_json()
-    elif choice == '5':
-        validate_database_table()
-    elif choice == '6':
-        validate_sftunnel_certificate()
-    elif choice == '7':
-        tail_logs()
-    elif choice == '0':
-        print("Exiting the script. Goodbye!")
-    else:
-        print("Invalid choice. Please try again.")
-        main()
+        if choice == '1':
+            verify_connectivity()
+        elif choice == '2':
+            run_bandwidth_test()
+        elif choice == '3':
+            verify_sftunnel_conf()
+        elif choice == '4':
+            verify_sftunnel_json()
+        elif choice == '5':
+            validate_database_table()
+        elif choice == '6':
+            validate_sftunnel_certificate()
+        elif choice == '7':
+            tail_logs()
+        elif choice == '0':
+            print("Exiting the script. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+        flush_stdin()  # Flush input before returning to the menu
 
 if __name__ == "__main__":
     main()
