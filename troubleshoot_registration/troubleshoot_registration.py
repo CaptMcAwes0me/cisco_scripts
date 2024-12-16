@@ -22,6 +22,7 @@ import threading
 import sys
 import os
 import signal
+import select
 
 def verify_connectivity():
     """
@@ -34,10 +35,11 @@ def verify_connectivity():
         stop_event = threading.Event()
 
         def monitor_input():
-            """Monitor for 'q' key press to stop the server."""
+            """Monitor for 'q' key press to stop the server gracefully."""
             print("Press 'q' to stop the server gracefully...")
             while not stop_event.is_set():
-                if sys.stdin.read(1).strip() == 'q':
+                user_input = input()  # Use input() instead of blocking sys.stdin.read
+                if user_input.strip().lower() == 'q':
                     print("\nStopping the server...")
                     stop_event.set()
 
@@ -102,7 +104,6 @@ def verify_connectivity():
     # Revert to main menu after completion of connectivity test
     main()
 
-
 def run_bandwidth_test():
     """
     Run the bandwidth test for the client or server.
@@ -114,14 +115,15 @@ def run_bandwidth_test():
         stop_server = threading.Event()
 
         def monitor_input():
-            """
-            Monitor for 'q' input to stop the server gracefully.
-            """
+            """Monitor for 'q' key press to stop the server gracefully."""
+            print("Press 'q' to stop the server gracefully...")
             while not stop_server.is_set():
-                user_input = input()
-                if user_input.lower() == 'q':
-                    print("Stopping the server gracefully...")
-                    stop_server.set()
+                # Use select for non-blocking input
+                if sys.stdin in select.select([sys.stdin], [], [], 0.1)[0]:
+                    user_input = sys.stdin.read(1)  # Read one character
+                    if user_input.strip().lower() == 'q':
+                        print("\nStopping the server...")
+                        stop_server.set()
 
         input_thread = threading.Thread(target=monitor_input, daemon=True)
         input_thread.start()
