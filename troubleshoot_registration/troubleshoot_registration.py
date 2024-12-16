@@ -23,6 +23,8 @@ import sys
 import os
 import signal
 import select
+import termios
+import tty
 
 def verify_connectivity():
     """
@@ -343,35 +345,39 @@ def tail_logs():
 
     if not uuid or not ip_address:
         print("UUID or IP address cannot be empty. Returning to main menu.")
-        main()
+        return
 
-    print(f"Tailing logs for UUID: {uuid}, IP Address: {ip_address}...")
+    print(f"Tailing logs for UUID: {uuid}, IP Address: {ip_address}... (Press 'q' to stop)")
 
-    def monitor_input():
-        """Monitor for 'q' key press to stop tailing logs."""
+    # Save original terminal settings
+    orig_settings = termios.tcgetattr(sys.stdin)
+
+    try:
+        # Set terminal to raw mode
+        tty.setraw(sys.stdin.fileno())
+
+        # Start the subprocess to tail logs
+        tail_process = subprocess.Popen(
+            f"pigtail --outfile /var/log/{time.strftime('%Y%m%d_%H%M%S')}_pigtail_registration",
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+
+        # Monitor for 'q' key press
         while True:
             if sys.stdin.read(1) == 'q':
-                print("Stopping log tailing...")
-                os.kill(pid, signal.SIGTERM)  # Kill the tail process
+                print("\nStopping log tailing...")
+                tail_process.terminate()
                 break
 
-    # Start a thread to monitor the user input
-    input_thread = threading.Thread(target=monitor_input)
-    input_thread.daemon = True  # This allows the thread to exit when the main program exits
+        tail_process.wait()
 
-    # Start the subprocess to tail the logs
-    tail_process = subprocess.Popen(
-        f"pigtail --outfile /var/log/{time.strftime('%Y%m%d_%H%M%S')}_pigtail_registration | grep -E {uuid}|{ip_address}|sftunneld",
-        shell=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
-    )
-
-    pid = tail_process.pid
-    input_thread.start()
-
-    # Wait for the tail process to finish
-    tail_process.wait()
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        # Restore original terminal settings
+        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, orig_settings)
 
     # Revert to main menu after tailing logs
     main()
