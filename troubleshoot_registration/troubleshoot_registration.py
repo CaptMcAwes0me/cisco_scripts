@@ -36,6 +36,20 @@ def flush_stdin():
     except:
         pass  # Ignore if flushing fails (e.g., on non-Unix systems)
 
+def validate_uuid(uuid):
+    """
+    Validates if the given UUID matches the standard UUID format.
+    """
+    uuid_pattern = re.compile(r'^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$', re.IGNORECASE)
+    return bool(uuid_pattern.match(uuid))
+
+def validate_ip(ip_address):
+    """
+    Validates if the given IP address is in the correct IPv4 format.
+    """
+    ip_pattern = re.compile(r'^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$')
+    return bool(ip_pattern.match(ip_address))
+    
 def verify_connectivity():
     """
     Verify connectivity based on client or server role selection with a 10-second timeout.
@@ -306,12 +320,17 @@ def validate_database_table():
     print("The peer's UUID can be found by running the 'show version' command on the peer device.")
 
     # Prompt the user to enter the UUID of the peer
-    uuid = input("Enter the peer's UUID: ").strip()
+    while True:
+        uuid = input("Enter the peer's UUID: ").strip()
 
-    if not uuid:
-        print("UUID cannot be empty.")
-        input("\nPress Enter to return to the main menu...")
-        return  # Return to the main menu if UUID is not provided
+        if not uuid:
+            print("UUID cannot be empty.")
+            continue  # Prompt again if UUID is empty
+        elif not validate_uuid(uuid):
+            print("Invalid UUID format. Please enter a valid UUID.")
+            continue  # Prompt again if UUID is invalid
+
+        break  # Exit the loop once a valid UUID is provided
 
     # Construct the OmniQuery command to fetch peer data from the database
     query_command = f"OmniQuery.pl -db mdb -e \"select name,ip,uuid,role,active from EM_peers;\" | grep {uuid}"
@@ -353,20 +372,6 @@ def validate_database_table():
     # Revert to main menu after validating the database table
     input("\nPress Enter to return to the main menu...")
     return
-
-def validate_uuid(uuid):
-    """
-    Validates if the given UUID matches the standard UUID format.
-    """
-    uuid_pattern = re.compile(r'^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$', re.IGNORECASE)
-    return bool(uuid_pattern.match(uuid))
-
-def validate_ip(ip_address):
-    """
-    Validates if the given IP address is in the correct IPv4 format.
-    """
-    ip_pattern = re.compile(r'^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$')
-    return bool(ip_pattern.match(ip_address))
 
 def grep_logs():
     """
