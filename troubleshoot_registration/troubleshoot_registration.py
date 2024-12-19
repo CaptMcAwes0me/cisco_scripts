@@ -143,7 +143,8 @@ def run_bandwidth_test():
             server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             server_socket.bind(('0.0.0.0', 8305))
             server_socket.listen(1)
-            print("Server is now listening for incoming connections on port 8305... (Press 'q' to exit)")
+            print("Server is now listening for incoming connections on port 8305... (Press 'q' to exit)\n")
+            print(f"*** Note: If bandwidth is subject to high latency the test may take longer than expected. ***\n")
 
             try:
                 while not stop_server.is_set():
@@ -177,7 +178,8 @@ def run_bandwidth_test():
     elif role == "client":
         server_ip = input("Enter the server IP address: ").strip()
         test_duration = int(input("Enter the test duration in seconds: ").strip())
-        print(f"Connecting to {server_ip} and starting bandwidth test for {test_duration} seconds...")
+        print(f"Connecting to {server_ip} and starting bandwidth test for {test_duration} seconds...\n")
+        print(f"*** Note: If bandwidth is subject to high latency the test may take longer than {test_duration} seconds. ***\n")
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
             client_socket.connect((server_ip, 8305))
