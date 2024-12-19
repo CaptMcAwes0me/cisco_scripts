@@ -25,6 +25,7 @@ import signal
 import select
 import termios
 import tty
+import re
 
 def flush_stdin():
     """
@@ -353,56 +354,64 @@ def validate_database_table():
     input("\nPress Enter to return to the main menu...")
     return
 
-def tail_logs():
+def validate_uuid(uuid):
     """
-    Tail the logs based on user input and allow stopping with 'q'.
+    Validates if the given UUID matches the standard UUID format.
     """
-    uuid = input("Enter the UUID of the peer: ").strip()
-    ip_address = input("Enter the IP address of the peer: ").strip()
+    uuid_pattern = re.compile(r'^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$', re.IGNORECASE)
+    return bool(uuid_pattern.match(uuid))
 
-    if not uuid or not ip_address:
-        print("UUID or IP address cannot be empty.")
-        input("\nPress Enter to return to the main menu...")
-        return
+def validate_ip(ip_address):
+    """
+    Validates if the given IP address is in the correct IPv4 format.
+    """
+    ip_pattern = re.compile(r'^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$')
+    return bool(ip_pattern.match(ip_address))
 
-    print(f"Tailing logs for UUID: {uuid}, IP Address: {ip_address}... (Press 'q' to stop)")
+def grep_logs():
+    """
+    Search logs based on the UUID and IP address and output to a file.
+    """
+    while True:
+        uuid = input("Enter the UUID of the peer: ").strip()
+        if not uuid:
+            print("UUID cannot be empty.")
+            continue
+        elif not validate_uuid(uuid):
+            print("Invalid UUID format. Please enter a valid UUID.")
+            continue
+        break  # Exit the loop once a valid UUID is provided
 
-    # Save original terminal settings
-    orig_settings = termios.tcgetattr(sys.stdin)
+    while True:
+        ip_address = input("Enter the IP address of the peer: ").strip()
+        if not ip_address:
+            print("IP address cannot be empty.")
+            continue
+        elif not validate_ip(ip_address):
+            print("Invalid IP address format. Please enter a valid IP address.")
+            continue
+        break  # Exit the loop once a valid IP address is provided
+
+    print(f"Gathering logs for UUID: {uuid}, IP Address: {ip_address}...")
+
+    # Define output file name with timestamp
+    output_file = f'{time.strftime("%Y%m%d_%H%M%S")}_filtered_logs.txt'
 
     try:
-        # Set terminal to raw mode to capture single-character inputs
-        tty.setraw(sys.stdin.fileno())
+        # Construct the grep command to search for the UUID and IP address in the logs
+        grep_command = f'grep -E "{uuid}|{ip_address}|sftunneld" /var/log/messages > {output_file}'
 
-        # Start the subprocess to tail logs
-        tail_process = subprocess.Popen(
-            f'pigtail --outfile /var/log/{time.strftime("%Y%m%d_%H%M%S")}_pigtail_registration | grep -E "{uuid}|{ip_address}|sftunneld"',
-            shell=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
-        )
+        # Run the grep command to search logs and write to the output file
+        subprocess.run(grep_command, shell=True, check=True)
 
-        # Monitor for 'q' key press
-        while True:
-            if sys.stdin.read(1) == 'q':  # Capture single character input
-                print("\nStopping log tailing...")
-                tail_process.terminate()
-                break
+        print(f"Logs have been saved to {output_file}")
 
-        tail_process.wait()
-
+    except subprocess.CalledProcessError as e:
+        print(f"Error occurred while gathering logs: {e}")
     except Exception as e:
-        print(f"Error: {e}")
-    finally:
-        # Restore original terminal settings
-        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, orig_settings)
-        print("\nTerminal settings restored.")
+        print(f"An unexpected error occurred: {e}")
 
-        # Flush any leftover input
-        sys.stdin.flush()
-
-
-    # Revert to main menu after tailing logs
+    # Revert to main menu after completing log gathering
     input("\nPress Enter to return to the main menu...")
     return
 
@@ -419,7 +428,7 @@ def main():
         print("4) Verify sftunnel.json")
         print("5) Validate Database Table")
         print("6) Validate sftunnel Certificate")
-        print("7) Tail Logs")
+        print("7) Gather Logs")
         print("0) Exit")
 
         choice = input("Enter your choice: ").strip()
@@ -437,7 +446,7 @@ def main():
         elif choice == '6':
             validate_sftunnel_certificate()
         elif choice == '7':
-            tail_logs()
+            grep_logs()
         elif choice == '0':
             print("Exiting the script. Goodbye!")
             break
