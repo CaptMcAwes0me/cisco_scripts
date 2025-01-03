@@ -314,7 +314,7 @@ def validate_sftunnel_certificate():
 
 def validate_database_table():
     """
-    Validate a database table by querying the database for peer information and formatting the output.
+    Validate a database table by querying the database for peer information.
     """
     print("To validate the database table, you need to provide the peer's UUID.")
     print("The peer's UUID can be found by running the 'show version' command on the peer device.")
@@ -332,8 +332,8 @@ def validate_database_table():
 
         break  # Exit the loop once a valid UUID is provided
 
-    # Construct the OmniQuery command to fetch peer data from the database
-    query_command = f"OmniQuery.pl -db mdb -e \"select name,ip,uuid,role,active from EM_peers;\" | grep {uuid}"
+    # Construct the OmniQuery command to fetch peer data from the database, filtering by the provided UUID
+    query_command = f"OmniQuery.pl -db mdb -e \"select name, ip, uuid, sw_version, role, active from EM_peers where uuid = '{uuid}';\""
 
     print(f"Running query for UUID {uuid}...")
 
@@ -341,27 +341,17 @@ def validate_database_table():
         # Execute the OmniQuery command and capture the output
         result = subprocess.run(
             query_command,
-            shell=True,  # Using shell=True to allow pipes and multi-part commands
+            shell=True,  # Using shell=True to allow multi-part commands
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True
         )
 
         if result.returncode == 0:
-            # Format the output as a table
             output = result.stdout.strip()
             if output:
-                # Add table headers and format the output accordingly
-                print("+---------------+---------------+--------------------------------------+------+" )
-                print("| name          | ip            | uuid                                 | role | active |")
-                print("+---------------+---------------+--------------------------------------+------+" )
-
-                # Split the output into rows and print each one
-                for line in output.splitlines():
-                    columns = line.split("|")
-                    formatted_line = "|".join([col.strip() for col in columns])
-                    print(f"{formatted_line}|")
-                print("+---------------+---------------+--------------------------------------+------+" )
+                print("Query result:")
+                print(output)
             else:
                 print("No results found for the specified UUID.")
         else:
