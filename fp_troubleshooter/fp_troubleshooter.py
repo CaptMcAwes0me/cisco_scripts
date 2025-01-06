@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 """
 Author: Garrett McCollum
-Date: 2025-01-06
+Date: 2024-12-14
 Description:
     This script performs various network-related tasks, including verifying connectivity,
-    running bandwidth tests, checking configuration files, validating certificates, checking database
-    values and gathering logs.
+    running bandwidth tests, checking configuration files, validating certificates, and
+    tailing logs for peer devices.
 
     The script interacts with the user through a simple text-based menu, where the user
     can choose from various options for network testing, configuration verification, and
@@ -502,7 +502,7 @@ def registration_troubleshooting():
         elif choice == '7':
             grep_logs()
         elif choice == '0':
-            print("Exiting the script. Goodbye!")
+            print("Returning to main menu.")
             break
         else:
             print("Invalid choice. Please try again.")
@@ -524,7 +524,7 @@ def main_menu():
         elif choice == "3":
             print("Fetching Database Data...")
         elif choice == "0":
-            print("Exiting program.")
+            print("Exiting the script. Goodbye!")
             break
         else:
             print("Invalid choice, please try again.")
