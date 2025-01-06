@@ -559,6 +559,65 @@ def ssl_peers():
     input("\nPress Enter to return to the main menu...")
     return
 
+def notifications_table():
+    """
+    Prompt the user for notification status options and query the database accordingly.
+    """
+    while True:
+        print("Choose a notification status to query:")
+        print("1) All notifications")
+        print("2) Failed notifications")
+        print("3) Running notifications")
+        print("0) Return to the previous menu")
+
+        # Prompt for the user's choice
+        choice = input("Enter your choice (1, 2, 3, 0): ").strip()
+
+        if choice == '1':
+            query_command = "OmniQuery.pl -db mdb -e \"SELECT seq, hex(uuid), notification_status.label, notification_status.status, body from notification JOIN notification_status ON notification.status = notification_status.status;\""
+            break
+        elif choice == '2':
+            query_command = "OmniQuery.pl -db mdb -e \"SELECT seq, HEX(uuid), notification_status.label, notification_status.status, body FROM notification JOIN notification_status ON notification.status = notification_status.status WHERE notification.status = 13;\""
+            break
+        elif choice == '3':
+            query_command = "OmniQuery.pl -db mdb -e \"SELECT seq, HEX(uuid), notification_status.label, notification_status.status, body FROM notification JOIN notification_status ON notification.status = notification_status.status WHERE notification.status = 7;\""
+            break
+        elif choice == '0':
+            print("Returning to the previous menu...")
+            return  # Exit the function to return to the previous menu
+        else:
+            print("Invalid choice. Please enter 1, 2, 3, or 0.")
+
+    print(f"Running query for {'all' if choice == '1' else 'failed' if choice == '2' else 'running'} notifications...")
+
+    try:
+        # Execute the OmniQuery command and capture the output
+        result = subprocess.run(
+            query_command,
+            shell=True,  # Using shell=True to allow multi-part commands
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,  # Text mode to automatically decode
+            encoding='utf-8',  # Try UTF-8 encoding
+            errors='ignore'  # Ignore characters that can't be decoded
+        )
+
+        if result.returncode == 0:
+            output = result.stdout.strip()
+            if output:
+                print("Query result:")
+                print(output)
+            else:
+                print("No results found.")
+        else:
+            print(f"Error executing query: {result.stderr.strip()}")
+    except Exception as e:
+        print(f"An error occurred while querying the notifications table: {e}")
+
+    # Revert to main menu after querying the notifications table
+    input("\nPress Enter to return to the main menu...")
+    return
+    
 def registration_troubleshooting():
     """
     Main menu for the script.
@@ -621,7 +680,7 @@ def database_troubleshooting():
         elif choice == '2':
             ssl_peers()
         elif choice == '3':
-            notications_table()
+            notifications_table()
         elif choice == '4':
             vdb_table()
         elif choice == '5':
