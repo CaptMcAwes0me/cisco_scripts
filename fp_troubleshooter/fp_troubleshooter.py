@@ -772,8 +772,11 @@ def fail_deployment():
     """
     Prompt the user for a UUID and set the status of the notification to 'failed' (status=13).
     """
-    print("WARNING: You are about to fail a deployment notification. Make sure you have the correct UUID.")
-    print("If you're unsure, do not proceed with the action.")
+    warning_message = (
+        "WARNING: You are about to fail a deployment notification. Make sure you have the correct UUID.\n"
+        "If you're unsure, do not proceed with the action."
+    )
+    print_warning_box(warning_message)
 
     # Option to return to the previous menu or fail a deployment
     while True:
