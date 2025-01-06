@@ -722,9 +722,13 @@ def delete_notification():
     )
     print_warning_box(warning_message)
 
-    # Prompt for the UUID to delete
+    # Option to return to the previous menu
     while True:
-        uuid = input("Enter the UUID of the notification to delete (32-character hex value): ").strip()
+        uuid = input("\nEnter the UUID of the notification to delete (32-character hex value) or enter '0' to return to the previous menu: ").strip()
+
+        if uuid == '0':
+            print("Returning to the previous menu...")
+            return  # Exit and return to the previous menu
 
         # Validate the UUID format
         if not uuid:
