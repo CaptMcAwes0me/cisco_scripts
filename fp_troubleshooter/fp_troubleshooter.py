@@ -469,6 +469,58 @@ def grep_logs():
     input("\nPress Enter to return to the main menu...")
     return
 
+def em_peers():
+    """
+    Validate a database table by querying the database for peer information.
+    """
+    print("You can either enter a peer's UUID or leave it blank to get all peer data.")
+    print("The peer's UUID can be found by running the 'show version' command on the peer device.")
+
+    # Prompt the user to enter the UUID of the peer
+    while True:
+        uuid = input("Enter the peer's UUID (or leave blank to query all peers): ").strip()
+
+        # If UUID is not empty, validate its format
+        if uuid and not validate_uuid(uuid):
+            print("Invalid UUID format. Please enter a valid UUID.")
+            continue  # Prompt again if UUID is invalid
+
+        break  # Exit the loop once a valid UUID or blank entry is provided
+
+    # Construct the OmniQuery command based on whether the UUID is provided
+    if uuid:
+        query_command = f"OmniQuery.pl -db mdb -e \"select name, ip, uuid, sw_version, role, reg_state from EM_peers where uuid = '{uuid}';\""
+    else:
+        query_command = "OmniQuery.pl -db mdb -e \"select name, ip, uuid, sw_version, role, reg_state from EM_peers;\""
+
+    print(f"Running query for UUID {uuid if uuid else 'all peers'}...")
+
+    try:
+        # Execute the OmniQuery command and capture the output
+        result = subprocess.run(
+            query_command,
+            shell=True,  # Using shell=True to allow multi-part commands
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+
+        if result.returncode == 0:
+            output = result.stdout.strip()
+            if output:
+                print("Query result:")
+                print(output)
+            else:
+                print("No results found for the specified UUID or for all peers.")
+        else:
+            print(f"Error executing query: {result.stderr.strip()}")
+    except Exception as e:
+        print(f"An error occurred while querying the database: {e}")
+
+    # Revert to main menu after validating the database table
+    input("\nPress Enter to return to the main menu...")
+    return
+
 def registration_troubleshooting():
     """
     Main menu for the script.
@@ -507,6 +559,44 @@ def registration_troubleshooting():
         else:
             print("Invalid choice. Please try again.")
         flush_stdin()  # Flush input before returning to the menu
+def database_troubleshooting():
+    """
+    Main menu for the script.
+    """
+    while True:  # Replace recursion with a loop for better performance
+        flush_stdin()  # Ensure the input buffer is clean
+        print("\n----- Database Menu -----")
+        print("1) Check EM Peers Table")
+        print("2) Check SSL Peer Table")
+        print("3) Check Notifications Table")
+        print("4) Check VDB Table")
+        print("5) Check GeoDB Table")
+        print("6) Delete Stuck Notification")
+        print("7) Fail Stuck Deployment")
+        print("0) Return to Main Menu")
+
+        choice = input("Enter your choice: ").strip()
+
+        if choice == '1':
+            em_peers()
+        elif choice == '2':
+            ssl_peers()
+        elif choice == '3':
+            notications_table()
+        elif choice == '4':
+            vdb_table()
+        elif choice == '5':
+            geodb_table()
+        elif choice == '6':
+            delete_stuck_notification()
+        elif choice == '7':
+            fail_deployment()
+        elif choice == '0':
+            print("Returning to main menu.")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+        flush_stdin()  # Flush input before returning to the menu
 
 def main_menu():
     while True:
@@ -522,7 +612,7 @@ def main_menu():
         elif choice == "2":
             registration_troubleshooting()
         elif choice == "3":
-            print("Fetching Database Data...")
+            database_troubleshooting()
         elif choice == "0":
             print("Exiting the script. Goodbye!")
             break
