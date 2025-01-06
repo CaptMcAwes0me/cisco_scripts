@@ -70,7 +70,7 @@ def print_warning_box(message):
     for line in lines:
         print(f"* {line.ljust(longest_line)} *")
     print(border)
-    
+
 # Path to the configuration file
 config_file_path = "/etc/sf/ims.conf"
 
@@ -718,7 +718,7 @@ def delete_notification():
     """
     warning_message = (
         "WARNING: Deleting a notification will permanently remove it from the system.\n"
-        "DO NOT delete deployment notifications. If you need to fail a stuck deployment, please select option 7 from the previous menu."
+        "WARNING: DO NOT delete deployment notifications. If you need to fail a stuck deployment, please select option 7 from the previous menu."
     )
     print_warning_box(warning_message)
 
@@ -770,7 +770,7 @@ def registration_troubleshooting():
     """
     while True:  # Replace recursion with a loop for better performance
         flush_stdin()  # Ensure the input buffer is clean
-        print("\n----- Main Menu -----")
+        print("\n----- Registration Menu -----")
         print("1) Verify Connectivity")
         print("2) Run Bandwidth Test")
         print("3) Verify sftunnel.conf")
