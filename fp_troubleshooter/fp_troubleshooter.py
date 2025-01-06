@@ -2,16 +2,16 @@
 # -*- coding: utf-8 -*-
 """
 Author: Garrett McCollum
-Date: 2024-12-14
+Date: 2025-01-06
 Description:
     This script performs various network-related tasks, including verifying connectivity,
-    running bandwidth tests, checking configuration files, validating certificates, and
-    tailing logs for peer devices.
-
+    running bandwidth tests, checking configuration files, validating certificates, checking database
+    values and gathering logs.
+    
     The script interacts with the user through a simple text-based menu, where the user
     can choose from various options for network testing, configuration verification, and
     log analysis.
-
+    
     Version: 1.0.0
 """
 
