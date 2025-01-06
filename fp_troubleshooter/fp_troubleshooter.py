@@ -134,7 +134,11 @@ def verify_connectivity():
     """
     Verify connectivity based on client or server role selection with a 10-second timeout.
     """
-    role = input("Enter the role (client/server): ").strip().lower()
+    print("\n" + "=" * 80)
+    print(" Connectivity Test: Client or Server Mode ".center(80, "="))
+    print("=" * 80)
+
+    role = input("\nEnter the role (client/server): ").strip().lower()
 
     if role == "server":
         # Flag to signal when to stop the server
@@ -145,49 +149,50 @@ def verify_connectivity():
             while not stop_event.is_set():
                 user_input = input()  # Use input() instead of blocking sys.stdin.read
                 if user_input.strip().lower() == 'q':
-                    print("\nStopping the server...")
+                    print("\n[!] Stopping the server...")
                     stop_event.set()
 
         # Start a separate thread to monitor user input
         input_thread = threading.Thread(target=monitor_input, daemon=True)
         input_thread.start()
 
-        # Server: Open port 8305 and listen for incoming connections
-        print("Starting the server and listening on port 8305...(Press 'q' to stop)")
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
-            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Allow port reuse
-            server_socket.bind(('0.0.0.0', 8305))
-            server_socket.listen(1)
-            print("Server is now listening for incoming connections on port 8305...")
+        # Server: Open port 12345 and listen for incoming connections
+        print("[+] Starting the server and listening on port 12345... (Press 'q' to stop)")
 
-            try:
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
+                server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Allow port reuse
+                server_socket.bind(('0.0.0.0', 12345))
+                server_socket.listen(1)
+                print("[+] Server is now listening for incoming connections...")
+
                 while not stop_event.is_set():
-                    # Use `select` to wait for connections with a timeout to check `stop_event`
-                    server_socket.settimeout(1)
+                    server_socket.settimeout(1)  # Check stop_event periodically
                     try:
                         conn, addr = server_socket.accept()
-                        print(f"Connection established with {addr[0]}:{addr[1]}")
-                        print("Press 'q' to stop the server.")
+                        print(f"\n[+] Connection established with {addr[0]}:{addr[1]}")
+                        print("[+] Press 'q' to stop the server.")
                         conn.close()
                     except socket.timeout:
-                        continue  # Timeout allows us to check the stop_event
+                        continue  # Timeout allows us to check stop_event
 
-            except Exception as e:
-                print(f"Error: {e}")
+        except Exception as e:
+            print(f"[!] Error: {e}")
 
-        # Stop the server and ensure only one "Stopping the server..." message is shown
-        print("Stopping the server...")
+        # Ensure only one "Stopping the server..." message is shown
+        print("[!] Stopping the server...")
 
     elif role == "client":
-        # Client: Prompt for server IP and test connectivity via telnet to port 8305
-        server_ip = input("Enter the server IP address: ").strip()
-        print(f"Attempting to telnet to {server_ip}:8305...")
+        # Client: Prompt for server IP and test connectivity via telnet to port 12345
+        server_ip = input("\nEnter the server IP address: ").strip()
+        print(f"[+] Attempting to telnet to {server_ip}:12345...")
 
         # Set a timeout of 10 seconds for the connection attempt
         start_time = time.time()
+
         try:
             result = subprocess.run(
-                ["telnet", server_ip, "8305"],
+                ["telnet", server_ip, "12345"],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
@@ -197,26 +202,31 @@ def verify_connectivity():
             elapsed_time = time.time() - start_time
 
             if "Connected" in result.stdout:
-                print(f"Successfully connected to {server_ip}:8305 in {elapsed_time:.2f} seconds")
+                print(f"[+] Successfully connected to {server_ip}:12345 in {elapsed_time:.2f} seconds")
             else:
-                print(f"Failed to connect to {server_ip}:8305. Reason: {result.stderr.strip()}")
+                print(f"[!] Failed to connect to {server_ip}:12345. Reason: {result.stderr.strip()}")
+
         except subprocess.TimeoutExpired:
-            print(f"Connection attempt to {server_ip}:8305 timed out after 10 seconds.")
+            print(f"[!] Connection attempt to {server_ip}:12345 timed out after 10 seconds.")
         except Exception as e:
-            print(f"Error while trying to telnet: {e}")
+            print(f"[!] Error while trying to telnet: {e}")
 
     else:
-        print("Invalid role selection. Please enter either 'client' or 'server'.")
+        print("\n[!] Invalid role selection. Please enter either 'client' or 'server'.")
 
-    # Revert to main menu after completion of connectivity test
-    return  # main() will be called after this function ends
-
+    # Return to the main menu after completing the connectivity test
+    input("\nPress Enter to return to the main menu...")
+    return
 
 def run_bandwidth_test():
     """
     Run the bandwidth test for the client or server.
     """
-    role = input("Enter the role (client/server): ").strip().lower()
+    print("\n" + "=" * 80)
+    print(" Bandwidth Test: Client or Server Mode ".center(80, "="))
+    print("=" * 80)
+
+    role = input("\nEnter the role (client/server): ").strip().lower()
 
     if role == "server":
         stop_server = threading.Event()
@@ -228,7 +238,7 @@ def run_bandwidth_test():
                 if sys.stdin in select.select([sys.stdin], [], [], 0.1)[0]:
                     user_input = sys.stdin.read(1)  # Read one character
                     if user_input.strip().lower() == 'q':
-                        print("\nStopping the server...")
+                        print("\n[!] Stopping the server...")
                         stop_server.set()
 
         input_thread = threading.Thread(target=monitor_input, daemon=True)
@@ -236,17 +246,17 @@ def run_bandwidth_test():
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
             server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            server_socket.bind(('0.0.0.0', 8305))
+            server_socket.bind(('0.0.0.0', 12345))
             server_socket.listen(1)
-            print("Server is now listening for incoming connections on port 8305... (Press 'q' to exit)\n")
-            print(f"*** Note: If bandwidth is subject to high latency the test may take longer than expected. ***\n")
+            print(f"\n[+] Server is now listening on port 12345... (Press 'q' to stop the server)\n")
+            print(f"*** Note: The test may take longer if bandwidth experiences high latency. ***\n")
 
             try:
                 while not stop_server.is_set():
                     server_socket.settimeout(1)  # Check stop condition every second
                     try:
                         conn, addr = server_socket.accept()
-                        print(f"Connection established with {addr[0]}:{addr[1]}")
+                        print(f"\n[+] Connection established with {addr[0]}:{addr[1]}")
                         start_time = time.time()
                         bytes_received = 0
 
@@ -257,28 +267,28 @@ def run_bandwidth_test():
                             bytes_received += len(data)
 
                         elapsed_time = time.time() - start_time
-                        print(f"Total data received: {bytes_received / (1024 * 1024):.2f} MB")
-                        print(f"Elapsed time: {elapsed_time:.2f} seconds")
-                        print(f"Approx. Bandwidth: {bytes_received * 8 / (elapsed_time * 1_000_000):.2f} Mbps")
+                        print(f"\n[+] Total data received: {bytes_received / (1024 * 1024):.2f} MB")
+                        print(f"[+] Elapsed time: {elapsed_time:.2f} seconds")
+                        print(f"[+] Approx. Bandwidth: {bytes_received * 8 / (elapsed_time * 1_000_000):.2f} Mbps")
                         conn.close()
-                        print("Test completed. Returning to main menu.")
-                        stop_server.set()  # Automatically stop the server after a test completes
+                        print("\n[+] Test completed. Stopping server...\n")
+                        stop_server.set()  # Automatically stop the server after the test
                     except socket.timeout:
                         continue  # Check stop flag periodically
             except Exception as e:
-                print(f"Server error: {e}")
+                print(f"[!] Server error: {e}")
             finally:
-                print("Server has stopped.\n")
+                print("\n[!] Server has stopped.\n")
 
     elif role == "client":
-        server_ip = input("Enter the server IP address: ").strip()
+        server_ip = input("\nEnter the server IP address: ").strip()
         test_duration = int(input("Enter the test duration in seconds: ").strip())
-        print(f"Connecting to {server_ip} and starting bandwidth test for {test_duration} seconds...\n")
-        print(f"*** Note: If bandwidth is subject to high latency the test may take longer than {test_duration} seconds. ***\n")
+        print(f"\n[+] Connecting to {server_ip} for a bandwidth test of {test_duration} seconds...\n")
+        print(f"*** Note: The test may take longer if bandwidth experiences high latency. ***\n")
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
-            client_socket.connect((server_ip, 8305))
-            print(f"Connected to server at {server_ip}:8305")
+            client_socket.connect((server_ip, 12345))
+            print(f"[+] Connected to server at {server_ip}:12345")
 
             start_time = time.time()
             bytes_sent = 0
@@ -288,22 +298,22 @@ def run_bandwidth_test():
                     client_socket.sendall(data)
                     bytes_sent += len(data)
                 except Exception as e:
-                    print(f"Error: {e}")
+                    print(f"[!] Error: {e}")
                     break
 
             elapsed_time = time.time() - start_time
-            print(f"Total data sent: {bytes_sent / (1024 * 1024):.2f} MB")
-            print(f"Elapsed time: {elapsed_time:.2f} seconds")
-            print(f"Approx. Bandwidth: {bytes_sent * 8 / (elapsed_time * 1_000_000):.2f} Mbps")
+            print(f"\n[+] Total data sent: {bytes_sent / (1024 * 1024):.2f} MB")
+            print(f"[+] Elapsed time: {elapsed_time:.2f} seconds")
+            print(f"[+] Approx. Bandwidth: {bytes_sent * 8 / (elapsed_time * 1_000_000):.2f} Mbps")
 
     else:
-        print("Invalid role selection. Please enter either 'client' or 'server'.")
+        print("\n[!] Invalid role selection. Please enter either 'client' or 'server'.")
 
     # Return to main menu after test completes
     input("\nPress Enter to return to the main menu...")
     return
 
-def verify_sftunnel_conf():
+def sftunnel_conf():
     """
     Verify the contents of the sftunnel.conf file by printing it.
     """
@@ -327,25 +337,33 @@ def verify_sftunnel_conf():
     input("\nPress Enter to return to the main menu...")
     return
 
-def verify_sftunnel_json():
+def sftunnel_json():
     """
     Verify the contents of the sftunnel.json file by prompting for the peer's UUID.
     """
-    print("To verify the sftunnel.json file, you need to provide the peer's UUID.")
+    print("\n" + "=" * 80)
+    print(" Verify sftunnel.json File ".center(80, "="))
+    print("=" * 80)
+    print("\nTo verify the sftunnel.json file, you need to provide the peer's UUID.")
     print("The peer's UUID can be found by running the 'show version' command on the peer device.")
+    print("=" * 80)
 
     # Prompt the user to enter the UUID of the peer
-    uuid = input("Enter the peer's UUID: ").strip()
+    uuid = input("Enter the peer's UUID (or press 0 to return): ").strip()
+
+    if uuid == '0':
+        print("\nReturning to the previous menu...")
+        return  # Return to the previous menu if UUID is '0'
 
     if not uuid:
-        print("UUID cannot be empty.")
+        print("\n[!] UUID cannot be empty. Please enter a valid UUID.")
         input("\nPress Enter to return to the main menu...")
         return  # Return to the main menu if UUID is not provided
 
     # Construct the path to the sftunnel.json file
     json_path = f"/var/sf/peers/{uuid}/sftunnel.json"
 
-    print(f"Displaying the contents of {json_path}...")
+    print(f"\nDisplaying the contents of {json_path}...\n")
 
     try:
         # Run the cat command to read the sftunnel.json file
@@ -359,15 +377,15 @@ def verify_sftunnel_json():
         if result.returncode == 0:
             print(result.stdout)  # Print the contents of the sftunnel.json file
         else:
-            print(f"Error reading {json_path}: {result.stderr.strip()}")
+            print(f"\n[!] Error reading {json_path}: {result.stderr.strip()}")
     except Exception as e:
-        print(f"An error occurred while trying to read {json_path}: {e}")
+        print(f"\n[!] An error occurred while trying to read {json_path}: {e}")
 
     # Revert to main menu after checking sftunnel.json
     input("\nPress Enter to return to the main menu...")
     return
 
-def validate_sftunnel_certificate():
+def sftunnel_certificate():
     """
     Validate the sftunnel certificate by displaying its details.
     """
@@ -392,22 +410,30 @@ def validate_sftunnel_certificate():
     input("\nPress Enter to return to the main menu...")
     return
 
-def validate_database_table():
+def em_peers_table():
     """
     Validate a database table by querying the database for peer information.
     """
-    print("To validate the database table, you need to provide the peer's UUID.")
+    print("\n" + "=" * 80)
+    print(" Validate EM Peers Table ".center(80, "="))
+    print("=" * 80)
+    print("\nTo validate the database table, you need to provide the peer's UUID.")
     print("The peer's UUID can be found by running the 'show version' command on the peer device.")
+    print("=" * 80)
 
     # Prompt the user to enter the UUID of the peer
     while True:
-        uuid = input("Enter the peer's UUID: ").strip()
+        uuid = input("Enter the peer's UUID (or press 0 to return): ").strip()
+
+        if uuid == '0':
+            print("\nReturning to the previous menu...")
+            return  # Exit the function to return to the previous menu
 
         if not uuid:
-            print("UUID cannot be empty.")
+            print("\n[!] UUID cannot be empty. Please enter a valid UUID.")
             continue  # Prompt again if UUID is empty
         elif not validate_uuid(uuid):
-            print("Invalid UUID format. Please enter a valid UUID.")
+            print("\n[!] Invalid UUID format. Please enter a valid UUID.")
             continue  # Prompt again if UUID is invalid
 
         break  # Exit the loop once a valid UUID is provided
@@ -415,7 +441,7 @@ def validate_database_table():
     # Construct the OmniQuery command to fetch peer data from the database, filtering by the provided UUID
     query_command = f"OmniQuery.pl -db mdb -e \"select name, ip, uuid, sw_version, role, active from EM_peers where uuid = '{uuid}';\""
 
-    print(f"Running query for UUID {uuid}...")
+    print(f"\nRunning query for UUID {uuid}...\n")
 
     try:
         # Execute the OmniQuery command and capture the output
@@ -430,14 +456,14 @@ def validate_database_table():
         if result.returncode == 0:
             output = result.stdout.strip()
             if output:
-                print("Query result:")
+                print("\nQuery result:")
                 print(output)
             else:
-                print("No results found for the specified UUID.")
+                print("\n[!] No results found for the specified UUID.")
         else:
-            print(f"Error executing query: {result.stderr.strip()}")
+            print(f"\n[!] Error executing query: {result.stderr.strip()}")
     except Exception as e:
-        print(f"An error occurred while querying the database: {e}")
+        print(f"\n[!] An error occurred while querying the database: {e}")
 
     # Revert to main menu after validating the database table
     input("\nPress Enter to return to the main menu...")
@@ -447,27 +473,39 @@ def grep_logs():
     """
     Search logs based on the UUID and IP address and output to a file.
     """
+    print("\n" + "=" * 80)
+    print(" Search Logs Based on UUID and IP Address ".center(80, "="))
+    print("=" * 80)
+    print("\nYou will need to provide the UUID and IP address of the peer to search the logs.")
+    print("Enter 0 at any prompt to return to the previous menu.")
+
+    # Prompt for the UUID of the peer
     while True:
-        uuid = input("Enter the UUID of the peer: ").strip()
+        uuid = input("Enter the UUID of the peer (or 0 to return to the previous menu): ").strip()
+        if uuid == '0':
+            return  # Escape to the previous menu
         if not uuid:
-            print("UUID cannot be empty.")
+            print("\n[!] UUID cannot be empty. Please enter a valid UUID.")
             continue
         elif not validate_uuid(uuid):
-            print("Invalid UUID format. Please enter a valid UUID.")
+            print("\n[!] Invalid UUID format. Please enter a valid UUID.")
             continue
         break  # Exit the loop once a valid UUID is provided
 
+    # Prompt for the IP address of the peer
     while True:
-        ip_address = input("Enter the IP address of the peer: ").strip()
+        ip_address = input("Enter the IP address of the peer (or 0 to return to the previous menu): ").strip()
+        if ip_address == '0':
+            return  # Escape to the previous menu
         if not ip_address:
-            print("IP address cannot be empty.")
+            print("\n[!] IP address cannot be empty. Please enter a valid IP address.")
             continue
         elif not validate_ip(ip_address):
-            print("Invalid IP address format. Please enter a valid IP address.")
+            print("\n[!] Invalid IP address format. Please enter a valid IP address.")
             continue
         break  # Exit the loop once a valid IP address is provided
 
-    print(f"Gathering logs for UUID: {uuid}, IP Address: {ip_address}...")
+    print(f"\nGathering logs for UUID: {uuid}, IP Address: {ip_address}...")
 
     # Define output file name with timestamp
     output_file = f'{time.strftime("%Y%m%d_%H%M%S")}_filtered_logs.txt'
@@ -479,14 +517,13 @@ def grep_logs():
         # Run the grep command to search logs and write to the output file
         subprocess.run(grep_command, shell=True, check=True)
 
-        print(f"Logs have been saved to {output_file}")
-
+        print(f"\n[+] Logs have been successfully saved to {output_file}")
     except subprocess.CalledProcessError as e:
-        print(f"Error occurred while gathering logs: {e}")
+        print(f"\n[!] Error occurred while gathering logs: {e}")
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        print(f"\n[!] An unexpected error occurred: {e}")
 
-    # Revert to main menu after completing log gathering
+    # Return to main menu after completing log gathering
     input("\nPress Enter to return to the main menu...")
     return
 
@@ -494,27 +531,43 @@ def em_peers():
     """
     Validate a database table by querying the database for peer information.
     """
-    print("You can either enter a peer's UUID or leave it blank to get all peer data.")
-    print("The peer's UUID can be found by running the 'show version' command on the peer device.")
+    print("\n" + "=" * 80)
+    print(" Peer Database Validation ".center(80, "="))
+    print("=" * 80)
+    print("You can either:")
+    print("  1. Enter a peer's UUID to query specific peer information.")
+    print("  2. Leave the input blank to query all peer data.")
+    print("  3. Enter '0' to return to the previous menu.")
+    print("\nNote: The peer's UUID can be found by running the 'show version' command on the peer device.")
+    print("=" * 80)
 
     # Prompt the user to enter the UUID of the peer
     while True:
-        uuid = input("Enter the peer's UUID (or leave blank to query all peers): ").strip()
+        uuid = input("\nEnter the peer's UUID (or leave blank to query all peers, or enter '0' to exit): ").strip()
+
+        # Exit back to the menu if the user enters '0'
+        if uuid == '0':
+            print("\nReturning to the previous menu...")
+            return
 
         # If UUID is not empty, validate its format
         if uuid and not validate_uuid(uuid):
-            print("Invalid UUID format. Please enter a valid UUID.")
+            print("\n[!] Invalid UUID format. Please enter a valid UUID (32 characters, uppercase hex).")
             continue  # Prompt again if UUID is invalid
 
-        break  # Exit the loop once a valid UUID or blank entry is provided
+        break  # Exit the loop once a valid UUID, blank entry, or '0' is provided
 
     # Construct the OmniQuery command based on whether the UUID is provided
     if uuid:
         query_command = f"OmniQuery.pl -db mdb -e \"select name, ip, uuid, sw_version, role, reg_state from EM_peers where uuid = '{uuid}';\""
+        query_desc = f"Querying data for UUID: {uuid}"
     else:
         query_command = "OmniQuery.pl -db mdb -e \"select name, ip, uuid, sw_version, role, reg_state from EM_peers;\""
+        query_desc = "Querying data for all peers"
 
-    print(f"Running query for UUID {uuid if uuid else 'all peers'}...")
+    print("\n" + "-" * 80)
+    print(query_desc.center(80))
+    print("-" * 80)
 
     try:
         # Execute the OmniQuery command and capture the output
@@ -529,17 +582,18 @@ def em_peers():
         if result.returncode == 0:
             output = result.stdout.strip()
             if output:
-                print("Query result:")
+                print("\nQuery result:")
                 print(output)
             else:
-                print("No results found for the specified UUID or for all peers.")
+                print("\n[!] No results found for the specified UUID or for all peers.")
         else:
-            print(f"Error executing query: {result.stderr.strip()}")
+            print(f"\n[!] Error executing query: {result.stderr.strip()}")
     except Exception as e:
-        print(f"An error occurred while querying the database: {e}")
+        print(f"\n[!] An error occurred while querying the database: {e}")
 
     # Revert to main menu after validating the database table
-    input("\nPress Enter to return to the main menu...")
+    print("\n" + "=" * 80)
+    input("Press Enter to return to the main menu...")
     return
 
 def ssl_peers():
@@ -584,31 +638,56 @@ def notifications_table():
     Prompt the user for notification status options and query the database accordingly.
     """
     while True:
-        print("Choose a notification status to query:")
-        print("1) All notifications")
-        print("2) Failed notifications")
-        print("3) Running notifications")
+        print("\n" + "=" * 80)
+        print(" Notification Status Menu ".center(80, "="))
+        print("=" * 80)
+        print("1) View all notifications")
+        print("2) View failed notifications")
+        print("3) View running notifications")
         print("0) Return to the previous menu")
+        print("=" * 80)
 
         # Prompt for the user's choice
-        choice = input("Enter your choice (1, 2, 3, 0): ").strip()
+        choice = input("Enter your choice (1, 2, 3, or 0 to return): ").strip()
 
+        # Handle the user's choice
         if choice == '1':
-            query_command = "OmniQuery.pl -db mdb -e \"SELECT seq, hex(uuid), notification_status.label, notification_status.status, body from notification JOIN notification_status ON notification.status = notification_status.status;\""
+            query_command = (
+                "OmniQuery.pl -db mdb -e "
+                "\"SELECT seq, hex(uuid), notification_status.label, notification_status.status, body "
+                "FROM notification JOIN notification_status ON notification.status = notification_status.status;\""
+            )
+            query_desc = "Querying all notifications..."
             break
         elif choice == '2':
-            query_command = "OmniQuery.pl -db mdb -e \"SELECT seq, HEX(uuid), notification_status.label, notification_status.status, body FROM notification JOIN notification_status ON notification.status = notification_status.status WHERE notification.status = 13;\""
+            query_command = (
+                "OmniQuery.pl -db mdb -e "
+                "\"SELECT seq, HEX(uuid), notification_status.label, notification_status.status, body "
+                "FROM notification JOIN notification_status ON notification.status = notification_status.status "
+                "WHERE notification.status = 13;\""
+            )
+            query_desc = "Querying failed notifications..."
             break
         elif choice == '3':
-            query_command = "OmniQuery.pl -db mdb -e \"SELECT seq, HEX(uuid), notification_status.label, notification_status.status, body FROM notification JOIN notification_status ON notification.status = notification_status.status WHERE notification.status = 7;\""
+            query_command = (
+                "OmniQuery.pl -db mdb -e "
+                "\"SELECT seq, HEX(uuid), notification_status.label, notification_status.status, body "
+                "FROM notification JOIN notification_status ON notification.status = notification_status.status "
+                "WHERE notification.status = 7;\""
+            )
+            query_desc = "Querying running notifications..."
             break
         elif choice == '0':
-            print("Returning to the previous menu...")
+            print("\nReturning to the previous menu...")
             return  # Exit the function to return to the previous menu
         else:
-            print("Invalid choice. Please enter 1, 2, 3, or 0.")
+            print("\n[!] Invalid choice. Please enter 1, 2, 3, or 0.")
+            continue
 
-    print(f"Running query for {'all' if choice == '1' else 'failed' if choice == '2' else 'running'} notifications...")
+    # Display the query being run
+    print("\n" + "-" * 80)
+    print(query_desc.center(80))
+    print("-" * 80)
 
     try:
         # Execute the OmniQuery command and capture the output
@@ -625,17 +704,18 @@ def notifications_table():
         if result.returncode == 0:
             output = result.stdout.strip()
             if output:
-                print("Query result:")
+                print("\nQuery result:")
                 print(output)
             else:
-                print("No results found.")
+                print("\n[!] No results found.")
         else:
-            print(f"Error executing query: {result.stderr.strip()}")
+            print(f"\n[!] Error executing query: {result.stderr.strip()}")
     except Exception as e:
-        print(f"An error occurred while querying the notifications table: {e}")
+        print(f"\n[!] An error occurred while querying the notifications table: {e}")
 
     # Revert to main menu after querying the notifications table
-    input("\nPress Enter to return to the main menu...")
+    print("\n" + "=" * 80)
+    input("Press Enter to return to the main menu...")
     return
 
 def vdb_table():
@@ -823,53 +903,79 @@ def fail_deployment():
     # Return to the previous menu after failing the deployment
     input("\nPress Enter to return to the previous menu...")
     return
-    
+
 def registration_troubleshooting():
-    """
-    Main menu for the script.
-    """
     while True:  # Replace recursion with a loop for better performance
         flush_stdin()  # Ensure the input buffer is clean
-        print("\n----- Registration Menu -----")
+        print("\n" + "=" * 80)
+        print(" Registration Menu ".center(80, "="))
+        print("=" * 80)
         print("1) Verify Connectivity")
         print("2) Run Bandwidth Test")
-        print("3) Verify sftunnel.conf")
-        print("4) Verify sftunnel.json")
-        print("5) Validate Database Table")
-        print("6) Validate sftunnel Certificate")
+        print("3) Check sftunnel.conf")
+        print("4) Check sftunnel.json")
+        print("5) Check EM Peers Table")
+        print("6) Check sftunnel Certificate")
         print("7) Gather Logs")
         print("0) Return to Main Menu")
+        print("=" * 80)
 
-        choice = input("Enter your choice: ").strip()
+        # Prompt for the user's choice
+        choice = input("Enter your choice (0-7): ").strip()
 
+        # Process the user's choice
         if choice == '1':
+            print("\n" + "-" * 80)
+            print("Verifying Connectivity...".center(80))
+            print("-" * 80)
             verify_connectivity()
         elif choice == '2':
+            print("\n" + "-" * 80)
+            print("Running Bandwidth Test...".center(80))
+            print("-" * 80)
             run_bandwidth_test()
         elif choice == '3':
-            verify_sftunnel_conf()
+            print("\n" + "-" * 80)
+            print("Checking sftunnel.conf...".center(80))
+            print("-" * 80)
+            sftunnel_conf()
         elif choice == '4':
-            verify_sftunnel_json()
+            print("\n" + "-" * 80)
+            print("Checking sftunnel.json...".center(80))
+            print("-" * 80)
+            sftunnel_json()
         elif choice == '5':
-            validate_database_table()
+            print("\n" + "-" * 80)
+            print("Checking EM Peers Table...".center(80))
+            print("-" * 80)
+            em_peers_table()
         elif choice == '6':
-            validate_sftunnel_certificate()
+            print("\n" + "-" * 80)
+            print("Checking sftunnel Certificate...".center(80))
+            print("-" * 80)
+            sftunnel_certificate()
         elif choice == '7':
+            print("\n" + "-" * 80)
+            print("Gathering Logs...".center(80))
+            print("-" * 80)
             grep_logs()
         elif choice == '0':
-            print("Returning to main menu.")
+            print("\nReturning to main menu...")
             break
         else:
-            print("Invalid choice. Please try again.")
-        flush_stdin()  # Flush input before returning to the menu
+            print("\n[!] Invalid choice. Please enter a number between 0 and 7.")
+
 
 def database_troubleshooting():
     """
-    Main menu for the script.
+    Main menu for database troubleshooting.
     """
-    while True:  # Replace recursion with a loop for better performance
+    while True:
         flush_stdin()  # Ensure the input buffer is clean
-        print("\n----- Database Menu -----")
+
+        print("\n" + "=" * 80)
+        print(" Database Troubleshooting Menu ".center(80, "="))
+        print("=" * 80)
         print("1) Check EM Peers Table")
         print("2) Check SSL Peer Table")
         print("3) Check Notifications Table")
@@ -878,50 +984,91 @@ def database_troubleshooting():
         print("6) Delete Notification")
         print("7) Fail Stuck Deployment")
         print("0) Return to Main Menu")
+        print("=" * 80)
 
-        choice = input("Enter your choice: ").strip()
+        # Prompt the user for their choice
+        choice = input("Enter your choice (0-7): ").strip()
 
+        # Process the user's choice
         if choice == '1':
+            print("\n" + "-" * 80)
+            print("Checking EM Peers Table...".center(80))
+            print("-" * 80)
             em_peers()
         elif choice == '2':
+            print("\n" + "-" * 80)
+            print("Checking SSL Peer Table...".center(80))
+            print("-" * 80)
             ssl_peers()
         elif choice == '3':
+            print("\n" + "-" * 80)
+            print("Checking Notifications Table...".center(80))
+            print("-" * 80)
             notifications_table()
         elif choice == '4':
+            print("\n" + "-" * 80)
+            print("Checking VDB Table...".center(80))
+            print("-" * 80)
             vdb_table()
         elif choice == '5':
+            print("\n" + "-" * 80)
+            print("Checking GeoDB Table...".center(80))
+            print("-" * 80)
             geodb_table()
         elif choice == '6':
+            print("\n" + "-" * 80)
+            print("Delete Notification...".center(80))
+            print("-" * 80)
             delete_notification()
         elif choice == '7':
+            print("\n" + "-" * 80)
+            print("Fail Stuck Deployment...".center(80))
+            print("-" * 80)
             fail_deployment()
         elif choice == '0':
-            print("Returning to main menu.")
+            print("\nReturning to the main menu...")
             break
         else:
-            print("Invalid choice. Please try again.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 7.")
+
         flush_stdin()  # Flush input before returning to the menu
 
 def main_menu():
     while True:
-        print("\n----- Main Menu -----")
+        print("\n" + "=" * 80)
+        print(" Main Menu ".center(80, "="))
+        print("=" * 80)
         print("1) Device Information")
         print("2) Registration Troubleshooting")
         print("3) Database Troubleshooting")
         print("0) Exit")
-        choice = input("Select an option: ")
+        print("=" * 80)
 
+        # Prompt the user for their choice
+        choice = input("Select an option (0-3): ").strip()
+
+        # Process the user's choice
         if choice == "1":
+            print("\n" + "-" * 80)
+            print("Accessing Device Information...".center(80))
+            print("-" * 80)
             device_information()
         elif choice == "2":
+            print("\n" + "-" * 80)
+            print("Accessing Registration Troubleshooting...".center(80))
+            print("-" * 80)
             registration_troubleshooting()
         elif choice == "3":
+            print("\n" + "-" * 80)
+            print("Accessing Database Troubleshooting...".center(80))
+            print("-" * 80)
             database_troubleshooting()
         elif choice == "0":
-            print("Exiting the script. Goodbye!")
+            print("\nExiting the script. Goodbye!")
             break
         else:
-            print("Invalid choice, please try again.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 3.")
+
 
 if __name__ == "__main__":
     main_menu()
