@@ -51,6 +51,26 @@ def validate_ip(ip_address):
     ip_pattern = re.compile(r'^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$')
     return bool(ip_pattern.match(ip_address))
 
+def validate_hex_uuid(uuid):
+    """
+    Validate the format of the UUID (all uppercase, 32 hex characters).
+    """
+    uuid_pattern = re.compile(r'^[A-F0-9]{32}$')
+    return bool(uuid_pattern.match(uuid))
+
+def print_warning_box(message):
+    """
+    Prints the given message inside a more proportionate box for emphasis.
+    """
+    lines = message.split('\n')
+    longest_line = max(len(line) for line in lines)
+    border = "*" * (longest_line + 4)  # Adjust the width based on the longest line
+
+    print(border)
+    for line in lines:
+        print(f"* {line.ljust(longest_line)} *")
+    print(border)
+    
 # Path to the configuration file
 config_file_path = "/etc/sf/ims.conf"
 
@@ -692,6 +712,58 @@ def geodb_table():
     input("\nPress Enter to return to the main menu...")
     return
 
+def delete_notification():
+    """
+    Prompt the user for a UUID and delete the notification with the corresponding UUID from the database.
+    """
+    warning_message = (
+        "WARNING: Deleting a notification will permanently remove it from the system.\n"
+        "DO NOT delete deployment notifications. If you need to fail a stuck deployment, please select option 7 from the previous menu."
+    )
+    print_warning_box(warning_message)
+
+    # Prompt for the UUID to delete
+    while True:
+        uuid = input("Enter the UUID of the notification to delete (32-character hex value): ").strip()
+
+        # Validate the UUID format
+        if not uuid:
+            print("UUID cannot be empty.")
+            continue  # Prompt again if UUID is empty
+        elif not validate_hex_uuid(uuid):
+            print("Invalid UUID format. Please enter a valid 32-character hex UUID (uppercase).")
+            continue  # Prompt again if UUID is invalid
+
+        break  # Exit the loop once a valid UUID is provided
+
+    # Construct the OmniQuery command to delete the notification
+    query_command = f"OmniQuery.pl -db mdb -e \"DELETE FROM notification WHERE uuid=unhex('{uuid}');\""
+
+    print(f"Running query to delete notification with UUID {uuid}...")
+
+    try:
+        # Execute the OmniQuery command and capture the output
+        result = subprocess.run(
+            query_command,
+            shell=True,  # Using shell=True to allow multi-part commands
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,  # Text mode to automatically decode
+            encoding='utf-8',  # UTF-8 encoding
+            errors='ignore'  # Ignore characters that can't be decoded
+        )
+
+        if result.returncode == 0:
+            print(f"Notification with UUID {uuid} successfully deleted.")
+        else:
+            print(f"Error executing query: {result.stderr.strip()}")
+    except Exception as e:
+        print(f"An error occurred while deleting the notification: {e}")
+
+    # Return to the previous menu after deleting the notification
+    input("\nPress Enter to return to the previous menu...")
+    return
+
 def registration_troubleshooting():
     """
     Main menu for the script.
@@ -743,7 +815,7 @@ def database_troubleshooting():
         print("3) Check Notifications Table")
         print("4) Check VDB Table")
         print("5) Check GeoDB Table")
-        print("6) Delete Stuck Notification")
+        print("6) Delete Notification")
         print("7) Fail Stuck Deployment")
         print("0) Return to Main Menu")
 
@@ -760,7 +832,7 @@ def database_troubleshooting():
         elif choice == '5':
             geodb_table()
         elif choice == '6':
-            delete_stuck_notification()
+            delete_notification()
         elif choice == '7':
             fail_deployment()
         elif choice == '0':
