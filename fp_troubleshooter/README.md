@@ -31,4 +31,4 @@ This Python script is designed specifically for troubleshooting on Cisco Firepow
 
 1. **Run the Script**:
    ```bash
-   python3 troubleshooting.py
+   python3 fp_troubleshooter.py
