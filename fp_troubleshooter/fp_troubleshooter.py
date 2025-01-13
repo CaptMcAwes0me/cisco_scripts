@@ -453,12 +453,12 @@ def grep_logs():
 
     try:
         # Construct the grep command to search for the UUID and IP address in the logs
-        grep_command = f'grep -E "{uuid}|{ip_address}|sftunneld" /var/log/messages > /var/common/{output_file}'
+        grep_command = f'grep -E "{uuid}|{ip_address}|sftunneld" /var/log/messages > {output_file}'
 
         # Run the grep command to search logs and write to the output file
         subprocess.run(grep_command, shell=True, check=True)
 
-        print(f"\n[+] Logs have been successfully saved to /var/common/{output_file}")
+        print(f"\n[+] Logs have been successfully saved to {output_file}")
     except subprocess.CalledProcessError as e:
         print(f"\n[!] Error occurred while gathering logs: {e}")
     except Exception as e:
@@ -902,6 +902,57 @@ def fail_deployment():
     input("\nPress Enter to return to the previous menu...")
     return
 
+def display_disk_usage():
+    """
+    Display disk usage with 'df -TH'.
+    """
+    try:
+        result = subprocess.run(["df", "-TH"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        print(result.stdout)
+    except Exception as e:
+        print(f"An error occurred while running 'df -TH': {e}")
+
+def find_large_files():
+    """
+    Find files greater than a user-specified size.
+    """
+    while True:
+        try:
+            size = input("\nEnter the file size (e.g., 100M, 1G) or '0' to return to the menu: ").strip()
+            if size == '0':
+                print("\nReturning to the previous menu...")
+                break
+            find_command = f"find / -type f -size +{size} 2>/dev/null"
+            print(f"\nFinding files greater than {size}...\n")
+            result = subprocess.run(find_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            if result.stdout:
+                print(result.stdout)
+            else:
+                print(f"\n[!] No files found greater than {size}.")
+        except Exception as e:
+            print(f"An error occurred while finding large files: {e}")
+
+def gather_deleted_files_info():
+    """
+    Gather information about deleted files with 'lsof | grep -i deleted' and save it to a file.
+    """
+    try:
+        # Get current date and time
+        current_time = time.strftime("%Y%m%d_%H%M%S")
+        output_file = f"/var/common/{current_time}_deleted_files.txt"
+
+        # Run the command to find deleted files
+        result = subprocess.run("lsof | grep -i deleted", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+        # Write the output to a file
+        with open(output_file, 'w') as file:
+            file.write(result.stdout)
+
+        print(f"\nDeleted file information has been saved to {output_file}")
+
+    except Exception as e:
+        print(f"An error occurred while gathering deleted file information: {e}")
+
 def registration_troubleshooting():
     while True:  # Replace recursion with a loop for better performance
         flush_stdin()  # Ensure the input buffer is clean
@@ -1037,6 +1088,43 @@ def database_troubleshooting():
 
         flush_stdin()  # Flush input before returning to the menu
 
+def disk_usage_troubleshooting():
+    """
+    Disk usage troubleshooting menu.
+    """
+    while True:
+        print("\n" + "=" * 80)
+        print(" Disk Usage Troubleshooting Menu ".center(80, "="))
+        print("=" * 80)
+        print("1) Display disk usage (df -TH)")
+        print("2) Find large files")
+        print("3) Gather deleted file information")
+        print("0) Return to Main Menu")
+        print("=" * 80)
+
+        choice = input("Select an option (0-3): ").strip()
+
+        if choice == "1":
+            print("\n" + "-" * 80)
+            print("Displaying disk usage...".center(80))
+            print("-" * 80)
+            display_disk_usage()
+        elif choice == "2":
+            print("\n" + "-" * 80)
+            print("Finding large files...".center(80))
+            print("-" * 80)
+            find_large_files()
+        elif choice == "3":
+            print("\n" + "-" * 80)
+            print("Gathering deleted file information...".center(80))
+            print("-" * 80)
+            gather_deleted_files_info()
+        elif choice == "0":
+            print("\nReturning to the main menu...")
+            break
+        else:
+            print("\n[!] Invalid choice. Please enter a number between 0 and 3.")
+
 def main_menu():
     while True:
         print("\n" + "=" * 80)
@@ -1045,6 +1133,7 @@ def main_menu():
         print("1) Device Information")
         print("2) Registration Troubleshooting")
         print("3) Database Troubleshooting")
+        print("4) Disk Usage Troubleshooting")
         print("0) Exit")
         print("=" * 80)
 
@@ -1067,6 +1156,11 @@ def main_menu():
             print("Accessing Database Troubleshooting...".center(80))
             print("-" * 80)
             database_troubleshooting()
+        elif choice == "4":
+            print("\n" + "-" * 80)
+            print("Accessing Disk Usage Troubleshooting...".center(80))
+            print("-" * 80)
+            disk_usage_troubleshooting()
         elif choice == "0":
             print("\nExiting the script. Goodbye!")
             break
