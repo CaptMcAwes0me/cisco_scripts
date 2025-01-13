@@ -1138,7 +1138,7 @@ def main_menu():
         print("=" * 80)
 
         # Prompt the user for their choice
-        choice = input("Select an option (0-3): ").strip()
+        choice = input("Select an option (0-4): ").strip()
 
         # Process the user's choice
         if choice == "1":
