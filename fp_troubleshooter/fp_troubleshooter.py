@@ -453,12 +453,12 @@ def grep_logs():
 
     try:
         # Construct the grep command to search for the UUID and IP address in the logs
-        grep_command = f'grep -E "{uuid}|{ip_address}|sftunneld" /var/log/messages > {output_file}'
+        grep_command = f'grep -E "{uuid}|{ip_address}|sftunneld" /var/log/messages > /var/common/{output_file}'
 
         # Run the grep command to search logs and write to the output file
         subprocess.run(grep_command, shell=True, check=True)
 
-        print(f"\n[+] Logs have been successfully saved to {output_file}")
+        print(f"\n[+] Logs have been successfully saved to /var/common/{output_file}")
     except subprocess.CalledProcessError as e:
         print(f"\n[!] Error occurred while gathering logs: {e}")
     except Exception as e:
