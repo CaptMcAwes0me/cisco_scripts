@@ -410,65 +410,6 @@ def sftunnel_certificate():
     input("\nPress Enter to return to the main menu...")
     return
 
-def em_peers_table():
-    """
-    Validate a database table by querying the database for peer information.
-    """
-    print("\n" + "=" * 80)
-    print(" Validate EM Peers Table ".center(80, "="))
-    print("=" * 80)
-    print("\nTo validate the database table, you need to provide the peer's UUID.")
-    print("The peer's UUID can be found by running the 'show version' command on the peer device.")
-    print("=" * 80)
-
-    # Prompt the user to enter the UUID of the peer
-    while True:
-        uuid = input("Enter the peer's UUID (or press 0 to return): ").strip()
-
-        if uuid == '0':
-            print("\nReturning to the previous menu...")
-            return  # Exit the function to return to the previous menu
-
-        if not uuid:
-            print("\n[!] UUID cannot be empty. Please enter a valid UUID.")
-            continue  # Prompt again if UUID is empty
-        elif not validate_uuid(uuid):
-            print("\n[!] Invalid UUID format. Please enter a valid UUID.")
-            continue  # Prompt again if UUID is invalid
-
-        break  # Exit the loop once a valid UUID is provided
-
-    # Construct the OmniQuery command to fetch peer data from the database, filtering by the provided UUID
-    query_command = f"OmniQuery.pl -db mdb -e \"select name, ip, uuid, sw_version, role, active from EM_peers where uuid = '{uuid}';\""
-
-    print(f"\nRunning query for UUID {uuid}...\n")
-
-    try:
-        # Execute the OmniQuery command and capture the output
-        result = subprocess.run(
-            query_command,
-            shell=True,  # Using shell=True to allow multi-part commands
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
-        )
-
-        if result.returncode == 0:
-            output = result.stdout.strip()
-            if output:
-                print("\nQuery result:")
-                print(output)
-            else:
-                print("\n[!] No results found for the specified UUID.")
-        else:
-            print(f"\n[!] Error executing query: {result.stderr.strip()}")
-    except Exception as e:
-        print(f"\n[!] An error occurred while querying the database: {e}")
-
-    # Revert to main menu after validating the database table
-    input("\nPress Enter to return to the main menu...")
-    return
-
 def grep_logs():
     """
     Search logs based on the UUID and IP address and output to a file.
@@ -1005,7 +946,7 @@ def registration_troubleshooting():
             print("\n" + "-" * 80)
             print("Checking EM Peers Table...".center(80))
             print("-" * 80)
-            em_peers_table()
+            em_peers()
         elif choice == '6':
             print("\n" + "-" * 80)
             print("Checking sftunnel Certificate...".center(80))
