@@ -792,6 +792,63 @@ def geodb_table():
     input("\nPress Enter to return to the main menu...")
     return
 
+def remove_peer():
+    """
+    Prompt the user for a UUID and execute the remove_peer.pl command.
+    """
+    warning_message = (
+        "WARNING: You are about to remove a peer using the remove_peer.pl script. "
+        "This action is irreversible. Ensure you have the correct UUID.\n"
+        "If you're unsure, do not proceed with the action."
+    )
+    print_warning_box(warning_message)
+
+    # Option to return to the previous menu or remove a peer
+    while True:
+        uuid = input("\nEnter the UUID of the peer to remove (32-character hex value) or enter '0' to exit: ").strip()
+
+        if uuid == '0':
+            print("Exiting without making changes...")
+            return  # Exit without making changes
+
+        # Validate the UUID format
+        if not uuid:
+            print("UUID cannot be empty.")
+            continue  # Prompt again if UUID is empty
+        elif not validate_hex_uuid(uuid):
+            print("Invalid UUID format. Please enter a valid 32-character hex UUID (uppercase).")
+            continue  # Prompt again if UUID is invalid
+
+        break  # Exit the loop once a valid UUID is provided
+
+    # Construct the remove_peer.pl command
+    command = f"remove_peer.pl {uuid}"
+
+    print(f"Running command to remove peer with UUID {uuid}...")
+
+    try:
+        # Execute the command and capture the output
+        result = subprocess.run(
+            command,
+            shell=True,  # Using shell=True to allow the command to run
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,  # Text mode to automatically decode
+            encoding='utf-8',  # UTF-8 encoding
+            errors='ignore'  # Ignore characters that can't be decoded
+        )
+
+        if result.returncode == 0:
+            print(f"Peer with UUID {uuid} successfully removed.")
+        else:
+            print(f"Error executing command: {result.stderr.strip()}")
+    except Exception as e:
+        print(f"An error occurred while removing the peer: {e}")
+
+    # Return to the previous menu after removing the peer
+    input("\nPress Enter to return to the previous menu...")
+    return
+
 def delete_notification():
     """
     Prompt the user for a UUID and delete the notification with the corresponding UUID from the database.
@@ -981,8 +1038,9 @@ def database_troubleshooting():
         print("3) Check Notifications Table")
         print("4) Check VDB Table")
         print("5) Check GeoDB Table")
-        print("6) Delete Notification")
-        print("7) Fail Stuck Deployment")
+        print("6) Delete Peer from EM Peer Table")
+        print("7) Delete Notification")
+        print("8) Fail Stuck Deployment")
         print("0) Return to Main Menu")
         print("=" * 80)
 
@@ -1017,10 +1075,15 @@ def database_troubleshooting():
             geodb_table()
         elif choice == '6':
             print("\n" + "-" * 80)
+            print("Delete Peer...".center(80))
+            print("-" * 80)
+            remove_peer()
+        elif choice == '7':
+            print("\n" + "-" * 80)
             print("Delete Notification...".center(80))
             print("-" * 80)
             delete_notification()
-        elif choice == '7':
+        elif choice == '8':
             print("\n" + "-" * 80)
             print("Fail Stuck Deployment...".center(80))
             print("-" * 80)
