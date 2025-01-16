@@ -971,6 +971,240 @@ def gather_deleted_files_info():
     except Exception as e:
         print(f"An error occurred while gathering deleted file information: {e}")
 
+def show_cpu_affinity():
+    """
+    Gathers and displays the output of 'pmtool show affinity'.
+    """
+    try:
+        print("\nGathering CPU affinity information...")
+        # Execute the command and capture its output
+        result = subprocess.run(["pmtool", "show", "affinity"], 
+                                 stdout=subprocess.PIPE, 
+                                 stderr=subprocess.PIPE, 
+                                 text=True)
+        
+        # Check if the command executed successfully
+        if result.returncode == 0:
+            print("\n" + "-" * 80)
+            print("CPU Affinity Information:".center(80))
+            print("-" * 80)
+            print(result.stdout)
+        else:
+            print("\n[!] Error gathering CPU affinity information:")
+            print(result.stderr)
+    except FileNotFoundError:
+        print("\n[!] 'pmtool' command not found. Please ensure it is installed and accessible.")
+    except Exception as e:
+        print(f"\n[!] An unexpected error occurred: {e}")
+
+def expand_cores(cores):
+    """
+    Expands the core list, whether it's a range (e.g., 10-11) or individual cores (e.g., 10, 48) into a list of core numbers.
+    """
+    expanded_cores = []
+    for part in cores.split(','):
+        if '-' in part:
+            # If it's a range (e.g., 10-11), expand the range
+            start, end = map(int, part.split('-'))
+            expanded_cores.extend(range(start, end + 1))
+        else:
+            # If it's an individual core, just add it
+            expanded_cores.append(int(part))
+    return expanded_cores
+
+def run_mpstat(cores):
+    """
+    Runs the 'mpstat' command with the given core list.
+    """
+    try:
+        # Expand the core list if necessary
+        expanded_cores = expand_cores(cores)
+        
+        # Format the cores into a comma-separated list for mpstat
+        core_list = ','.join(map(str, expanded_cores))
+        
+        # Create the mpstat command
+        mpstat_command = f"mpstat -P {core_list} 1 1"
+        
+        # Execute the mpstat command and capture its output
+        print(f"\nExecuting: {mpstat_command}")
+        result = subprocess.run(mpstat_command, 
+                                 shell=True, 
+                                 stdout=subprocess.PIPE, 
+                                 stderr=subprocess.PIPE, 
+                                 text=True)
+        
+        # Check if the mpstat command executed successfully
+        if result.returncode == 0:
+            print("\n" + "-" * 80)
+            print("mpstat Output:".center(80))
+            print("-" * 80)
+            print(result.stdout)
+        else:
+            print("\n[!] Error running mpstat command:")
+            print(result.stderr)
+    except Exception as e:
+        print(f"\n[!] An error occurred while executing mpstat: {e}")
+
+def gather_processes_on_cores(cores):
+    """
+    Gather a snapshot of processes and threads running on specific cores with highest CPU usage.
+    """
+    try:
+        # Expand the core list if necessary
+        expanded_cores = expand_cores(cores)
+        
+        # Format the cores into a logical OR list for awk
+        core_conditions = " || ".join([f"($10=={core})" for core in expanded_cores])
+        
+        # Run the pidstat command to capture CPU usage information for processes and threads
+        pidstat_command = f"pidstat -h -t -p ALL 1 1 | awk '($10==\"%CPU\") || ({core_conditions} && $9+0 > 10.00)'"
+        
+        # Execute the pidstat command and capture its output
+        print(f"\nExecuting: {pidstat_command}")
+        result = subprocess.run(pidstat_command, 
+                                 shell=True, 
+                                 stdout=subprocess.PIPE, 
+                                 stderr=subprocess.PIPE, 
+                                 text=True)
+        
+        # Check if the pidstat command executed successfully
+        if result.returncode == 0:
+            print("\n" + "-" * 80)
+            print("Processes and Threads with High CPU Usage on Specific Cores:".center(80))
+            print("-" * 80)
+            print(result.stdout)
+        else:
+            print("\n[!] Error gathering process information:")
+            print(result.stderr)
+    except Exception as e:
+        print(f"\n[!] An error occurred while gathering process information: {e}")
+
+def verify_affected_system_cores():
+    """
+    Gathers and verifies the affected system cores using 'pmtool show affinity' and runs 'mpstat' for those cores.
+    """
+    try:
+        # Execute the command to gather system core information
+        result = subprocess.run(["pmtool", "show", "affinity"], 
+                                 stdout=subprocess.PIPE, 
+                                 stderr=subprocess.PIPE, 
+                                 text=True)
+        
+        # Check if the command executed successfully
+        if result.returncode == 0:
+            output = result.stdout
+            
+            # Extract the line with "System CPU Affinity"
+            system_affinity_match = re.search(r"System CPU Affinity:\s([\d,-]+)", output)
+            if system_affinity_match:
+                system_cores = system_affinity_match.group(1)
+                print("\n" + "-" * 80)
+                print("System CPU Cores Used:".center(80))
+                print("-" * 80)
+                print(f"Cores: {system_cores}")
+                
+                # Call the mpstat function with the system cores
+                run_mpstat(system_cores)
+            else:
+                print("\n[!] Unable to parse 'System CPU Affinity' from the output.")
+        else:
+            print("\n[!] Error gathering CPU affinity information:")
+            print(result.stderr)
+    except FileNotFoundError:
+        print("\n[!] 'pmtool' command not found. Please ensure it is installed and accessible.")
+    except Exception as e:
+        print(f"\n[!] An unexpected error occurred: {e}")
+
+def check_process_threads():
+    """
+    Prints the thread information of the given process.
+    """
+    try:
+        process_name = input("\nEnter the process name (case sensitive): ").strip()
+        
+        # Use 'pidof' to get the PID of the process
+        pid_command = f"pidof {process_name}"
+        result = subprocess.run(pid_command, 
+                                 shell=True, 
+                                 stdout=subprocess.PIPE, 
+                                 stderr=subprocess.PIPE, 
+                                 text=True)
+        
+        # Check if the command executed successfully
+        if result.returncode == 0:
+            pid = result.stdout.strip()
+            if pid:
+                # Execute the pidstat command to get the thread information
+                pidstat_command = f"pidstat -h -t -p {pid} 1 1"
+                print(f"\nExecuting: {pidstat_command}")
+                
+                pidstat_result = subprocess.run(pidstat_command, 
+                                                shell=True, 
+                                                stdout=subprocess.PIPE, 
+                                                stderr=subprocess.PIPE, 
+                                                text=True)
+                
+                if pidstat_result.returncode == 0:
+                    # Print the output of the pidstat command
+                    print("\n" + "-" * 80)
+                    print("pidstat Output:".center(80))
+                    print("-" * 80)
+                    print(pidstat_result.stdout)
+                else:
+                    print("\n[!] Error running pidstat command:")
+                    print(pidstat_result.stderr)
+            else:
+                print(f"\n[!] Process '{process_name}' not found.")
+        else:
+            print(f"\n[!] Error finding process '{process_name}':")
+            print(result.stderr)
+    except Exception as e:
+        print(f"\n[!] An error occurred while checking process threads: {e}")
+
+def cpu_usage_troubleshooting():
+    """
+    CPU usage troubleshooting menu.
+    """
+    while True:
+        print("\n" + "=" * 80)
+        print(" System CPU Usage Troubleshooting Menu ".center(80, "="))
+        print("=" * 80)
+        print("1) Show CPU affinity")
+        print("2) Verify Affected System Cores")
+        print("3) Gather processes on specific cores with high CPU usage")
+        print("4) Check if a process is multi-threaded or single-threaded")
+        print("0) Return to Main Menu")
+        print("=" * 80)
+
+        choice = input("Select an option (0-4): ").strip()
+
+        if choice == "1":
+            print("\n" + "-" * 80)
+            print("Gathering CPU affinity...".center(80))
+            print("-" * 80)
+            show_cpu_affinity()
+        elif choice == "2":
+            print("\n" + "-" * 80)
+            print("Gathering Affected CPU Cores...".center(80))
+            print("-" * 80)
+            verify_affected_system_cores()
+        elif choice == "3":
+            print("\n" + "-" * 80)
+            print("Gathering processes on specific cores with high CPU usage...".center(80))
+            print("-" * 80)
+            gather_processes_on_cores("10-11")  # Here you can specify the core range or prompt for user input
+        elif choice == "4":
+            print("\n" + "-" * 80)
+            print("Checking process threading...".center(80))
+            print("-" * 80)
+            check_process_threads()
+        elif choice == "0":
+            print("\nReturning to Main Menu...")
+            break
+        else:
+            print("\n[!] Invalid option. Please choose a valid option (0-4).")
+
 def registration_troubleshooting():
     while True:  # Replace recursion with a loop for better performance
         flush_stdin()  # Ensure the input buffer is clean
@@ -1152,6 +1386,7 @@ def main_menu():
         print("2) Registration Troubleshooting")
         print("3) Database Troubleshooting")
         print("4) Disk Usage Troubleshooting")
+        print("5) System CPU Troubleshooting (FTD Only)")
         print("0) Exit")
         print("=" * 80)
 
@@ -1179,6 +1414,11 @@ def main_menu():
             print("Accessing Disk Usage Troubleshooting...".center(80))
             print("-" * 80)
             disk_usage_troubleshooting()
+        elif choice == "5":
+            print("\n" + "-" * 80)
+            print("Accessing System CPU Usage Troubleshooting...".center(80))
+            print("-" * 80)
+            cpu_usage_troubleshooting()
         elif choice == "0":
             print("\nExiting the script. Goodbye!")
             break
