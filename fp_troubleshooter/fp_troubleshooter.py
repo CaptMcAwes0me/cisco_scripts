@@ -1338,7 +1338,7 @@ def database_troubleshooting():
             print("\nReturning to the main menu...")
             break
         else:
-            print("\n[!] Invalid choice. Please enter a number between 0 and 7.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 8.")
 
         flush_stdin()  # Flush input before returning to the menu
 
@@ -1425,7 +1425,7 @@ def main_menu():
             print("\nExiting the script. Goodbye!")
             break
         else:
-            print("\n[!] Invalid choice. Please enter a number between 0 and 3.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 5.")
 
 
 if __name__ == "__main__":
