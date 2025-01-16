@@ -1219,7 +1219,9 @@ def registration_troubleshooting():
         print("6) Check sftunnel Certificate")
         print("7) Gather Logs")
         print("0) Return to Main Menu")
-        print("=" * 80)
+        print("\n" + "*" * 80)
+        print("Note: Options 1 and 2 are meant to be ran on both the FMC and FTD simultaneously.")
+        print("*" * 80)
 
         # Prompt for the user's choice
         choice = input("Enter your choice (0-7): ").strip()
@@ -1391,7 +1393,7 @@ def main_menu():
         print("=" * 80)
 
         # Prompt the user for their choice
-        choice = input("Select an option (0-5): ").strip()
+        choice = input("Select an option (0-4): ").strip()
 
         # Process the user's choice
         if choice == "1":
