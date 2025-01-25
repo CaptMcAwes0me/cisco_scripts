@@ -2,6 +2,7 @@
 
 from firepower.device_information.device_information import device_information
 from firepower.firepower_menu import firepower_menu
+from lina.lina_menu import lina_menu
 
 
 def main_menu():
