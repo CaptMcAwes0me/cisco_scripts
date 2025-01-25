@@ -1,9 +1,11 @@
-#Description: This script is the main menu for the Firepower troubleshooting section. It allows the user to access various troubleshooting tools for Cisco Firepower devices.
+# Description: This script is the main menu for the Firepower troubleshooting section. It allows the user to access various troubleshooting tools for Cisco Firepower devices.
 
 from firepower.registration.registration_menu import registration_troubleshooting
 from firepower.device_information.device_information import device_information
 from firepower.database.database_menu import database_troubleshooting
-from firepower.disk_usage.disk_usage import disk_usage
+from firepower.disk_usage.disk_usage_menu import disk_usage_troubleshooting
+from firepower.cpu_usage.cpu_usage_menu import cpu_usage_troubleshooting
+
 
 def firepower_menu():
     while True:
