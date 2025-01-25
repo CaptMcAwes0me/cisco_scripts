@@ -1,5 +1,9 @@
 # Description: This script is a simple menu-driven program that allows the user to access various troubleshooting tools for Cisco Firepower devices.
 
+from firepower.device_information.device_information import device_information
+from firepower.firepower_menu import firepower_menu
+
+
 def main_menu():
     while True:
         print("\n" + "=" * 80)
@@ -35,6 +39,7 @@ def main_menu():
             break
         else:
             print("\n[!] Invalid choice. Please enter a number between 0 and 3.")
+
 
 if __name__ == "__main__":
     main_menu()
