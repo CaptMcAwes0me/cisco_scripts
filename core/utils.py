@@ -127,3 +127,23 @@ def display_table(data):
         print(f"| {key.ljust(field_width)} | {value.ljust(value_width)} |")
 
     print("+" + "-" * (table_width - 2) + "+")
+
+
+def display_formatted_menu(title, options):
+    """
+    Displays a formatted menu.
+
+    Parameters:
+        title (str): The title of the menu.
+        options (dict): A dictionary where keys are menu option numbers/letters,
+                        and values are option descriptions.
+
+    Returns:
+        None
+    """
+    print("\n" + "=" * 80)
+    print(f" {title} ".center(80, "="))
+    print("=" * 80)
+    for key, description in options.items():
+        print(f"{key}) {description}")
+    print("=" * 80)

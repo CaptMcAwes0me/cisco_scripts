@@ -5,52 +5,36 @@ from firepower.device_information.device_information import device_information
 from firepower.database.database_menu import database_troubleshooting
 from firepower.disk_usage.disk_usage_menu import disk_usage_troubleshooting
 from firepower.cpu_usage.cpu_usage_menu import cpu_usage_troubleshooting
+from core.utils import display_formatted_menu
 
 
 def firepower_menu():
+    # Map menu options to descriptions and their respective functions
+    menu_options = {
+        "1": ("Device Information", device_information),
+        "2": ("Registration Troubleshooting", registration_troubleshooting),
+        "3": ("Database Troubleshooting", database_troubleshooting),
+        "4": ("Disk Usage Troubleshooting", disk_usage_troubleshooting),
+        "5": ("System CPU Troubleshooting (FTD Only)", cpu_usage_troubleshooting),
+        "0": ("Exit", None),
+    }
+
     while True:
-        print("\n" + "=" * 80)
-        print(" Firepower Menu ".center(80, "="))
-        print("=" * 80)
-        print("1) Device Information")
-        print("2) Registration Troubleshooting")
-        print("3) Database Troubleshooting")
-        print("4) Disk Usage Troubleshooting")
-        print("5) System CPU Troubleshooting (FTD Only)")
-        print("0) Exit")
-        print("=" * 80)
+        # Create a dictionary for menu display
+        options_display = {key: description for key, (description, _) in menu_options.items()}
+        display_formatted_menu("Firepower Menu", options_display)
 
-        # Prompt the user for their choice
-        choice = input("Select an option (0-5): ").strip()
+        choice = input("Select an option: ").strip()
 
-        # Process the user's choice
-        if choice == "1":
-            print("\n" + "-" * 80)
-            print("Accessing Device Information...".center(80))
-            print("-" * 80)
-            device_information()
-        elif choice == "2":
-            print("\n" + "-" * 80)
-            print("Accessing Registration Troubleshooting...".center(80))
-            print("-" * 80)
-            registration_troubleshooting()
-        elif choice == "3":
-            print("\n" + "-" * 80)
-            print("Accessing Database Troubleshooting...".center(80))
-            print("-" * 80)
-            database_troubleshooting()
-        elif choice == "4":
-            print("\n" + "-" * 80)
-            print("Accessing Disk Usage Troubleshooting...".center(80))
-            print("-" * 80)
-            disk_usage_troubleshooting()
-        elif choice == "5":
-            print("\n" + "-" * 80)
-            print("Accessing System CPU Usage Troubleshooting...".center(80))
-            print("-" * 80)
-            cpu_usage_troubleshooting()
-        elif choice == "0":
-            print("\nExiting the script. Goodbye!")
-            break
+        if choice in menu_options:
+            description, function = menu_options[choice]
+            if function:  # If a function is assigned
+                print("\n" + "-" * 80)
+                print(f"Accessing {description}...".center(80))
+                print("-" * 80)
+                function()
+            else:  # Exit condition
+                print("\nExiting the script. Goodbye!")
+                break
         else:
-            print("\n[!] Invalid choice. Please enter a number between 0 and 5.")
+            print("\n[!] Invalid choice. Please enter a valid option.")

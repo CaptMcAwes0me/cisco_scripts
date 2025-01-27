@@ -1,5 +1,4 @@
 # Troubleshooting Script
-
 ## Overview
 This Python script is designed specifically for troubleshooting on Cisco Firepower machines. It provides a menu-driven interface for verifying connectivity, analyzing logs, running bandwidth tests, and validating configurations, certificates, and database entries. The script is meant to simplify the troubleshooting process by consolidating common tasks into a single tool.
 
