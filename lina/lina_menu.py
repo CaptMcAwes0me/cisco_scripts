@@ -9,12 +9,13 @@ def lina_menu():
         "1": ("Device Information", device_information),
         "2": ("NAT (Network Address Translation)", nat_menu),
         "3": ("Access Control (ACLs)", access_control_menu),
-        "4": ("Inspection Features", inspection_features_menu),
-        "5": ("VPN", vpn_menu),
-        "6": ("High Availability (HA) / Failover", high_availability_failover_menu),
-        "7": ("Traffic Analysis and Logging", traffic_analysis_and_logging_menu),
-        "8": ("Clustering", clustering_menu),
-        "9": ("User Authentication and AAA", user_authentication_and_aaa_menu),
+        "4": ("Routing", routing_menu),
+        "5": ("Inspection Features", inspection_features_menu),
+        "6": ("VPN", vpn_menu),
+        "7": ("High Availability (HA) / Failover", high_availability_failover_menu),
+        "8": ("Traffic Analysis and Logging", traffic_analysis_and_logging_menu),
+        "9": ("Clustering", clustering_menu),
+        "10": ("User Authentication and AAA", user_authentication_and_aaa_menu),
         "0": ("Exit", None),
     }
 
@@ -36,4 +37,4 @@ def lina_menu():
                 print("\nExiting the script. Goodbye!")
                 break
         else:
-            print("\n[!] Invalid choice. Please enter a number between 0 and 9.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 10.")
