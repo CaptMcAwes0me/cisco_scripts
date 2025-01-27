@@ -53,4 +53,4 @@ The script is designed to be easy to use, with a simple text-based interface tha
 2. Ensure Python 3.x is installed and accessible.
 3. Run the script using:
    ```bash
-   python3 troubleshooting_script.py
+   python3 fp_troubleshooting_helper.py
