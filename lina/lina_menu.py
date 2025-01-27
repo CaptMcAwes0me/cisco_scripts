@@ -1,6 +1,7 @@
 # Description: This script contains the Lina menu and its options.
 
 from core.utils import display_formatted_menu
+from firepower.device_information.device_information import device_information
 
 
 def lina_menu():
