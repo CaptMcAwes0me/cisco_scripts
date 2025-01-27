@@ -9,8 +9,11 @@ def gather_processes_on_cores(cores):
     Gather a snapshot of processes and threads running on specific cores with highest CPU usage.
     """
     try:
-        # Expand the core list if necessary
-        expanded_cores = expand_cores(cores)
+        # If cores is already a list, don't split it. Otherwise, pass it as a string.
+        if isinstance(cores, str):
+            expanded_cores = expand_cores(cores)
+        else:
+            expanded_cores = cores  # If it's already a list, use it directly.
 
         # Format the cores into a logical OR list for awk
         core_conditions = " || ".join([f"($10=={core})" for core in expanded_cores])
