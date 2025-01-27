@@ -2,7 +2,7 @@
 
 import re
 import subprocess
-from firepower.cpu_usage.run_mpstat import run_mpstat
+from firepower.cpu_usage.run_mpstat.run_mpstat import run_mpstat
 
 
 def verify_affected_system_cores():

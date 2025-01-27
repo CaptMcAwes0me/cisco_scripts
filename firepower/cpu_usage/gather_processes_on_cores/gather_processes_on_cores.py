@@ -1,6 +1,6 @@
 # Description: Gather a snapshot of processes and threads running on specific cores with highest CPU usage.
 
-from firepower.cpu_usage.expand_cores import expand_cores
+from firepower.cpu_usage.expand_cores.expand_cores import expand_cores
 import subprocess
 
 

@@ -1,9 +1,9 @@
 # Description: CPU usage troubleshooting menu.
 
-from firepower.cpu_usage.show_cpu_affinity import show_cpu_affinity
-from firepower.cpu_usage.verify_affected_system_cores import verify_affected_system_cores
-from firepower.cpu_usage.gather_processes_on_cores import gather_processes_on_cores
-from firepower.cpu_usage.check_process_threads import check_process_threads
+from firepower.cpu_usage.show_cpu_affinity.show_cpu_affinity import show_cpu_affinity
+from firepower.cpu_usage.verify_affected_system_cores.verify_affected_system_cores import verify_affected_system_cores
+from firepower.cpu_usage.gather_processes_on_cores.gather_processes_on_cores import gather_processes_on_cores
+from firepower.cpu_usage.check_process_threads.check_process_threads import check_process_threads
 
 
 def cpu_usage_troubleshooting():

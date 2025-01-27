@@ -1,14 +1,14 @@
 # Description: This file contains the database troubleshooting menu.
 
 from core.utils import flush_stdin
-from firepower.database.em_peers import em_peers
-from firepower.database.ssl_peers import ssl_peers
-from firepower.database.fail_deployment import fail_deployment
-from firepower.database.delete_notification import delete_notification
-from firepower.database.vdb_table import vdb_table
-from firepower.database.geodb_table import geodb_table
-from firepower.database.notifications_table import notifications_table
-from firepower.database.remove_peer import remove_peer
+from firepower.database.em_peers.em_peers import em_peers
+from firepower.database.ssl_peers.ssl_peers import ssl_peers
+from firepower.database.fail_deployment.fail_deployment import fail_deployment
+from firepower.database.delete_notification.delete_notification import delete_notification
+from firepower.database.vdb_table.vdb_table import vdb_table
+from firepower.database.geodb_table.geodb_table import geodb_table
+from firepower.database.notifications_table.notifications_table import notifications_table
+from firepower.database.remove_peer.remove_peer import remove_peer
 
 
 def database_troubleshooting():

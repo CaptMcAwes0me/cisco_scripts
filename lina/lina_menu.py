@@ -7,14 +7,14 @@ from firepower.device_information.device_information import device_information
 def lina_menu():
     menu_options = {
         "1": ("Device Information", device_information),
-        "2": ("NAT (Network Address Translation)", registration_troubleshooting),
-        "3": ("Access Control (ACLs)", database_troubleshooting),
-        "4": ("Inspection Features", disk_usage_troubleshooting),
-        "5": ("VPN", cpu_usage_troubleshooting),
-        "6": ("High Availability (HA) / Failover", database_troubleshooting),
-        "7": ("Traffic Analysis and Logging", disk_usage_troubleshooting),
-        "8": ("Clustering", cpu_usage_troubleshooting),
-        "9": ("User Authentication and AAA", cpu_usage_troubleshooting),
+        "2": ("NAT (Network Address Translation)", nat_menu),
+        "3": ("Access Control (ACLs)", access_control_menu),
+        "4": ("Inspection Features", inspection_features_menu),
+        "5": ("VPN", vpn_menu),
+        "6": ("High Availability (HA) / Failover", high_availability_failover_menu),
+        "7": ("Traffic Analysis and Logging", traffic_analysis_and_logging_menu),
+        "8": ("Clustering", clustering_menu),
+        "9": ("User Authentication and AAA", user_authentication_and_aaa_menu),
         "0": ("Exit", None),
     }
 

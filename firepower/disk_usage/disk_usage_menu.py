@@ -1,8 +1,8 @@
 # Description: This file contains the disk usage troubleshooting menu.
 
-from firepower.disk_usage.display_disk_usage import display_disk_usage
-from firepower.disk_usage.find_large_files import find_large_files
-from firepower.disk_usage.gather_deleted_files import gather_deleted_files_info
+from firepower.disk_usage.display_disk_usage.display_disk_usage import display_disk_usage
+from firepower.disk_usage.find_large_files.find_large_files import find_large_files
+from firepower.disk_usage.gather_deleted_files.gather_deleted_files import gather_deleted_files_info
 
 
 def disk_usage_troubleshooting():

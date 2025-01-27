@@ -1,7 +1,7 @@
 # Description: This script runs the 'mpstat' command with the given core list.
 
 import subprocess
-from firepower.cpu_usage.expand_cores import expand_cores
+from firepower.cpu_usage.expand_cores.expand_cores import expand_cores
 
 
 def run_mpstat(cores):
