@@ -8,6 +8,7 @@ from lina.routing.eigrp.eigrp_neighbors.eigrp_neighbors import eigrp_neighbors
 from lina.routing.eigrp.eigrp_topology.eigrp_topology import eigrp_topology
 from lina.routing.eigrp.eigrp_traffic.eigrp_traffic import eigrp_traffic
 from lina.routing.eigrp.eigrp_routing_table.eigrp_routing_table import eigrp_routing_table
+from lina.routing.eigrp.eigrp_running_config.eigrp_running_config import eigrp_running_config
 
 
 def dump_all_eigrp_data():
@@ -32,6 +33,7 @@ def dump_all_eigrp_data():
     try:
         # Gather outputs
         data_to_dump = [
+            ("EIGRP Running Configuration", eigrp_running_config(suppress_output=True)),
             ("EIGRP Events", eigrp_events(suppress_output=True)),
             ("EIGRP Interfaces", eigrp_interfaces(suppress_output=True)),
             ("EIGRP Neighbors", eigrp_neighbors(suppress_output=True)),
@@ -53,4 +55,3 @@ def dump_all_eigrp_data():
 
     except Exception as e:
         print(f"[!] Error writing EIGRP data to file: {e}")
-
