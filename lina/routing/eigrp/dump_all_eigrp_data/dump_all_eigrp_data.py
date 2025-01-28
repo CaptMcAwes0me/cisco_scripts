@@ -16,13 +16,14 @@ def dump_all_eigrp_data():
 
     try:
         # Gather outputs
-        data_to_dump = []
-        data_to_dump.append(("EIGRP Events", eigrp_events()))
-        data_to_dump.append(("EIGRP Interfaces", eigrp_interfaces()))
-        data_to_dump.append(("EIGRP Neighbors", eigrp_neighbors()))
-        data_to_dump.append(("EIGRP Topology", eigrp_topology()))
-        data_to_dump.append(("EIGRP Traffic", eigrp_traffic()))
-        data_to_dump.append(("EIGRP Routing Table", eigrp_routing_table()))
+        data_to_dump = [
+            ("EIGRP Events", eigrp_events(suppress_output=True)),
+            ("EIGRP Interfaces", eigrp_interfaces(suppress_output=True)),
+            ("EIGRP Neighbors", eigrp_neighbors(suppress_output=True)),
+            ("EIGRP Topology", eigrp_topology(suppress_output=True)),
+            ("EIGRP Traffic", eigrp_traffic(suppress_output=True)),
+            ("EIGRP Routing Table", eigrp_routing_table(suppress_output=True)),
+        ]
 
         # Write all outputs to the file
         with open(log_file, "w") as f:
