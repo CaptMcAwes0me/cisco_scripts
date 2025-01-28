@@ -1,11 +1,18 @@
 # Description: This script contains the routing menu and its corresponding functions.
 
 from lina.routing.eigrp.eigrp_menu import eigrp_menu
+from lina.routing.isis.isis_menu import isis_menu
+from lina.routing.ospf.ospf_menu import ospf_menu
+from lina.routing.bgp.bgp_menu import bgp_menu
+from lina.routing.rip.rip_menu import rip_menu
+from lina.routing.vrf.vrf_menu import vrf_menu
+from lina.routing.global.global_menu import global_menu
+from core.utils import display_formatted_menu
 
 
 def routing_menu():
     menu_options = {
-        "1": ("Global Routing", global_routing),
+        "1": ("Global Routing", global_menu),
         "2": ("EIGRP", eigrp_menu),
         "3": ("OSPF", ospf_menu),
         "4": ("BGP", bgp_menu),
