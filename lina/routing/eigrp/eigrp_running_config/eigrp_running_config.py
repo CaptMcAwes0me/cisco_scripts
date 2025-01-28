@@ -17,4 +17,3 @@ def eigrp_running_config(suppress_output=False):
         if not suppress_output:
             print(error_message)
         return error_message
-
