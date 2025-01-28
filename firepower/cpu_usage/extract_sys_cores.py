@@ -1,7 +1,7 @@
 # Description: This script is used to extract the system cores from the 'show_cpu_affinity' command output.
 
 import subprocess
-from expand_cores import expand_cores
+from firepower.cpu_usage.expand_cores.expand_cores import expand_cores
 
 
 def extract_sys_cores():
