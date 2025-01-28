@@ -10,41 +10,30 @@ from lina.routing.eigrp.eigrp_routing_table.eigrp_routing_table import eigrp_rou
 
 
 def dump_all_eigrp_data():
-    """Collects all EIGRP-related outputs and writes them to a log file."""
+    """Gathers output from all EIGRP commands and writes them to a log file."""
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_file = f"/var/log/{timestamp}_eigrp_dump.log"
+
     try:
-        # Gather outputs from each function
-        events_output = eigrp_events()
-        interfaces_output = eigrp_interfaces()
-        neighbors_output = eigrp_neighbors()
-        topology_output = eigrp_topology()
-        traffic_output = eigrp_traffic()
-        routing_table_output = eigrp_routing_table()
+        # Gather outputs
+        data_to_dump = []
+        data_to_dump.append(("EIGRP Events", eigrp_events()))
+        data_to_dump.append(("EIGRP Interfaces", eigrp_interfaces()))
+        data_to_dump.append(("EIGRP Neighbors", eigrp_neighbors()))
+        data_to_dump.append(("EIGRP Topology", eigrp_topology()))
+        data_to_dump.append(("EIGRP Traffic", eigrp_traffic()))
+        data_to_dump.append(("EIGRP Routing Table", eigrp_routing_table()))
 
-        # Prepare log file name with timestamp
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        log_file_path = f"/var/log/{timestamp}_eigrp_dump.log"
+        # Write all outputs to the file
+        with open(log_file, "w") as f:
+            for title, output in data_to_dump:
+                f.write(f"{'=' * 80}\n")
+                f.write(f"{title}\n")
+                f.write(f"{'-' * 80}\n")
+                f.write(f"{output}\n")
+                f.write(f"{'=' * 80}\n\n")
 
-        # Write all outputs to the log file
-        with open(log_file_path, "w") as log_file:
-            log_file.write("EIGRP Events:\n")
-            log_file.write(events_output + "\n\n")
-
-            log_file.write("EIGRP Interfaces:\n")
-            log_file.write(interfaces_output + "\n\n")
-
-            log_file.write("EIGRP Neighbors:\n")
-            log_file.write(neighbors_output + "\n\n")
-
-            log_file.write("EIGRP Topology:\n")
-            log_file.write(topology_output + "\n\n")
-
-            log_file.write("EIGRP Traffic:\n")
-            log_file.write(traffic_output + "\n\n")
-
-            log_file.write("EIGRP Routing Table:\n")
-            log_file.write(routing_table_output + "\n\n")
-
-        print(f"[+] All EIGRP data has been written to {log_file_path}")
+        print(f"\n[+] All EIGRP data written to: {log_file}")
 
     except Exception as e:
-        print(f"[!] Error while dumping EIGRP data: {e}")
+        print(f"[!] Error writing EIGRP data to file: {e}")
