@@ -15,5 +15,4 @@ def eigrp_traffic():
         return output
     except Exception as e:
         print(f"[!] Error: {e}")
-        return "
-"
+        return ""
