@@ -8,7 +8,7 @@ from core.utils import display_formatted_menu
 from firepower.cpu_usage.extract_sys_cores import extract_sys_cores
 
 
-def cpu_usage_troubleshooting():
+def cpu_usage_menu():
     # Extract the system cores before proceeding with the menu
     system_cores = extract_sys_cores()
     if system_cores is None:

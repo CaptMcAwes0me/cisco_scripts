@@ -11,7 +11,7 @@ from firepower.database.notifications_table.notifications_table import notificat
 from firepower.database.remove_peer.remove_peer import remove_peer
 from core.utils import display_formatted_menu
 
-def database_troubleshooting():
+def database_menu():
     # Map menu options to descriptions and their respective functions
     menu_options = {
         "1": ("Check EM Peers Table", em_peers),
