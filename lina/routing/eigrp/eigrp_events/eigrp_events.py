@@ -19,6 +19,6 @@ def eigrp_events():
         print("-" * 80)
         print(output)
         print("-" * 80)
-
+        return(output)
     except Exception as e:
         print(f"[!] Error: {e}")

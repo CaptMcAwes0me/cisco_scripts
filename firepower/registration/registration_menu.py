@@ -10,7 +10,7 @@ from firepower.registration.registration_log_filter.registration_log_filter impo
 from firepower.database.em_peers.em_peers import em_peers
 
 
-def registration_troubleshooting():
+def registration_menu():
     while True:  # Replace recursion with a loop for better performance
         flush_stdin()  # Ensure the input buffer is clean
         print("\n" + "=" * 80)

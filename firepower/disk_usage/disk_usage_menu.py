@@ -6,7 +6,7 @@ from firepower.disk_usage.gather_deleted_files.gather_deleted_files import gathe
 from core.utils import display_formatted_menu
 
 
-def disk_usage_troubleshooting():
+def disk_usage_menu():
     # Map menu options to descriptions and their respective functions
     menu_options = {
         "1": ("Display disk usage (df -TH)", display_disk_usage),

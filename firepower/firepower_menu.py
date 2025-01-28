@@ -1,10 +1,11 @@
-# Description: This script is the main menu for the Firepower troubleshooting section. It allows the user to access various troubleshooting tools for Cisco Firepower devices.
+# Description: This script is the main menu for the Firepower troubleshooting section.
+# It allows the user to access various troubleshooting tools for Cisco Firepower devices.
 
-from firepower.registration.registration_menu import registration_troubleshooting
+from firepower.registration.registration_menu import registration_menu
 from firepower.device_information.device_information import device_information
-from firepower.database.database_menu import database_troubleshooting
-from firepower.disk_usage.disk_usage_menu import disk_usage_troubleshooting
-from firepower.cpu_usage.cpu_usage_menu import cpu_usage_troubleshooting
+from firepower.database.database_menu import database_menu
+from firepower.disk_usage.disk_usage_menu import disk_usage_menu
+from firepower.cpu_usage.cpu_usage_menu import cpu_usage_menu
 from core.utils import display_formatted_menu
 
 
@@ -12,10 +13,10 @@ def firepower_menu():
     # Map menu options to descriptions and their respective functions
     menu_options = {
         "1": ("Device Information", device_information),
-        "2": ("Registration Troubleshooting", registration_troubleshooting),
-        "3": ("Database Troubleshooting", database_troubleshooting),
-        "4": ("Disk Usage Troubleshooting", disk_usage_troubleshooting),
-        "5": ("System CPU Troubleshooting (FTD Only)", cpu_usage_troubleshooting),
+        "2": ("Registration Troubleshooting", registration_menu),
+        "3": ("Database Troubleshooting", database_menu),
+        "4": ("Disk Usage Troubleshooting", disk_usage_menu),
+        "5": ("System CPU Troubleshooting (FTD Only)", cpu_usage_menu),
         "0": ("Exit", None),
     }
 

@@ -1,6 +1,13 @@
 # Description: This script contains the EIGRP menu and its associated functions.
 
 from core.utils import display_formatted_menu
+from lina.routing.eigrp.eigrp_events.eigrp_events import eigrp_events
+from lina.routing.eigrp.eigrp_interfaces.eigrp_interfaces import eigrp_interfaces
+from lina.routing.eigrp.eigrp_neighbors.eigrp_neighbors import eigrp_neighbors
+from lina.routing.eigrp.eigrp_topology.eigrp_topology import eigrp_topology
+from lina.routing.eigrp.eigrp_traffic.eigrp_traffic import eigrp_traffic
+from lina.routing.eigrp.eigrp_routing_table.eigrp_routing_table import eigrp_routing_table
+from lina.routing.eigrp.dump_all_eigrp_data.dump_all_eigrp_data import dump_all_eigrp_data
 
 
 def eigrp_menu():
