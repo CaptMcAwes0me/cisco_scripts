@@ -1,16 +1,16 @@
 import os
 from datetime import datetime
-from lina.routing.ospf.ospf_running_config import ospf_running_config
-from lina.routing.ospf.ospf_all import ospf_all
-from lina.routing.ospf.ospf_border_routers import ospf_border_routers
-from lina.routing.ospf.ospf_database import ospf_database
-from lina.routing.ospf.ospf_events import ospf_events
-from lina.routing.ospf.ospf_interface import ospf_interface
-from lina.routing.ospf.ospf_neighbor import ospf_neighbor
-from lina.routing.ospf.ospf_nsf import ospf_nsf
-from lina.routing.ospf.ospf_rib import ospf_rib
-from lina.routing.ospf.ospf_statistics import ospf_statistics
-from lina.routing.ospf.ospf_traffic import ospf_traffic
+from lina.routing.ospf.ospf_running_config.ospf_running_config import ospf_running_config
+from lina.routing.ospf.ospf_all.ospf_all import ospf_all
+from lina.routing.ospf.ospf_border_routers.ospf_border_routers import ospf_border_routers
+from lina.routing.ospf.ospf_database.ospf_database import ospf_database
+from lina.routing.ospf.ospf_events.ospf_events import ospf_events
+from lina.routing.ospf.ospf_interface.ospf_interface import ospf_interface
+from lina.routing.ospf.ospf_neighbor.ospf_neighbor import ospf_neighbor
+from lina.routing.ospf.ospf_nsf.ospf_nsf import ospf_nsf
+from lina.routing.ospf.ospf_rib.ospf_rib import ospf_rib
+from lina.routing.ospf.ospf_statistics.ospf_statistics import ospf_statistics
+from lina.routing.ospf.ospf_traffic.ospf_traffic import ospf_traffic
 
 
 def dump_all_ospf_data():
@@ -61,4 +61,3 @@ def dump_all_ospf_data():
 
     except Exception as e:
         print(f"[!] Error writing OSPF data to file: {e}")
-

@@ -17,4 +17,3 @@ def ospf_border_routers(suppress_output=False):
         if not suppress_output:
             print(error_message)
         return error_message
-
