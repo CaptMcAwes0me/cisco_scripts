@@ -11,7 +11,7 @@ from core.utils import display_formatted_menu
 
 def routing_menu():
     menu_options = {
-        "1": ("Global Routing", global_menu),
+        "1": ("Global Routing and VRF", global_menu),
         "2": ("EIGRP", eigrp_menu),
         "3": ("OSPF", ospf_menu),
         "4": ("BGP", bgp_menu),
