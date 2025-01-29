@@ -1,6 +1,14 @@
 import os
 from datetime import datetime
-from core.utils import isis_running_config, isis_database, isis_hostname, isis_lsp_log, isis_neighbors, isis_rib, isis_spf_log, isis_topology
+from lina.routing.isis.isis_database.isis_database import isis_database
+from lina.routing.isis.isis_hostname.isis_hostname import isis_hostname
+from lina.routing.isis.isis_lsp_log.isis_lsp_log import isis_lsp_log
+from lina.routing.isis.isis_neighbors.isis_neighbors import isis_neighbors
+from lina.routing.isis.isis_rib.isis_rib import isis_rib
+from lina.routing.isis.isis_running_config.isis_running_config import isis_running_config
+from lina.routing.isis.isis_spf_log.isis_spf_log import isis_spf_log
+from lina.routing.isis.isis_topology.isis_topology import isis_topology
+
 
 def dump_all_isis_data():
     """Gathers output from all ISIS commands and writes them to a log file under /var/log/fp_troubleshooting_data."""
@@ -47,4 +55,3 @@ def dump_all_isis_data():
 
     except Exception as e:
         print(f"[!] Error writing ISIS data to file: {e}")
-
