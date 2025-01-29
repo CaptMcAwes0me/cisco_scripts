@@ -7,7 +7,7 @@ from lina.routing.global_routing.dump_all_route_data.dump_all_route_data import 
 from lina.routing.global_routing.running_config_all.running_config_all import running_config_all
 
 
-def global_menu():
+def global_routing_menu():
     menu_options = {
         "1": ("Route Running Configuration", lambda: running_config_all(suppress_output=False, config_type="route")),
         "2": ("Router Running Configuration", lambda: running_config_all(suppress_output=False, config_type="router")),
