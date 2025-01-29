@@ -1,6 +1,6 @@
 # Description: This script contains the routing menu and its corresponding functions.
 
-from lina.routing.global_routing_and_vrf.global_routing_and_vrf_menu import global_menu
+from lina.routing.global_routing.global_routing_and_vrf_menu import global_menu
 from lina.routing.eigrp.eigrp_menu import eigrp_menu
 from lina.routing.ospf.ospf_menu import ospf_menu
 from lina.routing.bgp.bgp_menu import bgp_menu
