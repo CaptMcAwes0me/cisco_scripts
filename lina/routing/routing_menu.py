@@ -4,7 +4,6 @@ from lina.routing.global_routing.global_routing_menu import global_routing_menu
 from lina.routing.eigrp.eigrp_menu import eigrp_menu
 from lina.routing.ospf.ospf_menu import ospf_menu
 from lina.routing.bgp.bgp_menu import bgp_menu
-from lina.routing.rip.rip_menu import rip_menu
 from lina.routing.isis.isis_menu import isis_menu
 from lina.routing.vrf.vrf_menu import vrf_menu
 from core.utils import display_formatted_menu
@@ -16,9 +15,8 @@ def routing_menu():
         "2": ("EIGRP", eigrp_menu),
         "3": ("OSPF", ospf_menu),
         "4": ("BGP", bgp_menu),
-        "5": ("RIP", rip_menu),
-        "6": ("ISIS", isis_menu),
-        "7": ("VRF", vrf_menu),
+        "5": ("ISIS", isis_menu),
+        "6": ("VRF", vrf_menu),
         "0": ("Exit", None),
     }
 
