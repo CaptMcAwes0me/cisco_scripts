@@ -35,7 +35,7 @@ def bgp_menu():
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu("BGP Menu", options_display)
 
-        choice = input("Select an option (0-9): ").strip()
+        choice = input("Select an option (0-11): ").strip()
 
         if choice in menu_options:
             description, function = menu_options[choice]
