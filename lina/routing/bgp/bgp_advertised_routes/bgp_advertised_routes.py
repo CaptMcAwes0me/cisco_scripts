@@ -9,7 +9,7 @@ def bgp_advertised_routes(suppress_output=False):
         summary_output = get_and_parse_cli_output("show bgp summary")
 
         # Extract neighbor IP addresses
-        neighbor_ips = re.findall(r"\b\d+\.\d+\.\d+\.\d+\b", summary_output)
+        neighbor_section_match = re.search(r"State/PfxRcd\s*\n(-+\n)?([\s\S]+)", summary_output)
 
         # Store output for all neighbors
         all_output = []
