@@ -10,6 +10,7 @@ from lina.routing.bgp.bgp_paths.bgp_paths import bgp_paths
 from lina.routing.bgp.bgp_pending_prefixes.bgp_pending_prefixes import bgp_pending_prefixes
 from lina.routing.bgp.bgp_rib_failure.bgp_rib_failure import bgp_rib_failure
 from lina.routing.bgp.dump_all_bgp_data.dump_all_bgp_data import dump_all_bgp_data
+from lina.routing.bgp.bgp_advertised_routes.bgp_advertised_routes import bgp_advertised_routes
 
 
 def bgp_menu():
@@ -22,7 +23,8 @@ def bgp_menu():
         "6": ("BGP Paths", bgp_paths),
         "7": ("BGP Pending Prefixes", bgp_pending_prefixes),
         "8": ("BGP RIB Failure", bgp_rib_failure),
-        "9": ("Dump All BGP Data", dump_all_bgp_data),
+        "9": ("BGP Get Advertised Routes", bgp_advertised_routes),
+        "10": ("Dump All BGP Data", dump_all_bgp_data),
         "0": ("Exit", None),
     }
 
