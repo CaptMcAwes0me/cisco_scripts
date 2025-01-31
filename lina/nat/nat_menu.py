@@ -43,7 +43,7 @@ def dump_all_nat_data():
                 f.write(f"{output}\n")
                 f.write(f"{'=' * 80}\n\n")
 
-        print(f"\n[+] All BGP data written to: {log_file}")
+        print(f"\n[+] All NAT data written to: {log_file}")
 
     except Exception as e:
-        print(f"[!] Error writing BGP data to file: {e}")
+        print(f"[!] Error writing NAT data to file: {e}")
