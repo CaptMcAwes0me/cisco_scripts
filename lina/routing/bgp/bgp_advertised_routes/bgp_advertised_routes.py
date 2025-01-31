@@ -1,6 +1,7 @@
 from core.utils import get_and_parse_cli_output
 import re
 
+
 def bgp_advertised_routes(suppress_output=False):
     """Retrieves and optionally displays advertised routes for each BGP neighbor."""
 
@@ -8,8 +9,19 @@ def bgp_advertised_routes(suppress_output=False):
         # Get the BGP summary output
         summary_output = get_and_parse_cli_output("show bgp summary")
 
-        # Extract neighbor IP addresses
+        # Locate the neighbor table section (starts after "State/PfxRcd")
         neighbor_section_match = re.search(r"State/PfxRcd\s*\n(-+\n)?([\s\S]+)", summary_output)
+
+        if not neighbor_section_match:
+            raise Exception("Failed to locate the neighbor section in 'show bgp summary' output.")
+
+        neighbor_section = neighbor_section_match.group(2)
+
+        # Extract neighbor IP addresses (first column in the neighbor table)
+        neighbor_ips = re.findall(r"^\s*(\d+\.\d+\.\d+\.\d+)", neighbor_section, re.MULTILINE)
+
+        if not neighbor_ips:
+            raise Exception("No valid BGP neighbors found.")
 
         # Store output for all neighbors
         all_output = []
