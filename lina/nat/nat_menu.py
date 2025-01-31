@@ -1,10 +1,10 @@
 # Description: This script contains the nat menu and its corresponding functions.
 
-from lina.nat.nat_running_config import nat_running_config
-from lina.nat.nat_detail import nat_detail
-from lina.nat.xlate_count import xlate_count
-from lina.nat.xlate_detail import xlate_detail
-from lina.nat.dump_all_nat_data import dump_all_nat_data
+from lina.nat.nat_running_config.nat_running_config import nat_running_config
+from lina.nat.nat_detail.nat_detail import nat_detail
+from lina.nat.xlate_count.xlate_count import xlate_count
+from lina.nat.xlate_detail.xlate_detail import xlate_detail
+from lina.nat.dump_all_nat_data.dump_all_nat_data import dump_all_nat_data
 from core.utils import display_formatted_menu
 
 
