@@ -11,7 +11,7 @@ def main_menu():
         "1": ("Troubleshooting Menu", troubleshoot_menu),
         "2": ("Data Dump Menu", data_dump_menu),
         "3": ("Help and About", help_about_menu),
-        "0": ("Exit", None),
+        "0": ("Exit123", None),
     }
 
     while True:
