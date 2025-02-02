@@ -15,9 +15,9 @@ def about_menu():
     print("\nAbout:")
     print("-" * 80)
     print("This script is developed by Garrett McCollum and Shane Bebber to streamline troubleshooting tasks for Cisco"
-          " Firepower devices.")
-    print("Version: 1.0")
-    print("For more information or support, contact [Your Email].")
+    print("Firepower devices.")
+    print("Version: Still building")
+    print("For more information or support, contact gmccollu@cisco.com or shbebber@cisco.com.")
     print("-" * 80)
 
 
