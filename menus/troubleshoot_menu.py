@@ -1,16 +1,17 @@
-# Description: This script is a simple menu-driven program that allows the user to access data dumps.
+# Description: This script is a simple menu-driven program that allows the user to access various troubleshooting tools
+# for Cisco Firepower devices.
 
+from firepower.device_information.device_information import device_information
+from firepower.firepower_menu import firepower_menu
+from menus.lina_menu import lina_menu
 from core.utils import display_formatted_menu
-from menus.troubleshoot_menu import troubleshoot_menu
-from menus.data_dump_menu import data_dump_menu
-from menus.help_about_menu import help_about_menu
 
 
-def main_menu():
+def troubleshoot_menu():
     menu_options = {
-        "1": ("Troubleshooting Menu", troubleshoot_menu),
-        "2": ("Data Dump Menu", data_dump_menu),
-        "3": ("Help and About", help_about_menu),
+        "1": ("Device Information", device_information),
+        "2": ("Firepower Troubleshooting", firepower_menu),
+        "3": ("Lina Troubleshooting", lina_menu),
         "0": ("Exit", None),
     }
 
@@ -33,7 +34,3 @@ def main_menu():
                 break
         else:
             print("\n[!] Invalid choice. Please enter a number between 0 and 3.")
-
-
-if __name__ == "__main__":
-    main_menu()

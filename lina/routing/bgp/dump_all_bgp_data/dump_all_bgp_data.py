@@ -8,6 +8,8 @@ from lina.routing.bgp.bgp_cidr_only.bgp_cidr_only import bgp_cidr_only
 from lina.routing.bgp.bgp_paths.bgp_paths import bgp_paths
 from lina.routing.bgp.bgp_pending_prefixes.bgp_pending_prefixes import bgp_pending_prefixes
 from lina.routing.bgp.bgp_rib_failure.bgp_rib_failure import bgp_rib_failure
+from lina.routing.bgp.bgp_advertised_routes.bgp_advertised_routes import bgp_advertised_routes
+from lina.routing.bgp.bgp_update_group.bgp_update_group import bgp_update_group
 
 
 def dump_all_bgp_data():
@@ -40,6 +42,8 @@ def dump_all_bgp_data():
             ("BGP Paths", bgp_paths(suppress_output=True)),
             ("BGP Pending Prefixes", bgp_pending_prefixes(suppress_output=True)),
             ("BGP RIB Failure", bgp_rib_failure(suppress_output=True)),
+            ("BGP Advertised Routes", bgp_advertised_routes(suppress_output=True)),
+            ("BGP Update-group", bgp_update_group(suppress_output=True))
         ]
 
         # Write all outputs to the log file

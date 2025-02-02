@@ -10,6 +10,8 @@ from lina.routing.bgp.bgp_paths.bgp_paths import bgp_paths
 from lina.routing.bgp.bgp_pending_prefixes.bgp_pending_prefixes import bgp_pending_prefixes
 from lina.routing.bgp.bgp_rib_failure.bgp_rib_failure import bgp_rib_failure
 from lina.routing.bgp.dump_all_bgp_data.dump_all_bgp_data import dump_all_bgp_data
+from lina.routing.bgp.bgp_advertised_routes.bgp_advertised_routes import bgp_advertised_routes
+from lina.routing.bgp.bgp_update_group.bgp_update_group import bgp_update_group
 
 
 def bgp_menu():
@@ -22,7 +24,9 @@ def bgp_menu():
         "6": ("BGP Paths", bgp_paths),
         "7": ("BGP Pending Prefixes", bgp_pending_prefixes),
         "8": ("BGP RIB Failure", bgp_rib_failure),
-        "9": ("Dump All BGP Data", dump_all_bgp_data),
+        "9": ("BGP Get Advertised Routes", bgp_advertised_routes),
+        "10": ("BGP Update-group", bgp_update_group),
+        "11": ("Dump All BGP Data", dump_all_bgp_data),
         "0": ("Exit", None),
     }
 
@@ -31,7 +35,7 @@ def bgp_menu():
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu("BGP Menu", options_display)
 
-        choice = input("Select an option (0-9): ").strip()
+        choice = input("Select an option (0-11): ").strip()
 
         if choice in menu_options:
             description, function = menu_options[choice]

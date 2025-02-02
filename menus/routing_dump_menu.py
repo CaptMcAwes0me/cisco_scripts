@@ -1,24 +1,22 @@
 # Description: This script contains the routing menu and its corresponding functions.
 
-from lina.routing.global_routing.global_routing_menu import global_routing_menu
-from lina.routing.eigrp.eigrp_menu import eigrp_menu
-from lina.routing.ospf.ospf_menu import ospf_menu
-from lina.routing.bgp.bgp_menu import bgp_menu
-from lina.routing.rip.rip_menu import rip_menu
-from lina.routing.isis.isis_menu import isis_menu
-from lina.routing.vrf.vrf_menu import vrf_menu
+from lina.routing.global_routing.dump_all_route_data.dump_all_route_data import dump_all_route_data
+from lina.routing.eigrp.dump_all_eigrp_data.dump_all_eigrp_data import dump_all_eigrp_data
+from lina.routing.ospf.dump_all_ospf_data.dump_all_ospf_data import dump_all_ospf_data
+from lina.routing.bgp.dump_all_bgp_data.dump_all_bgp_data import dump_all_bgp_data
+from lina.routing.isis.dump_all_isis_data.dump_all_isis_data import dump_all_isis_data
+from lina.routing.vrf.dump_all_vrf_data.dump_all_vrf_data import dump_all_vrf_data
 from core.utils import display_formatted_menu
 
 
-def routing_menu():
+def routing_dump_menu():
     menu_options = {
-        "1": ("Global Routing", global_routing_menu),
-        "2": ("EIGRP", eigrp_menu),
-        "3": ("OSPF", ospf_menu),
-        "4": ("BGP", bgp_menu),
-        "5": ("RIP", rip_menu),
-        "6": ("ISIS", isis_menu),
-        "7": ("VRF", vrf_menu),
+        "1": ("Dump Global Routing Data", dump_all_route_data),
+        "2": ("Dump EIGRP Data", dump_all_eigrp_data),
+        "3": ("Dump OSPF Data", dump_all_ospf_data),
+        "4": ("Dump BGP Data", dump_all_bgp_data),
+        "5": ("Dump ISIS Data", dump_all_isis_data),
+        "6": ("Dump VRF Data", dump_all_vrf_data),
         "0": ("Exit", None),
     }
 
