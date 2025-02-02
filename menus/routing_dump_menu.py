@@ -1,11 +1,11 @@
 # Description: This script contains the routing menu and its corresponding functions.
 
-from lina.routing.global_routing.dump_all_route_data import dump_all_route_data
-from lina.routing.eigrp.dump_all_eigrp_data import dump_all_eigrp_data
-from lina.routing.ospf.dump_all_ospf_data import dump_all_ospf_data
-from lina.routing.bgp.dump_all_bgp_data import dump_all_bgp_data
-from lina.routing.isis.dump_all_isis_data import dump_all_isis_data
-from lina.routing.vrf.dump_all_vrf_data import dump_all_vrf_data
+from lina.routing.global_routing.dump_all_route_data.dump_all_route_data import dump_all_route_data
+from lina.routing.eigrp.dump_all_eigrp_data.dump_all_eigrp_data import dump_all_eigrp_data
+from lina.routing.ospf.dump_all_ospf_data.dump_all_ospf_data import dump_all_ospf_data
+from lina.routing.bgp.dump_all_bgp_data.dump_all_bgp_data import dump_all_bgp_data
+from lina.routing.isis.dump_all_isis_data.dump_all_isis_data import dump_all_isis_data
+from lina.routing.vrf.dump_all_vrf_data.dump_all_vrf_data import dump_all_vrf_data
 from core.utils import display_formatted_menu
 
 
