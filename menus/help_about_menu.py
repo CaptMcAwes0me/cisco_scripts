@@ -14,9 +14,11 @@ def help_menu():
 def about_menu():
     print("\nAbout:")
     print("-" * 80)
-    print("This script is developed by Garrett McCollum and Shane Bebber to ")
-    print("streamline troubleshooting tasks for Cisco Firepower devices.")
+    print("This script is developed by Garrett McCollum and Shane Bebber to streamline troubleshooting")
+    print("tasks for Cisco Firepower devices.")
+    print("-" * 80)
     print("Version: Still building")
+    print("-" * 80)
     print("For more information or support, contact gmccollu@cisco.com or shbebber@cisco.com.")
     print("-" * 80)
 
