@@ -1,7 +1,7 @@
 # Description: This script is a simple menu-driven program that allows the user to dump various data for Cisco Firepower
 # devices.
 
-from lina.nat.dump_all_nat_data import dump_all_nat_data
+from lina.nat.dump_all_nat_data.dump_all_nat_data import dump_all_nat_data
 from firepower.device_information.device_information import device_information
 from menus.routing_dump_menu import routing_dump_menu
 from menus.inspection_menu import inspection_menu
