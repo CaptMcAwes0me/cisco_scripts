@@ -1,4 +1,4 @@
-# Description: This script is a simple menu-driven program that allows the user to access troubleshooting tools, data dumps, and help/about information.
+# Description: This script is a simple menu-driven program that allows the user to access data dumps.
 
 from core.utils import display_formatted_menu
 from menus.troubleshoot_menu import troubleshoot_menu

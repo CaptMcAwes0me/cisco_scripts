@@ -21,7 +21,7 @@ def data_dump_menu():
         "3": ("Access Control (ACLs)", access_control_menu),  # still working on this
         "4": ("Routing", routing_dump_menu),
         "5": ("Inspection Features", inspection_menu),  # still working on this
-        "6": ("VPN", vpn_menu), # still working on this
+        "6": ("VPN", vpn_menu),  # still working on this
         "7": ("High Availability (HA) / Failover", high_availability_failover_menu),  # still working on this
         "8": ("Traffic Analysis and Logging", traffic_analysis_and_logging_menu),  # still working on this
         "9": ("Clustering", clustering_menu),  # still working on this
