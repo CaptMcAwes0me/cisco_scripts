@@ -14,7 +14,8 @@ def help_menu():
 def about_menu():
     print("\nAbout:")
     print("-" * 80)
-    print("This script is developed by [Your Name] to streamline troubleshooting tasks for Cisco Firepower devices.")
+    print("This script is developed by Garrett McCollum and Shane Bebber to streamline troubleshooting tasks for Cisco"
+          " Firepower devices.")
     print("Version: 1.0")
     print("For more information or support, contact [Your Email].")
     print("-" * 80)
