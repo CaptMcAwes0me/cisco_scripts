@@ -7,10 +7,10 @@ from menus.routing_dump_menu import routing_dump_menu
 from menus.inspection_menu import inspection_menu
 from menus.vpn_menu import vpn_menu
 from menus.high_availability_failover_menu import high_availability_failover_menu
-from menus.traffic_analysis_and_logging_menu import traffic_analysis_and_logging_menu
+from menus.logging_menu import traffic_analysis_and_logging_menu
 from lina.cluster.dump_all_cluster_data.dump_all_cluster_data import dump_all_cluster_data
-from menus.user_authentication_and_aaa_menu import user_authentication_and_aaa_menu
-from menus.access_control_menu import access_control_menu
+from menus.block_memory_menu import user_authentication_and_aaa_menu
+from menus.connectivity_and_traffic_menu import access_control_menu
 from core.utils import display_formatted_menu
 
 
