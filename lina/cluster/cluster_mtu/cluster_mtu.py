@@ -17,7 +17,8 @@ def cluster_mtu(suppress_output=False):
             print("-" * 80)
             print(
                 "\033[1;33m[NOTE]\033[0m: The Cluster Control Link (CCL) MTU should be configured to at least 100 bytes"
-                "to ensure stable cluster communication and performance.\n")
+                " larger than Data Interfaces to ensure stable cluster communication and performance.\033[1;33m[NOTE]\033"
+                "\n")
 
         return output
 
