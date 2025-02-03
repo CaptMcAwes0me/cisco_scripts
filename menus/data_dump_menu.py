@@ -4,7 +4,6 @@
 from lina.nat.dump_all_nat_data.dump_all_nat_data import dump_all_nat_data
 from firepower.device_information.device_information import device_information
 from menus.routing_dump_menu import routing_dump_menu
-from menus.inspection_menu import inspection_menu
 from menus.vpn_menu import vpn_menu
 from menus.high_availability_failover_menu import high_availability_failover_menu
 from menus.logging_menu import logging_menu
@@ -20,12 +19,11 @@ def data_dump_menu():
         "2": ("NAT (Network Address Translation) Dump", dump_all_nat_data),
         "3": ("Connectivity and Traffic", connectivity_and_traffic_menu),  # still working on this
         "4": ("Routing", routing_dump_menu),
-        "5": ("Inspection Features", inspection_menu),  # still working on this
-        "6": ("VPN", vpn_menu),  # still working on this
-        "7": ("High Availability (HA) / Failover", high_availability_failover_menu),  # still working on this
-        "8": ("Logging", logging_menu),  # still working on this
-        "9": ("Clustering", dump_all_cluster_data),
-        "10": ("Block Memory", block_memory_menu),  # still working on this
+        "5": ("VPN", vpn_menu),  # still working on this
+        "6": ("High Availability (HA) / Failover", high_availability_failover_menu),  # still working on this
+        "7": ("Logging", logging_menu),  # still working on this
+        "8": ("Clustering", dump_all_cluster_data),
+        "9": ("Block Memory", block_memory_menu),  # still working on this
         "0": ("Exit", None),
     }
 
@@ -34,7 +32,7 @@ def data_dump_menu():
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu("Data Dump Menu", options_display)
 
-        choice = input("Select an option (0-3): ").strip()
+        choice = input("Select an option (0-9): ").strip()
 
         if choice in menu_options:
             description, function = menu_options[choice]
@@ -47,4 +45,4 @@ def data_dump_menu():
                 print("\nExiting back to the Main Menu...")
                 break
         else:
-            print("\n[!] Invalid choice. Please enter a number between 0 and 3.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 9.")

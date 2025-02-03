@@ -5,7 +5,6 @@ from firepower.device_information.device_information import device_information
 from menus.nat_menu import nat_menu
 from menus.connectivity_and_traffic_menu import connectivity_and_traffic_menu
 from menus.routing_menu import routing_menu
-from menus.inspection_menu import inspection_menu
 from menus.vpn_menu import vpn_menu
 from menus.high_availability_failover_menu import high_availability_failover_menu
 from menus.logging_menu import logging_menu
@@ -19,12 +18,11 @@ def lina_menu():
         "2": ("NAT (Network Address Translation)", nat_menu),
         "3": ("Connectivity and Traffic", connectivity_and_traffic_menu),
         "4": ("Routing", routing_menu),
-        "5": ("Inspection Features", inspection_menu),
-        "6": ("VPN", vpn_menu),
-        "7": ("High Availability (HA) / Failover", high_availability_failover_menu),
-        "8": ("Logging", logging_menu),
-        "9": ("Clustering", cluster_menu),
-        "10": ("Block Memory", block_memory_menu),
+        "5": ("VPN", vpn_menu),
+        "6": ("High Availability (HA) / Failover", high_availability_failover_menu),
+        "7": ("Logging", logging_menu),
+        "8": ("Clustering", cluster_menu),
+        "9": ("Block Memory", block_memory_menu),
         "0": ("Exit", None),
     }
 
@@ -46,4 +44,4 @@ def lina_menu():
                 print("\nExiting to previous menu...")
                 break
         else:
-            print("\n[!] Invalid choice. Please enter a number between 0 and 10.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 9.")
