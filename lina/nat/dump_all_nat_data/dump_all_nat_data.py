@@ -4,6 +4,8 @@ from lina.nat.nat_running_config.nat_running_config import nat_running_config
 from lina.nat.nat_detail.nat_detail import nat_detail
 from lina.nat.xlate_count.xlate_count import xlate_count
 from lina.nat.xlate_detail.xlate_detail import xlate_detail
+from lina.nat.nat_proxy_arp.nat_proxy_arp import nat_proxy_arp
+from lina.nat.nat_pool.nat_pool import nat_pool
 
 
 def dump_all_nat_data():
@@ -30,6 +32,8 @@ def dump_all_nat_data():
         data_to_dump = [
             ("NAT Running Config", nat_running_config(suppress_output=True)),
             ("NAT Detail Table", nat_detail(suppress_output=True)),
+            ("NAT Proxy-ARP Table", nat_proxy_arp(suppress_output=True)),
+            ("NAT Pool", nat_pool(suppress_output=True)),
             ("Xlate Count", xlate_count(suppress_output=True)),
             ("Xlate Detail Table", xlate_detail(suppress_output=True))
         ]
