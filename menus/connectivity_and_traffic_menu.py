@@ -6,6 +6,8 @@ from lina.connectivity_and_traffic.conn_detail.conn_detail import conn_detail
 from lina.connectivity_and_traffic.sla_config.sla_config import sla_config
 from lina.connectivity_and_traffic.sla_operational_state.sla_operational_state import sla_operational_state
 from lina.connectivity_and_traffic.traffic.traffic import traffic
+from lina.connectivity_and_traffic.perfmon.perfmon import perfmon
+from lina.connectivity_and_traffic.service_policy.service_policy import service_policy
 
 
 def connectivity_and_traffic_menu():
@@ -15,6 +17,8 @@ def connectivity_and_traffic_menu():
         "3": ("SLA Configuration", sla_config),
         "4": ("SLA Operational-State", sla_operational_state),
         "5": ("Traffic", traffic),
+        "6": ("Perfmon", perfmon),
+        "7": ("Service-policy", service_policy),
         "0": ("Exit", None),
     }
 
