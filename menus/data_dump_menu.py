@@ -7,10 +7,10 @@ from menus.routing_dump_menu import routing_dump_menu
 from menus.inspection_menu import inspection_menu
 from menus.vpn_menu import vpn_menu
 from menus.high_availability_failover_menu import high_availability_failover_menu
-from menus.logging_menu import traffic_analysis_and_logging_menu
+from menus.logging_menu import logging_menu
 from lina.cluster.dump_all_cluster_data.dump_all_cluster_data import dump_all_cluster_data
-from menus.block_memory_menu import user_authentication_and_aaa_menu
-from menus.connectivity_and_traffic_menu import access_control_menu
+from menus.block_memory_menu import block_memory_menu
+from menus.connectivity_and_traffic_menu import connectivity_and_traffic_menu
 from core.utils import display_formatted_menu
 
 
@@ -18,14 +18,14 @@ def data_dump_menu():
     menu_options = {
         "1": ("Device Information", device_information),
         "2": ("NAT (Network Address Translation) Dump", dump_all_nat_data),
-        "3": ("Access Control (ACLs)", access_control_menu),  # still working on this
+        "3": ("Connectivity and Traffic", connectivity_and_traffic_menu),  # still working on this
         "4": ("Routing", routing_dump_menu),
         "5": ("Inspection Features", inspection_menu),  # still working on this
         "6": ("VPN", vpn_menu),  # still working on this
         "7": ("High Availability (HA) / Failover", high_availability_failover_menu),  # still working on this
-        "8": ("Traffic Analysis and Logging", traffic_analysis_and_logging_menu),  # still working on this
+        "8": ("Logging", logging_menu),  # still working on this
         "9": ("Clustering", dump_all_cluster_data),
-        "10": ("User Authentication and AAA", user_authentication_and_aaa_menu),  # still working on this
+        "10": ("Block Memory", block_memory_menu),  # still working on this
         "0": ("Exit", None),
     }
 
