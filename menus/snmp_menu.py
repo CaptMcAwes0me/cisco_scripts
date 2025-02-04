@@ -1,10 +1,10 @@
 from core.utils import display_formatted_menu
-from lina.logging_and_monitoring.snmp.snmp_config import snmp_config
-from lina.logging_and_monitoring.snmp.snmp_engineid import snmp_engineid
-from lina.logging_and_monitoring.snmp.snmp_group import snmp_group
-from lina.logging_and_monitoring.snmp.snmp_host import snmp_host
-from lina.logging_and_monitoring.snmp.snmp_user import snmp_user
-from lina.logging_and_monitoring.snmp.snmp_stats import snmp_stats
+from lina.logging_and_monitoring.snmp.snmp_config.snmp_config import snmp_config
+from lina.logging_and_monitoring.snmp.snmp_engineid.snmp_engineid import snmp_engineid
+from lina.logging_and_monitoring.snmp.snmp_group.snmp_group import snmp_group
+from lina.logging_and_monitoring.snmp.snmp_host.snmp_host import snmp_host
+from lina.logging_and_monitoring.snmp.snmp_user.snmp_user import snmp_user
+from lina.logging_and_monitoring.snmp.snmp_stats.snmp_stats import snmp_stats
 
 
 def snmp_menu():
