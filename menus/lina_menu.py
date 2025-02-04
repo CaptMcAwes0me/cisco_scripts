@@ -9,7 +9,7 @@ from menus.vpn_menu import vpn_menu
 from menus.high_availability_failover_menu import high_availability_failover_menu
 from menus.logging_menu import logging_menu
 from menus.cluster_menu import cluster_menu
-from menus.block_memory_menu import block_memory_menu
+from menus.blocks_menu import block_memory_menu
 
 
 def lina_menu():

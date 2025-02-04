@@ -8,7 +8,7 @@ from menus.vpn_menu import vpn_menu
 from menus.high_availability_failover_menu import high_availability_failover_menu
 from menus.logging_menu import logging_menu
 from lina.cluster.dump_all_cluster_data.dump_all_cluster_data import dump_all_cluster_data
-from menus.block_memory_menu import block_memory_menu
+from menus.blocks_menu import block_memory_menu
 from menus.connectivity_and_traffic_menu import connectivity_and_traffic_menu
 from core.utils import display_formatted_menu
 
