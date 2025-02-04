@@ -3,28 +3,26 @@
 from core.utils import display_formatted_menu
 from firepower.device_information.device_information import device_information
 from menus.nat_menu import nat_menu
-from menus.access_control_menu import access_control_menu
+from menus.connectivity_and_traffic_menu import connectivity_and_traffic_menu
 from menus.routing_menu import routing_menu
-from menus.inspection_menu import inspection_menu
 from menus.vpn_menu import vpn_menu
 from menus.high_availability_failover_menu import high_availability_failover_menu
-from menus.traffic_analysis_and_logging_menu import traffic_analysis_and_logging_menu
+from menus.logging_and_monitoring_menu import logging_and_monitoring_menu
 from menus.cluster_menu import cluster_menu
-from menus.user_authentication_and_aaa_menu import user_authentication_and_aaa_menu
+from menus.blocks_menu import blocks_menu
 
 
 def lina_menu():
     menu_options = {
         "1": ("Device Information", device_information),
         "2": ("NAT (Network Address Translation)", nat_menu),
-        "3": ("Access Control (ACLs)", access_control_menu),
+        "3": ("Connectivity and Traffic", connectivity_and_traffic_menu),
         "4": ("Routing", routing_menu),
-        "5": ("Inspection Features", inspection_menu),
-        "6": ("VPN", vpn_menu),
-        "7": ("High Availability (HA) / Failover", high_availability_failover_menu),
-        "8": ("Traffic Analysis and Logging", traffic_analysis_and_logging_menu),
-        "9": ("Clustering", cluster_menu),
-        "10": ("User Authentication and AAA", user_authentication_and_aaa_menu),
+        "5": ("VPN", vpn_menu),
+        "6": ("High Availability (HA) / Failover", high_availability_failover_menu),
+        "7": ("Logging and Monitoring", logging_and_monitoring_menu),
+        "8": ("Clustering", cluster_menu),
+        "9": ("Blocks", blocks_menu),
         "0": ("Exit", None),
     }
 
@@ -46,4 +44,4 @@ def lina_menu():
                 print("\nExiting to previous menu...")
                 break
         else:
-            print("\n[!] Invalid choice. Please enter a number between 0 and 10.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 9.")

@@ -1,16 +1,16 @@
 
 from core.utils import get_and_parse_cli_output
 
-def cluster_conn_count(suppress_output=False):
-    """Retrieves and optionally displays the Cluster Conn Count using 'show cluster conn_detail count'."""
+def blocks_queue_history_core_local(suppress_output=False):
+    """Retrieves and optionally displays the Blocks Queue History Core Local using 'show blocks history core-local'."""
 
-    command = "show cluster conn_detail count"
+    command = "show blocks history core-local"
 
     try:
         output = get_and_parse_cli_output(command)
 
         if not suppress_output:
-            print("\nCluster Conn Count Output:")
+            print("\nBlocks Queue History Core Local Output:")
             print("-" * 80)
             print(output)
             print("-" * 80)

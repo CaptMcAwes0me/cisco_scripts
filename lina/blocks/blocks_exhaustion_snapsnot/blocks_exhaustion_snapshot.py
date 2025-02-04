@@ -1,16 +1,17 @@
 
 from core.utils import get_and_parse_cli_output
 
-def cluster_conn_count(suppress_output=False):
-    """Retrieves and optionally displays the Cluster Conn Count using 'show cluster conn_detail count'."""
 
-    command = "show cluster conn_detail count"
+def blocks_exhaustion_snapshot(suppress_output=False):
+    """Retrieves and optionally displays the Blocks Exhaustion Snapshot using 'show blocks exhaustion snapshot'."""
+
+    command = "show blocks exhaustion snapshot"
 
     try:
         output = get_and_parse_cli_output(command)
 
         if not suppress_output:
-            print("\nCluster Conn Count Output:")
+            print("\nBlocks Exhaustion Snapshot Output:")
             print("-" * 80)
             print(output)
             print("-" * 80)
