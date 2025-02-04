@@ -26,7 +26,7 @@ def dump_all_conn_and_traffic_data():
 
     # Generate timestamp for the log file
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_file = os.path.join(troubleshooting_dir, f"{timestamp}_nat_dump.log")
+    log_file = os.path.join(troubleshooting_dir, f"{timestamp}_conn_and_traffic_dump.log")
 
     try:
         # Gather outputs

@@ -18,13 +18,13 @@ def data_dump_menu():
     menu_options = {
         "1": ("Device Information", device_information),
         "2": ("NAT (Network Address Translation) Dump", dump_all_nat_data),
-        "3": ("Connectivity and Traffic", dump_all_conn_and_traffic_data),  # still working on this
+        "3": ("Connectivity and Traffic", dump_all_conn_and_traffic_data),
         "4": ("Routing", routing_dump_menu),
         "5": ("VPN", vpn_menu),  # still working on this
         "6": ("High Availability (HA) / Failover", high_availability_failover_menu),  # still working on this
         "7": ("Logging", logging_menu),  # still working on this
         "8": ("Clustering", dump_all_cluster_data),
-        "9": ("Block Memory", dump_all_blocks_data),  # still working on this
+        "9": ("Block Memory", dump_all_blocks_data),
         "0": ("Exit", None),
     }
 
