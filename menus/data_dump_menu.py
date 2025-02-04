@@ -8,7 +8,7 @@ from menus.vpn_menu import vpn_menu
 from menus.high_availability_failover_menu import high_availability_failover_menu
 from menus.logging_menu import logging_menu
 from lina.cluster.dump_all_cluster_data.dump_all_cluster_data import dump_all_cluster_data
-from menus.blocks_menu import blocks_memory_menu
+from menus.blocks_menu import blocks_menu
 from menus.connectivity_and_traffic_menu import connectivity_and_traffic_menu
 from core.utils import display_formatted_menu
 
@@ -23,7 +23,7 @@ def data_dump_menu():
         "6": ("High Availability (HA) / Failover", high_availability_failover_menu),  # still working on this
         "7": ("Logging", logging_menu),  # still working on this
         "8": ("Clustering", dump_all_cluster_data),
-        "9": ("Block Memory", blocks_memory_menu),  # still working on this
+        "9": ("Block Memory", blocks_menu),  # still working on this
         "0": ("Exit", None),
     }
 
