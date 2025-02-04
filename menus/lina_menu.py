@@ -9,7 +9,7 @@ from menus.vpn_menu import vpn_menu
 from menus.high_availability_failover_menu import high_availability_failover_menu
 from menus.logging_menu import logging_menu
 from menus.cluster_menu import cluster_menu
-from menus.blocks_menu import block_memory_menu
+from menus.blocks_menu import blocks_menu
 
 
 def lina_menu():
@@ -22,7 +22,7 @@ def lina_menu():
         "6": ("High Availability (HA) / Failover", high_availability_failover_menu),
         "7": ("Logging", logging_menu),
         "8": ("Clustering", cluster_menu),
-        "9": ("Block Memory", block_memory_menu),
+        "9": ("Blocks", blocks_menu),
         "0": ("Exit", None),
     }
 
