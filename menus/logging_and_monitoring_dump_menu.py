@@ -1,7 +1,7 @@
 # Description: This script contains the Logging and Monitoring Dump menu.
 
-from lina.logging_and_monitoring.syslog.dump_all_syslog_data import dump_all_syslog_data
-from lina.logging_and_monitoring.snmp.dump_all_snmp_data import dump_all_snmp_data
+from lina.logging_and_monitoring.syslog.dump_all_syslog_data.dump_all_syslog_data import dump_all_syslog_data
+from lina.logging_and_monitoring.snmp.dump_all_snmp_data.dump_all_snmp_data import dump_all_snmp_data
 from core.utils import display_formatted_menu
 
 
