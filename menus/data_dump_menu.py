@@ -22,7 +22,7 @@ def data_dump_menu():
         "4": ("Routing", routing_dump_menu),
         "5": ("VPN", vpn_menu),  # still working on this
         "6": ("High Availability (HA) / Failover", high_availability_failover_menu),  # still working on this
-        "7": ("Logging", logging_and_monitoring_dump_menu),
+        "7": ("Logging and Monitoring", logging_and_monitoring_dump_menu),
         "8": ("Clustering", dump_all_cluster_data),
         "9": ("Block Memory", dump_all_blocks_data),
         "0": ("Exit", None),
