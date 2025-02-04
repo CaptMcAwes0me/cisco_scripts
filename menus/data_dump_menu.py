@@ -6,7 +6,7 @@ from firepower.device_information.device_information import device_information
 from menus.routing_dump_menu import routing_dump_menu
 from menus.vpn_menu import vpn_menu
 from menus.high_availability_failover_menu import high_availability_failover_menu
-from menus.logging_and_monitoring_menu import logging_and_monitoring_menu
+from menus.logging_and_monitoring_dump_menu import logging_and_monitoring_dump_menu
 from lina.cluster.dump_all_cluster_data.dump_all_cluster_data import dump_all_cluster_data
 from lina.blocks.dump_all_blocks_data.dump_all_blocks_data import dump_all_blocks_data
 from lina.connectivity_and_traffic.dump_all_conn_and_traffic_data.dump_all_conn_and_traffic_data \
@@ -22,7 +22,7 @@ def data_dump_menu():
         "4": ("Routing", routing_dump_menu),
         "5": ("VPN", vpn_menu),  # still working on this
         "6": ("High Availability (HA) / Failover", high_availability_failover_menu),  # still working on this
-        "7": ("Logging", logging_and_monitoring_menu),  # still working on this
+        "7": ("Logging", logging_and_monitoring_dump_menu),
         "8": ("Clustering", dump_all_cluster_data),
         "9": ("Block Memory", dump_all_blocks_data),
         "0": ("Exit", None),
