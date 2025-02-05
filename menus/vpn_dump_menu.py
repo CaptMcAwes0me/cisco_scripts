@@ -1,12 +1,12 @@
 from core.utils import display_formatted_menu
-from menus.anyconnect_menu import anyconnect_menu
-from menus.site_to_site_menu import site_to_site_menu
+from lina.vpn.anyconnect.dump_all_anyconnect_data.dump_all_anyconnect_data import dump_all_anyconnect_data
+from lina.vpn.s2s.dump_all_s2s_data.dump_all_s2s_data import dump_all_s2s_data
 
 
 def vpn_menu():
     menu_options = {
-        "1": ("AnyConnect (Secure Client) Menu", anyconnect_menu),
-        "2": ("Site-to-Site VPN Menu", site_to_site_menu),
+        "1": ("AnyConnect (Secure Client) Dump", dump_all_anyconnect_data),
+        "2": ("Site-to-Site VPN Dump", dump_all_s2s_data),
         "0": ("Exit", None),
     }
 
