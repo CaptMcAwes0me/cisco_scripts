@@ -8,7 +8,7 @@ def anyconnect_config(suppress_output=False):
         "show running-config all tunnel-group",
         "show running-config all group-policy",
         "show running-config all webvpn",
-        "show running-config all crypto trustpoint"
+        "show running-config all crypto ca trustpoint"
     ]
 
     results = {}
