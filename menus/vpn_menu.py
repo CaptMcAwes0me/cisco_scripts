@@ -1,12 +1,12 @@
 from core.utils import display_formatted_menu
 from menus.anyconnect_menu import anyconnect_menu
-from menus.site_to_site_menu import site_to_site_menu
+from menus.s2s_menu import s2s_menu
 
 
 def vpn_menu():
     menu_options = {
         "1": ("AnyConnect (Secure Client) Menu", anyconnect_menu),
-        "2": ("Site-to-Site VPN Menu", site_to_site_menu),
+        "2": ("Site-to-Site VPN Menu", s2s_menu),
         "0": ("Exit", None),
     }
 
