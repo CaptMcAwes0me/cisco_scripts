@@ -4,7 +4,6 @@ from core.utils import get_and_parse_cli_output
 def s2s_config(suppress_output=False):
     """Retrieves and optionally displays Site-to-Site VPN-related configurations."""
 
-    # Initial commands to gather S2S-related configuration
     commands = [
         "show running-config all crypto",
         "show running-config all tunnel-group",
