@@ -39,7 +39,7 @@ def anyconnect_menu():
                 print("\n" + "-" * 80)
                 print(f"Accessing {description}...".center(80))
                 print("-" * 80)
-                function(suppress_output=False)  # Ensuring output is displayed
+                function()  # Ensuring output is displayed
             else:  # Exit condition
                 print("\nReturning to the previous menu. Goodbye!")
                 break
