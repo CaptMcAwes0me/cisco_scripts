@@ -4,8 +4,8 @@
 from lina.nat.dump_all_nat_data.dump_all_nat_data import dump_all_nat_data
 from firepower.device_information.device_information import device_information
 from menus.routing_dump_menu import routing_dump_menu
-from menus.vpn_menu import vpn_menu
-from menus.high_availability_failover_menu import high_availability_failover_menu
+from menus.vpn_dump_menu import vpn_dump_menu
+from lina.failover.dump_all_failover_data.dump_all_failover_data import dump_all_failover_data
 from menus.logging_and_monitoring_dump_menu import logging_and_monitoring_dump_menu
 from lina.cluster.dump_all_cluster_data.dump_all_cluster_data import dump_all_cluster_data
 from lina.blocks.dump_all_blocks_data.dump_all_blocks_data import dump_all_blocks_data
@@ -20,8 +20,8 @@ def data_dump_menu():
         "2": ("NAT (Network Address Translation) Dump", dump_all_nat_data),
         "3": ("Connectivity and Traffic", dump_all_conn_and_traffic_data),
         "4": ("Routing", routing_dump_menu),
-        "5": ("VPN", vpn_menu),  # still working on this
-        "6": ("High Availability (HA) / Failover", high_availability_failover_menu),  # still working on this
+        "5": ("VPN", vpn_dump_menu),
+        "6": ("High Availability (HA) / Failover", dump_all_failover_data),
         "7": ("Logging and Monitoring", logging_and_monitoring_dump_menu),
         "8": ("Clustering", dump_all_cluster_data),
         "9": ("Block Memory", dump_all_blocks_data),
