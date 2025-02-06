@@ -27,9 +27,9 @@ def blocks_menu():
     while True:
         # Prepare the menu options for display
         options_display = {key: description for key, (description, _) in menu_options.items()}
-        display_formatted_menu("Cluster Menu", options_display)
+        display_formatted_menu("Blocks Menu", options_display)
 
-        choice = input("Select an option (0-9): ").strip()
+        choice = input("Select an option (0-8): ").strip()
 
         if choice in menu_options:
             description, function = menu_options[choice]
@@ -42,4 +42,4 @@ def blocks_menu():
                 print("\nExiting to previous menu...")
                 break
         else:
-            print("\n[!] Invalid choice. Please enter a number between 0 and 9.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 8.")

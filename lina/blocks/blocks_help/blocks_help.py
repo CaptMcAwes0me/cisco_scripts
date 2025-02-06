@@ -28,8 +28,12 @@ def blocks_help():
         "   - Provides a comprehensive view of block processing, including details about old blocks that may still affect the system.\n\n"
         "How These Commands Relate\n"
         "=========================\n\n"
-        "- The **show blocks blocks** command provides a snapshot of the current block status, while the **show blocks blocks exhaustion history** and **show blocks blocks exhaustion snapshot** commands help monitor both past and present block exhaustion events.\n\n"
-        "- The **show blocks queue history core-local** and **show blocks queue history detail** commands focus on the handling of blocks in the queue, particularly with regard to delays and resource management.\n\n"
-        "- The **show blocks old** and **show blocks old dump** commands allow access to information about older blocks that are no longer part of active processing but might still be valuable for analysis or historical reference."
+        "- The **show blocks ** command provides a snapshot of the current block status, while the **show blocks "
+        "exhaustion history** and **show blocks blocks exhaustion snapshot** commands help monitor both past and "
+        "present block exhaustion events.\n\n"
+        "- The **show blocks queue history core-local** and **show blocks queue history detail** commands focus on the "
+        "handling of blocks in the queue, particularly with regard to delays and resource management.\n\n"
+        "- The **show blocks old** and **show blocks old dump** commands allow access to information about older blocks "
+        "that are no longer part of active processing but might still be valuable for analysis or historical reference."
     )
     print(help_text)
