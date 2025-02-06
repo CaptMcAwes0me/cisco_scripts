@@ -8,6 +8,7 @@ from lina.blocks.blocks_queue_history_core_local.blocks_queue_history_core_local
 from lina.blocks.blocks_queue_history_detail.blocks_queue_history_detail import blocks_queue_history_detail
 from lina.blocks.blocks_old.blocks_old import blocks_old
 from lina.blocks.blocks_old_dump.blocks_old_dump import blocks_old_dump
+from lina.blocks.blocks_help.blocks_help import blocks_help
 
 
 def blocks_menu():
@@ -19,6 +20,7 @@ def blocks_menu():
         "5": ("Blocks Queue History Detail", blocks_queue_history_detail),
         "6": ("Blocks Old", blocks_old),
         "7": ("Blocks Old Dump", blocks_old_dump),
+        "8": ("Blocks Help", blocks_help),
         "0": ("Exit", None),
     }
 
