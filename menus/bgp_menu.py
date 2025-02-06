@@ -9,7 +9,7 @@ from lina.routing.bgp.bgp_cidr_only.bgp_cidr_only import bgp_cidr_only
 from lina.routing.bgp.bgp_paths.bgp_paths import bgp_paths
 from lina.routing.bgp.bgp_pending_prefixes.bgp_pending_prefixes import bgp_pending_prefixes
 from lina.routing.bgp.bgp_rib_failure.bgp_rib_failure import bgp_rib_failure
-from lina.routing.bgp.dump_all_bgp_data.dump_all_bgp_data import dump_all_bgp_data
+from lina.routing.bgp.bgp_help.bgp_help import bgp_help
 from lina.routing.bgp.bgp_advertised_routes.bgp_advertised_routes import bgp_advertised_routes
 from lina.routing.bgp.bgp_update_group.bgp_update_group import bgp_update_group
 
@@ -26,7 +26,7 @@ def bgp_menu():
         "8": ("BGP RIB Failure", bgp_rib_failure),
         "9": ("BGP Get Advertised Routes", bgp_advertised_routes),
         "10": ("BGP Update-group", bgp_update_group),
-        "11": ("Dump All BGP Data", dump_all_bgp_data),
+        "11": ("BGP Help", bgp_help),
         "0": ("Exit", None),
     }
 
@@ -45,7 +45,7 @@ def bgp_menu():
                 print("-" * 80)
                 function()
             else:  # Exit condition
-                print("\nExiting the script. Goodbye!")
+                print("\nExiting to previous menu...")
                 break
         else:
             print("\n[!] Invalid choice. Please enter a number between 0 and 9.")

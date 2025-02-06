@@ -8,6 +8,7 @@ from lina.vpn.anyconnect.crypto_ca_crls.crypto_ca_crls import crypto_ca_crls
 from lina.vpn.anyconnect.ssl_cipher.ssl_cipher import ssl_cipher
 from lina.vpn.anyconnect.ssl_information.ssl_information import ssl_information
 from lina.vpn.anyconnect.ssl_errors.ssl_errors import ssl_errors
+from lina.vpn.anyconnect.anyconnect_help.anyconnect_help import anyconnect_help
 
 
 def anyconnect_menu():
@@ -23,6 +24,7 @@ def anyconnect_menu():
         "7": ("SSL Cipher", ssl_cipher),
         "8": ("SSL Information", ssl_information),
         "9": ("SSL Errors", ssl_errors),
+        "10": ("Anyconnect Help", anyconnect_help),
         "0": ("Exit", None),
     }
 
@@ -41,7 +43,7 @@ def anyconnect_menu():
                 print("-" * 80)
                 function()  # Ensuring output is displayed
             else:  # Exit condition
-                print("\nReturning to the previous menu. Goodbye!")
+                print("\nExiting to previous menu...")
                 break
         else:
             print("\n[!] Invalid choice. Please enter a number between 0 and 9.")

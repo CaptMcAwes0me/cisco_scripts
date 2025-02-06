@@ -7,7 +7,7 @@ from lina.logging_and_monitoring.syslog.logging_dynamic_rate_limit.logging_dynam
 from lina.logging_and_monitoring.syslog.logging_unified_client.logging_unified_client import logging_unified_client
 from lina.logging_and_monitoring.syslog.logging_unified_client_stats.logging_unified_client_stats import logging_unified_client_stats
 from lina.logging_and_monitoring.syslog.logging_buffered_output.logging_buffered_output import logging_buffered_output
-
+from lina.logging_and_monitoring.syslog.syslog_help import syslog_help
 
 def syslog_menu():
     menu_options = {
@@ -19,6 +19,7 @@ def syslog_menu():
         "6": ("Logging Unified Client", logging_unified_client),
         "7": ("Logging Unified Client Stats", logging_unified_client_stats),
         "8": ("Logging Buffered Output", logging_buffered_output),
+        "9": ("Logging Help", syslog_help),
         "0": ("Exit", None),
     }
 
@@ -27,7 +28,7 @@ def syslog_menu():
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu("Syslog Menu", options_display)
 
-        choice = input("Select an option (0-8): ").strip()
+        choice = input("Select an option (0-9): ").strip()
 
         if choice in menu_options:
             description, function = menu_options[choice]
@@ -37,7 +38,7 @@ def syslog_menu():
                 print("-" * 80)
                 function()
             else:  # Exit condition
-                print("\nExiting the script. Goodbye!")
+                print("\nExiting to previous menu...")
                 break
         else:
-            print("\n[!] Invalid choice. Please enter a number between 0 and 8.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 9.")

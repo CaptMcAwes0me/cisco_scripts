@@ -8,7 +8,7 @@ from lina.connectivity_and_traffic.sla_operational_state.sla_operational_state i
 from lina.connectivity_and_traffic.traffic.traffic import traffic
 from lina.connectivity_and_traffic.perfmon.perfmon import perfmon
 from lina.connectivity_and_traffic.service_policy.service_policy import service_policy
-
+from lina.connectivity_and_traffic.connectivity_and_traffic_help.connectivity_and_traffic_help import connectivity_and_traffic_help
 
 def connectivity_and_traffic_menu():
     menu_options = {
@@ -19,15 +19,16 @@ def connectivity_and_traffic_menu():
         "5": ("Traffic", traffic),
         "6": ("Perfmon", perfmon),
         "7": ("Service-policy", service_policy),
+        "8": ("Connectivity and Traffic Help", connectivity_and_traffic_help),
         "0": ("Exit", None),
     }
 
     while True:
         # Prepare the menu options for display
         options_display = {key: description for key, (description, _) in menu_options.items()}
-        display_formatted_menu("Cluster Menu", options_display)
+        display_formatted_menu("Connectivity and Traffic Menu", options_display)
 
-        choice = input("Select an option (0-5): ").strip()
+        choice = input("Select an option (0-8): ").strip()
 
         if choice in menu_options:
             description, function = menu_options[choice]
@@ -37,7 +38,7 @@ def connectivity_and_traffic_menu():
                 print("-" * 80)
                 function()
             else:  # Exit condition
-                print("\nExiting the script. Goodbye!")
+                print("\nExiting to previous menu...")
                 break
         else:
-            print("\n[!] Invalid choice. Please enter a number between 0 and 5.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 8.")

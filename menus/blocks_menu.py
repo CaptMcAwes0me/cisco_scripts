@@ -8,6 +8,7 @@ from lina.blocks.blocks_queue_history_core_local.blocks_queue_history_core_local
 from lina.blocks.blocks_queue_history_detail.blocks_queue_history_detail import blocks_queue_history_detail
 from lina.blocks.blocks_old.blocks_old import blocks_old
 from lina.blocks.blocks_old_dump.blocks_old_dump import blocks_old_dump
+from lina.blocks.blocks_help.blocks_help import blocks_help
 
 
 def blocks_menu():
@@ -19,15 +20,16 @@ def blocks_menu():
         "5": ("Blocks Queue History Detail", blocks_queue_history_detail),
         "6": ("Blocks Old", blocks_old),
         "7": ("Blocks Old Dump", blocks_old_dump),
+        "8": ("Blocks Help", blocks_help),
         "0": ("Exit", None),
     }
 
     while True:
         # Prepare the menu options for display
         options_display = {key: description for key, (description, _) in menu_options.items()}
-        display_formatted_menu("Cluster Menu", options_display)
+        display_formatted_menu("Blocks Menu", options_display)
 
-        choice = input("Select an option (0-9): ").strip()
+        choice = input("Select an option (0-8): ").strip()
 
         if choice in menu_options:
             description, function = menu_options[choice]
@@ -37,7 +39,7 @@ def blocks_menu():
                 print("-" * 80)
                 function()
             else:  # Exit condition
-                print("\nExiting the script. Goodbye!")
+                print("\nExiting to previous menu...")
                 break
         else:
-            print("\n[!] Invalid choice. Please enter a number between 0 and 9.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 8.")

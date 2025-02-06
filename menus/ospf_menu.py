@@ -12,7 +12,7 @@ from lina.routing.ospf.ospf_nsf.ospf_nsf import ospf_nsf
 from lina.routing.ospf.ospf_rib.ospf_rib import ospf_rib
 from lina.routing.ospf.ospf_statistics.ospf_statistics import ospf_statistics
 from lina.routing.ospf.ospf_traffic.ospf_traffic import ospf_traffic
-from lina.routing.ospf.dump_all_ospf_data.dump_all_ospf_data import dump_all_ospf_data
+from lina.routing.ospf.ospf_help.ospf_help import ospf_help
 
 
 def ospf_menu():
@@ -28,7 +28,7 @@ def ospf_menu():
         "9": ("OSPF RIB", ospf_rib),
         "10": ("OSPF Statistics", ospf_statistics),
         "11": ("OSPF Traffic", ospf_traffic),
-        "12": ("Dump All OSPF Data", dump_all_ospf_data),
+        "12": ("OSPF Help", ospf_help),
         "0": ("Exit", None),
     }
 
@@ -47,7 +47,7 @@ def ospf_menu():
                 print("-" * 80)
                 function()
             else:  # Exit condition
-                print("\nExiting the script. Goodbye!")
+                print("\nExiting to previous menu...")
                 break
         else:
             print("\n[!] Invalid choice. Please enter a number between 0 and 12.")

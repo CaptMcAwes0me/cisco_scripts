@@ -5,6 +5,7 @@ from lina.routing.vrf.vrf_counters.vrf_counters import vrf_counters
 from lina.routing.vrf.vrf_detail.vrf_detail import vrf_detail
 from lina.routing.vrf.vrf_lock.vrf_lock import vrf_lock
 from lina.routing.vrf.vrf_tableid.vrf_tableid import vrf_tableid
+from lina.routing.vrf.vrf_help.vrf_help import vrf_help
 
 
 def vrf_menu():
@@ -15,6 +16,7 @@ def vrf_menu():
         "4": ("VRF Detail", vrf_detail),
         "5": ("VRF Lock", vrf_lock),
         "6": ("VRF Table ID", vrf_tableid),
+        "7": ("VRF Help", vrf_help),
         "0": ("Exit", None),
     }
 
@@ -23,7 +25,7 @@ def vrf_menu():
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu("VRF Menu", options_display)
 
-        choice = input("Select an option (0-6): ").strip()
+        choice = input("Select an option (0-7): ").strip()
 
         if choice in menu_options:
             description, function = menu_options[choice]
@@ -33,7 +35,7 @@ def vrf_menu():
                 print("-" * 80)
                 function()
             else:  # Exit condition
-                print("\nExiting the script. Goodbye!")
+                print("\nExiting to previous menu...")
                 break
         else:
-            print("\n[!] Invalid choice. Please enter a number between 0 and 6.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 7.")

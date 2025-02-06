@@ -6,8 +6,10 @@ from core.utils import display_formatted_menu
 def help_menu():
     print("\nHelp:")
     print("-" * 80)
-    print("This script provides various troubleshooting and diagnostic tools for Cisco Firepower devices.")
-    print("Use the available menus to access specific troubleshooting options and data dumps.")
+    print("This script offers a set of troubleshooting and diagnostic tools designed for Cisco Firepower devices.")
+    print("Each troubleshooting section includes a 'Help' option, where you can access the relevant commands used to")
+    print("gather data for that section. You will also find a brief explanation of each command's purpose and usage.")
+    print("Navigate through the available menus to select specific diagnostic options and view detailed information.")
     print("-" * 80)
 
 
