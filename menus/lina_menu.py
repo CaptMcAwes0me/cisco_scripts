@@ -6,7 +6,7 @@ from menus.nat_menu import nat_menu
 from menus.connectivity_and_traffic_menu import connectivity_and_traffic_menu
 from menus.routing_menu import routing_menu
 from menus.vpn_menu import vpn_menu
-from menus.high_availability_failover_menu import high_availability_failover_menu
+from menus.failover_menu import failover_menu
 from menus.logging_and_monitoring_menu import logging_and_monitoring_menu
 from menus.cluster_menu import cluster_menu
 from menus.blocks_menu import blocks_menu
@@ -19,7 +19,7 @@ def lina_menu():
         "3": ("Connectivity and Traffic", connectivity_and_traffic_menu),
         "4": ("Routing", routing_menu),
         "5": ("VPN", vpn_menu),
-        "6": ("High Availability (HA) / Failover", high_availability_failover_menu),
+        "6": ("High Availability (HA) / Failover", failover_menu),
         "7": ("Logging and Monitoring", logging_and_monitoring_menu),
         "8": ("Clustering", cluster_menu),
         "9": ("Blocks", blocks_menu),

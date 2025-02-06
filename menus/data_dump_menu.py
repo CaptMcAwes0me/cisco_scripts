@@ -5,7 +5,7 @@ from lina.nat.dump_all_nat_data.dump_all_nat_data import dump_all_nat_data
 from firepower.device_information.device_information import device_information
 from menus.routing_dump_menu import routing_dump_menu
 from menus.vpn_dump_menu import vpn_dump_menu
-from menus.high_availability_failover_menu import high_availability_failover_menu
+from menus.failover_menu import high_availability_failover_menu
 from menus.logging_and_monitoring_dump_menu import logging_and_monitoring_dump_menu
 from lina.cluster.dump_all_cluster_data.dump_all_cluster_data import dump_all_cluster_data
 from lina.blocks.dump_all_blocks_data.dump_all_blocks_data import dump_all_blocks_data
