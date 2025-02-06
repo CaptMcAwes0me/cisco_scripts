@@ -6,6 +6,7 @@ from lina.failover.failover_interface.failover_interface import failover_interfa
 from lina.failover.failover_descriptor.failover_descriptor import failover_descriptor
 from lina.failover.failover_config_sync_status.failover_config_sync_status import failover_config_sync_status
 from lina.failover.failover_app_sync_stats.failover_app_sync_stats import failover_app_sync_stats
+from lina.failover.failover_help.failover_help import failover_help
 from core.utils import display_formatted_menu
 
 
@@ -21,6 +22,7 @@ def failover_menu():
         "6": ("Failover Descriptor", failover_descriptor),
         "7": ("Failover Config Sync Status", failover_config_sync_status),
         "8": ("Failover Application Sync Stats", failover_app_sync_stats),
+        "9": ("Failover Help", failover_help),
         "0": ("Exit", None),
     }
 
@@ -29,7 +31,7 @@ def failover_menu():
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu("Failover Menu", options_display)
 
-        choice = input("Select an option (0-8): ").strip()
+        choice = input("Select an option (0-9): ").strip()
 
         if choice in menu_options:
             description, function = menu_options[choice]
@@ -42,4 +44,4 @@ def failover_menu():
                 print("\nReturning to the previous menu...")
                 break
         else:
-            print("\n[!] Invalid choice. Please enter a number between 0 and 8.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 9.")
