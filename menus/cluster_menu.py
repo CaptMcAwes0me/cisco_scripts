@@ -10,6 +10,7 @@ from lina.cluster.cluster_conn_count.cluster_conn_count import cluster_conn_coun
 from lina.cluster.cluster_xlate_count.cluster_xlate_count import cluster_xlate_count
 from lina.cluster.cluster_traffic.cluster_traffic import cluster_traffic
 from lina.cluster.cluster_cpu.cluster_cpu import cluster_cpu
+from lina.cluster.cluster_help.cluster_help import cluster_help
 
 
 def cluster_menu():
@@ -23,6 +24,7 @@ def cluster_menu():
         "7": ("Cluster Xlate Count", cluster_xlate_count),
         "8": ("Cluster Traffic", cluster_traffic),
         "9": ("Cluster CPU", cluster_cpu),
+        "10": ("Cluster Help", cluster_help),
         "0": ("Exit", None),
     }
 
@@ -31,7 +33,7 @@ def cluster_menu():
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu("Cluster Menu", options_display)
 
-        choice = input("Select an option (0-9): ").strip()
+        choice = input("Select an option (0-10): ").strip()
 
         if choice in menu_options:
             description, function = menu_options[choice]
@@ -44,4 +46,4 @@ def cluster_menu():
                 print("\nExiting to previous menu...")
                 break
         else:
-            print("\n[!] Invalid choice. Please enter a number between 0 and 9.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 10.")
