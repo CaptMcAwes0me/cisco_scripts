@@ -3,7 +3,7 @@
 from core.utils import display_formatted_menu
 from lina.routing.global_routing.show_route_all.show_route_all import show_route_all
 from lina.routing.global_routing.asp_table_routing_all.asp_table_routing_all import asp_table_routing_all
-from lina.routing.global_routing.dump_all_route_data.dump_all_route_data import dump_all_route_data
+from lina.routing.global_routing.global_routing_help.global_routing_help import global_routing_help
 from lina.routing.global_routing.running_config_all.running_config_all import running_config_all
 
 
@@ -13,7 +13,7 @@ def global_routing_menu():
         "2": ("Router Running Configuration", lambda: running_config_all(suppress_output=False, config_type="router")),
         "3": ("Show Route All", show_route_all),
         "4": ("ASP Table Routing All", asp_table_routing_all),
-        "5": ("Dump All Route Data", dump_all_route_data),
+        "5": ("Global Routing Help", global_routing_help),
         "0": ("Exit", None),
     }
 
@@ -36,4 +36,3 @@ def global_routing_menu():
                 break
         else:
             print("\n[!] Invalid choice. Please enter a number between 0 and 5.")
-

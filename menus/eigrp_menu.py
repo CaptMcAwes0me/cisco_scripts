@@ -7,7 +7,7 @@ from lina.routing.eigrp.eigrp_neighbors.eigrp_neighbors import eigrp_neighbors
 from lina.routing.eigrp.eigrp_topology.eigrp_topology import eigrp_topology
 from lina.routing.eigrp.eigrp_traffic.eigrp_traffic import eigrp_traffic
 from lina.routing.eigrp.eigrp_routing_table.eigrp_routing_table import eigrp_routing_table
-from lina.routing.eigrp.dump_all_eigrp_data.dump_all_eigrp_data import dump_all_eigrp_data
+from lina.routing.eigrp.eigrp_help.eigrp_help import eigrp_help
 from lina.routing.eigrp.eigrp_running_config.eigrp_running_config import eigrp_running_config
 
 
@@ -20,7 +20,7 @@ def eigrp_menu():
         "5": ("EIGRP Topology", eigrp_topology),
         "6": ("EIGRP Traffic", eigrp_traffic),
         "7": ("EIGRP Routing Table", eigrp_routing_table),
-        "8": ("Dump All EIGRP Data", dump_all_eigrp_data),
+        "8": ("EIGRP Help", eigrp_help),
         "0": ("Exit", None),
     }
 

@@ -6,6 +6,7 @@ from lina.nat.xlate_count.xlate_count import xlate_count
 from lina.nat.xlate_detail.xlate_detail import xlate_detail_interactive
 from lina.nat.nat_proxy_arp.nat_proxy_arp import nat_proxy_arp
 from lina.nat.nat_pool.nat_pool import nat_pool
+from lina.nat.nat_help.nat_help import nat_help
 from core.utils import display_formatted_menu
 
 
@@ -17,6 +18,7 @@ def nat_menu():
         "4": ("NAT Pool", nat_pool),
         "5": ("Xlate Count", xlate_count),
         "6": ("Xlate Detail", xlate_detail_interactive),
+        "7": ("NAT Help", nat_help),
         "0": ("Exit", None),
     }
 
@@ -25,7 +27,7 @@ def nat_menu():
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu("NAT Menu", options_display)
 
-        choice = input("Select an option (0-6): ").strip()
+        choice = input("Select an option (0-7): ").strip()
 
         if choice in menu_options:
             description, function = menu_options[choice]
@@ -38,4 +40,4 @@ def nat_menu():
                 print("\nExiting to previous menu...")
                 break
         else:
-            print("\n[!] Invalid choice. Please enter a number between 0 and 6.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 7.")

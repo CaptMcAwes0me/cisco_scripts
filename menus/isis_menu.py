@@ -8,7 +8,7 @@ from lina.routing.isis.isis_neighbors.isis_neighbors import isis_neighbors
 from lina.routing.isis.isis_rib.isis_rib import isis_rib
 from lina.routing.isis.isis_spf_log.isis_spf_log import isis_spf_log
 from lina.routing.isis.isis_topology.isis_topology import isis_topology
-from lina.routing.isis.dump_all_isis_data.dump_all_isis_data import dump_all_isis_data
+from lina.routing.isis.isis_help.isis_help import isis_help
 from lina.routing.isis.isis_running_config.isis_running_config import isis_running_config
 
 
@@ -22,7 +22,7 @@ def isis_menu():
         "6": ("ISIS RIB", isis_rib),
         "7": ("ISIS SPF Log", isis_spf_log),
         "8": ("ISIS Topology", isis_topology),
-        "9": ("Dump All ISIS Data", dump_all_isis_data),
+        "9": ("ISIS Help", isis_help),
         "0": ("Exit", None),
     }
 
