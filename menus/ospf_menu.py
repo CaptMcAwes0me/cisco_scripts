@@ -47,7 +47,7 @@ def ospf_menu():
                 print("-" * 80)
                 function()
             else:  # Exit condition
-                print("\nExiting the script. Goodbye!")
+                print("\nExiting to previous menu...")
                 break
         else:
             print("\n[!] Invalid choice. Please enter a number between 0 and 12.")

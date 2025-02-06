@@ -43,7 +43,7 @@ def data_dump_menu():
                 print("-" * 80)
                 function()
             else:  # Exit condition
-                print("\nExiting back to the Main Menu...")
+                print("\nExiting to previous menu...")
                 break
         else:
             print("\n[!] Invalid choice. Please enter a number between 0 and 9.")

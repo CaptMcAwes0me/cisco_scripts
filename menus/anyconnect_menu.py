@@ -41,7 +41,7 @@ def anyconnect_menu():
                 print("-" * 80)
                 function()  # Ensuring output is displayed
             else:  # Exit condition
-                print("\nReturning to the previous menu. Goodbye!")
+                print("\nExiting to previous menu...")
                 break
         else:
             print("\n[!] Invalid choice. Please enter a number between 0 and 9.")

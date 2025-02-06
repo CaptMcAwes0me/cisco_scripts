@@ -29,7 +29,7 @@ def s2s_menu():
                 print("-" * 80)
                 function()
             else:  # Exit condition
-                print("\nReturning to the previous menu. Goodbye!")
+                print("\nExiting to previous menu...")
                 break
         else:
             print("\n[!] Invalid choice. Please enter a number between 0 and 3.")
