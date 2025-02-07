@@ -12,7 +12,6 @@ def main_menu_help():
 
     **How to Use the Menu:**
     - Enter the number corresponding to the desired option and press Enter.
-    - Use 'q' or 'exit' to quit the script at any time.
 
     **Additional Notes:**
     - The Troubleshooting Menu allows access to more detailed Firepower and Lina troubleshooting tools.

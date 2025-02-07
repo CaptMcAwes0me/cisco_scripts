@@ -15,8 +15,6 @@ def routing_help():
 
     **How to Use the Menu:**
     - Enter the corresponding number to access routing details for a specific protocol.
-    - Review routing tables and protocol-specific information for troubleshooting.
-    - Use 'q' or 'exit' to leave the menu.
 
     **Additional Notes:**
     - Understanding routing protocols helps identify connectivity issues.
