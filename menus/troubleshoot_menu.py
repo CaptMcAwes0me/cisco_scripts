@@ -2,7 +2,7 @@
 # for Cisco Firepower devices.
 
 from firepower.device_information.device_information import device_information
-from firepower.firepower_menu import firepower_menu
+from menus.firepower_menu import firepower_menu
 from menus.lina_menu import lina_menu
 from core.utils import display_formatted_menu
 
