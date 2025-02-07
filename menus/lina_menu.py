@@ -1,7 +1,7 @@
 # Description: This script contains the Lina menu and its options.
 
 from core.utils import display_formatted_menu
-from firepower.device_information.device_information import device_information
+from lina.show_version.show_version import show_version
 from menus.nat_menu import nat_menu
 from menus.connectivity_and_traffic_menu import connectivity_and_traffic_menu
 from menus.routing_menu import routing_menu
@@ -15,7 +15,7 @@ from menus.lina_menu_help.lina_menu_help import lina_menu_help
 
 def lina_menu():
     menu_options = {
-        "1": ("Device Information", device_information),
+        "1": ("System Version", show_version),
         "2": ("NAT (Network Address Translation)", nat_menu),
         "3": ("Connectivity and Traffic", connectivity_and_traffic_menu),
         "4": ("Routing", routing_menu),

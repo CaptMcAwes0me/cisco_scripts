@@ -2,7 +2,7 @@
 # devices.
 
 from lina.nat.dump_all_nat_data.dump_all_nat_data import dump_all_nat_data
-from firepower.device_information.device_information import device_information
+from lina.show_version.show_version import show_version
 from menus.routing_dump_menu import routing_dump_menu
 from menus.vpn_dump_menu import vpn_dump_menu
 from lina.failover.dump_all_failover_data.dump_all_failover_data import dump_all_failover_data
@@ -17,7 +17,7 @@ from core.utils import display_formatted_menu
 
 def data_dump_menu():
     menu_options = {
-        "1": ("Device Information", device_information),
+        "1": ("System Version", show_version),
         "2": ("NAT (Network Address Translation) Data Retrieval", dump_all_nat_data),
         "3": ("Connectivity and Traffic Data Retrieval", dump_all_conn_and_traffic_data),
         "4": ("Routing Data Retrieval", routing_dump_menu),
