@@ -11,7 +11,7 @@ from lina.cluster.dump_all_cluster_data.dump_all_cluster_data import dump_all_cl
 from lina.blocks.dump_all_blocks_data.dump_all_blocks_data import dump_all_blocks_data
 from lina.connectivity_and_traffic.dump_all_conn_and_traffic_data.dump_all_conn_and_traffic_data \
     import dump_all_conn_and_traffic_data
-from lina.data_dump_help import data_dump_help
+from menus.data_dump_help import data_dump_help
 from core.utils import display_formatted_menu
 
 

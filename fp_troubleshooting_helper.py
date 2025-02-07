@@ -3,7 +3,7 @@
 from core.utils import display_formatted_menu
 from menus.troubleshoot_menu import troubleshoot_menu
 from menus.data_dump_menu import data_dump_menu
-from main_menu_help.main_menu_help import main_menu_help
+from menus.main_menu_help import main_menu_help
 
 
 def main_menu():

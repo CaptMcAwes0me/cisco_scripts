@@ -6,7 +6,7 @@ from firepower.device_information.device_information import device_information
 from firepower.database.database_menu import database_menu
 from firepower.disk_usage.disk_usage_menu import disk_usage_menu
 from firepower.cpu_usage.cpu_usage_menu import cpu_usage_menu
-from firepower.firepower_menu_help.firepower_menu_help import firepower_menu_help
+from menus.firepower_menu_help.firepower_menu_help import firepower_menu_help
 from core.utils import display_formatted_menu
 
 
