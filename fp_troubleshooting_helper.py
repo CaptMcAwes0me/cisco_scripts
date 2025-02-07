@@ -3,14 +3,14 @@
 from core.utils import display_formatted_menu
 from menus.troubleshoot_menu import troubleshoot_menu
 from menus.data_dump_menu import data_dump_menu
-from menus.help_about_menu import help_about_menu
+from menus.main_menu_help.main_menu_help import main_menu_help
 
 
 def main_menu():
     menu_options = {
         "1": ("Troubleshooting Menu", troubleshoot_menu),
-        "2": ("Data Dump Menu", data_dump_menu),
-        "3": ("Help and About", help_about_menu),
+        "2": ("Lina Data Retrieval Menu", data_dump_menu),
+        "3": ("Main Menu Help", main_menu_help),
         "0": ("Exit", None),
     }
 
