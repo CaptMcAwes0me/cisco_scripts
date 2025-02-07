@@ -1,8 +1,8 @@
 def data_dump_help():
     help_text = """
-    Data Dump Menu Help:
+    Lina Data Retrieval Menu Help:
 
-    The Data Dump Menu provides various commands to extract and review detailed system information, 
+    The Lina Data Retrieval Menu provides various commands to extract and review detailed system information, 
     aiding in diagnostics and troubleshooting.
 
     1. **Device Information**: 

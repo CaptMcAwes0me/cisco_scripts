@@ -6,7 +6,7 @@ def main_menu_help():
 
     **Menu Options:**
     1) Troubleshooting Menu - Access troubleshooting tools for Firepower and Lina systems.
-    2) Data Retrieval Menu - Retrieve system logs, configurations, and diagnostic data.
+    2) Lina Data Retrieval Menu - Retrieve system logs, configurations, and diagnostic data.
     3) Help and About - View documentation and details about this script.
     0) Exit - Close the script safely.
 
