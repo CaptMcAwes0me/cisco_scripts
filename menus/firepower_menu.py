@@ -6,6 +6,7 @@ from firepower.device_information.device_information import device_information
 from firepower.database.database_menu import database_menu
 from firepower.disk_usage.disk_usage_menu import disk_usage_menu
 from firepower.cpu_usage.cpu_usage_menu import cpu_usage_menu
+from firepower.firepower_menu_help.firepower_menu_help import firepower_menu_help
 from core.utils import display_formatted_menu
 
 
@@ -16,7 +17,8 @@ def firepower_menu():
         "2": ("Registration Troubleshooting", registration_menu),
         "3": ("Database Troubleshooting", database_menu),
         "4": ("Disk Usage Troubleshooting", disk_usage_menu),
-        "5": ("System CPU Troubleshooting (FTD Only)", cpu_usage_menu),
+        "5": ("System CPU Troubleshooting", cpu_usage_menu),
+        "6": ("Firepower Menu Help", firepower_menu_help),
         "0": ("Exit", None),
     }
 
@@ -25,7 +27,7 @@ def firepower_menu():
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu("Firepower Menu", options_display)
 
-        choice = input("Select an option: ").strip()
+        choice = input("Select an option (0-6): ").strip()
 
         if choice in menu_options:
             description, function = menu_options[choice]
@@ -35,7 +37,7 @@ def firepower_menu():
                 print("-" * 80)
                 function()
             else:  # Exit condition
-                print("\nExiting the script. Goodbye!")
+                print("\nExiting to previous menu...")
                 break
         else:
-            print("\n[!] Invalid choice. Please enter a valid option.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 6.")

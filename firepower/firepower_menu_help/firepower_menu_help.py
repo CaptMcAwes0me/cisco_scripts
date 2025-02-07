@@ -9,7 +9,7 @@ def firepower_menu_help():
     2) Registration Troubleshooting - Check device registration status and troubleshoot connectivity.
     3) Database Troubleshooting - Analyze Firepower database integrity and performance.
     4) Disk Usage Troubleshooting - Monitor disk space usage and identify storage-related issues.
-    5) System CPU Troubleshooting (FTD Only) - Analyze CPU usage and process performance (Firepower Threat Defense only).
+    5) System CPU Troubleshooting - Analyze CPU usage and process performance.
     0) Exit - Return to the previous menu.
 
     **Usage Tips:**
