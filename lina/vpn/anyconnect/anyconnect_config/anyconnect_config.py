@@ -10,6 +10,8 @@ def anyconnect_config(tunnel_group):
     command = f"show running-config tunnel-group {tunnel_group}"
     output = get_and_parse_cli_output(command)
     print("-" * 80)
+    print(f"Configuration for Tunnel Group: {tunnel_group}")
+    print("-" * 80)
     print(output)
     print("-" * 80)
 

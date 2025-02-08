@@ -58,7 +58,7 @@ def anyconnect_tunnel_groups():
             print("\n[!] Invalid choice. Please enter a valid option.")
 
 
-def anyconnect_menu(selected_group):
+def anyconnect_menu(selected_group, tunnel_groups):
     """Displays a menu for AnyConnect-related tasks."""
 
     menu_options = {
@@ -88,9 +88,10 @@ def anyconnect_menu(selected_group):
                 print(f"Accessing {description}...".center(80))
                 print("-" * 80)
 
-                # Conditionally pass selected_group only to functions that require it
+                # Conditionally handle multiple tunnel groups
                 if function == anyconnect_config:
-                    function(selected_group)
+                    for group in tunnel_groups:
+                        function(group)
                 else:
                     function()
 
