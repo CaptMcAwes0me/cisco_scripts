@@ -47,12 +47,12 @@ def anyconnect_config(tunnel_group):
                     print("-" * 80)
             elif re.search(rf"(?<!ipv6-){policy_type} tunnelall", group_policy_output):
                 print(f"{policy_type} disabled")
-                print("-" * 80)
 
         # Step 5.1: Check for vpn-filter and show access-list
         vpn_filter_match = re.search(r"vpn-filter value (\S+)", group_policy_output)
         if vpn_filter_match:
             acl_name = vpn_filter_match.group(1)
+            print("-" * 80)
             print(f"vpn-filter enabled (ACL: {acl_name})")
             acl_command = f"show access-list {acl_name}"
             acl_output = get_and_parse_cli_output(acl_command)
