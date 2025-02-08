@@ -58,8 +58,11 @@ def anyconnect_tunnel_groups():
             print("\n[!] Invalid choice. Please enter a valid option.")
 
 
-def anyconnect_menu(selected_group, tunnel_groups):
+def anyconnect_menu(selected_group, tunnel_groups=[]):
     """Displays a menu for AnyConnect-related tasks."""
+
+    if not tunnel_groups:
+        tunnel_groups = [selected_group]
 
     menu_options = {
         "1": ("AnyConnect Configuration", anyconnect_config),
