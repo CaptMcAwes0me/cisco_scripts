@@ -14,7 +14,6 @@ def anyconnect_config(tunnel_group):
     output = get_and_parse_cli_output(command)
     print(output)
     print("-" * 80)
-    print("-" * 80)
 
     # Step 2: Extract address-pool and default-group-policy
     address_pool_match = re.search(r"address-pool (\S+)", output)
@@ -26,12 +25,11 @@ def anyconnect_config(tunnel_group):
     if group_policy:
         # Step 3: Show group-policy configuration
         print("-" * 80)
-        print("Group Policy Configuration:")
+        print(f"Group Policy Configuration for {tunnel_group}:")
         print("-" * 80)
         group_policy_cmd = f"show running-config group-policy {group_policy}"
         group_policy_output = get_and_parse_cli_output(group_policy_cmd)
         print(group_policy_output)
-        print("-" * 80)
         print("-" * 80)
 
         # Step 4: Check for split-tunnel-policy
@@ -46,14 +44,13 @@ def anyconnect_config(tunnel_group):
                     acl_command = f"show access-list {acl_name}"
                     acl_output = get_and_parse_cli_output(acl_command)
                     print("-" * 80)
-                    print("Access List Configuration:")
+                    print(f"Access List Configuration for {tunnel_group}:")
                     print("-" * 80)
                     print(acl_output)
                     print("-" * 80)
                     print("-" * 80)
             elif re.search(rf"(?<!ipv6-){policy_type} tunnelall", group_policy_output):
                 print(f"{policy_type} disabled")
-                print("-" * 80)
                 print("-" * 80)
 
         # Step 5.1: Check for vpn-filter and show access-list
@@ -64,25 +61,22 @@ def anyconnect_config(tunnel_group):
             acl_command = f"show access-list {acl_name}"
             acl_output = get_and_parse_cli_output(acl_command)
             print("-" * 80)
-            print("VPN Filter Configuration:")
+            print(f"VPN Filter Configuration for {tunnel_group}:")
             print("-" * 80)
             print(acl_output)
             print("-" * 80)
-            print("-" * 80)
         else:
             print("vpn-filter disabled")
-            print("-" * 80)
             print("-" * 80)
 
     if address_pool:
         # Show IP local pool configuration
         print("-" * 80)
-        print("IP Local Pool Configuration:")
+        print(f"IP Local Pool Configuration for {tunnel_group}:")
         print("-" * 80)
         ip_pool_cmd = f"show running-config ip local pool {address_pool}"
         ip_pool_output = get_and_parse_cli_output(ip_pool_cmd)
         print(ip_pool_output)
-        print("-" * 80)
         print("-" * 80)
 
     # Step 6: Gather and print sysopt configuration related to VPN
