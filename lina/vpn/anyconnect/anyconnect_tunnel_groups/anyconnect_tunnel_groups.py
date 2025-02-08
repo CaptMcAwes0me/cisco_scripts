@@ -1,12 +1,12 @@
 from core.utils import get_and_parse_cli_output, display_formatted_menu
 
 
-def anyconnect_tunnel_groups():
+def get_anyconnect_tunnel_groups():
     """
     Executes the 'show running-config tunnel-group | include type remote-access' command,
     parses the output, and displays a numbered menu for the user to select a tunnel group.
 
-    Returns the selected tunnel group name.
+    Returns the selected tunnel group name or all tunnel groups if Enter is pressed.
     """
     command = "show running-config tunnel-group | include type remote-access"
     cli_output = get_and_parse_cli_output(command)
@@ -28,12 +28,15 @@ def anyconnect_tunnel_groups():
     menu_options["0"] = "Exit"
 
     while True:
-        display_formatted_menu("Select a Tunnel Group", menu_options)
-        choice = input("Select an option (0-{}): ".format(len(tunnel_groups))).strip()
+        display_formatted_menu("Select a Tunnel Group (press Enter to select all)", menu_options)
+        choice = input("Select an option (0-{} or Enter for all): ".format(len(tunnel_groups))).strip()
 
         if choice == "0":
             print("\nExiting to previous menu...")
             return None
+        elif choice == "":
+            print("\nSelected All Tunnel Groups:", ", ".join(tunnel_groups))
+            return tunnel_groups
         elif choice in menu_options:
             selected_group = menu_options[choice]
             print(f"\nSelected Tunnel Group: {selected_group}")
