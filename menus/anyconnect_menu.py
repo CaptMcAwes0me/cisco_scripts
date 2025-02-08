@@ -45,9 +45,9 @@ def anyconnect_tunnel_groups():
             print("\nExiting to previous menu...")
             return None
         elif choice == "":
-            print("\nSelected All Tunnel Groups:", ", ".join(tunnel_groups))
+            print("\nSelected All Tunnel Groups")
             selected_groups = tunnel_groups
-            anyconnect_menu(selected_groups)
+            anyconnect_menu("All")
             return selected_groups
         elif choice in menu_options:
             selected_group = menu_options[choice]
@@ -56,6 +56,7 @@ def anyconnect_tunnel_groups():
             return selected_group
         else:
             print("\n[!] Invalid choice. Please enter a valid option.")
+
 
 def anyconnect_menu(selected_group):
     """Displays a menu for AnyConnect-related tasks."""
