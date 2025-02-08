@@ -1,8 +1,7 @@
 from core.utils import display_formatted_menu
-from menus.anyconnect_menu import anyconnect_menu
+from menus.anyconnect_menu import anyconnect_tunnel_groups
 from menus.vpn_menu_help.vpn_menu_help import vpn_menu_help
 from menus.s2s_menu import s2s_menu
-from lina.vpn.anyconnect.anyconnect_tunnel_groups.anyconnect_tunnel_groups import anyconnect_tunnel_groups
 
 
 def vpn_menu():
