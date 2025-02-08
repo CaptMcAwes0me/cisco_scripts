@@ -47,7 +47,7 @@ def anyconnect_tunnel_groups():
         elif choice == "":
             print("\nSelected All Tunnel Groups")
             selected_groups = tunnel_groups
-            anyconnect_menu("All")
+            anyconnect_menu("All", selected_groups)  # Fixed: passing selected_groups
             return selected_groups
         elif choice in menu_options:
             selected_group = menu_options[choice]
