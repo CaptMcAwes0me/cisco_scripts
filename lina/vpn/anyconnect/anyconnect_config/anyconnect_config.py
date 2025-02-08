@@ -47,6 +47,19 @@ def anyconnect_config(tunnel_group):
             elif re.search(rf"(?<!ipv6-){policy_type} tunnelall", group_policy_output):
                 print(f"{policy_type} disabled")
 
+        # Step 5.1: Check for vpn-filter and show access-list
+        vpn_filter_match = re.search(r"vpn-filter value (\S+)", group_policy_output)
+        if vpn_filter_match:
+            acl_name = vpn_filter_match.group(1)
+            print(f"vpn-filter enabled (ACL: {acl_name})")
+            acl_command = f"show access-list {acl_name}"
+            acl_output = get_and_parse_cli_output(acl_command)
+            print("-" * 80)
+            print(acl_output)
+            print("-" * 80)
+        else:
+            print("vpn-filter disabled")
+
     if address_pool:
         # Show IP local pool configuration
         ip_pool_cmd = f"show running-config ip local pool {address_pool}"
@@ -67,3 +80,4 @@ def anyconnect_config(tunnel_group):
     # Note about NAT configuration
     print("\nNOTE: This script does not gather NAT configuration. Manual verification is required for NAT-exemption "
           "and/or Hairpin NAT statements to ensure they are configured properly.")
+
