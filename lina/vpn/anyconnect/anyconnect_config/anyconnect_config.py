@@ -12,6 +12,7 @@ def anyconnect_config(tunnel_group):
     print("#" * 80)
     print(f"Configuration for Tunnel Group: {tunnel_group}")
     print("#" * 80)
+    print("\n")
     print(output)
     print("-" * 80)
 
@@ -46,6 +47,7 @@ def anyconnect_config(tunnel_group):
                     print("-" * 80)
             elif re.search(rf"(?<!ipv6-){policy_type} tunnelall", group_policy_output):
                 print(f"{policy_type} disabled")
+                print("-" * 80)
 
         # Step 5.1: Check for vpn-filter and show access-list
         vpn_filter_match = re.search(r"vpn-filter value (\S+)", group_policy_output)
