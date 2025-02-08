@@ -1,39 +1,45 @@
 from core.utils import get_and_parse_cli_output
+import re
 
 
-def anyconnect_config(suppress_output=False):
-    """Retrieves and optionally displays AnyConnect-related configurations."""
+def anyconnect_config(tunnel_group):
+    """
+    Gathers and displays configuration details for the selected AnyConnect tunnel group.
+    """
+    # Step 1: Gather and print tunnel-group configuration
+    command = f"show running-config tunnel-group {tunnel_group}"
+    output = get_and_parse_cli_output(command)
+    print(output)
 
-    commands = [
-        "show running-config all tunnel-group",
-        "show running-config all group-policy",
-        "show running-config all webvpn",
-        "show running-config all crypto ca trustpoint"
-    ]
+    # Step 2: Extract address-pool and default-group-policy
+    address_pool_match = re.search(r"address-pool (\S+)", output)
+    group_policy_match = re.search(r"default-group-policy (\S+)", output)
 
-    try:
-        outputs = {cmd: get_and_parse_cli_output(cmd) for cmd in commands}
+    address_pool = address_pool_match.group(1) if address_pool_match else None
+    group_policy = group_policy_match.group(1) if group_policy_match else None
 
-        formatted_output = "\n".join([
-            "-" * 80,
-            "                     Accessing AnyConnect Configuration...",
-            "-" * 80,
-            "\nAnyConnect (Secure Client) Configuration Output:",
-            "-" * 80
-        ])
+    if group_policy:
+        # Step 3: Show group-policy configuration
+        group_policy_cmd = f"show running-config group-policy {group_policy}"
+        group_policy_output = get_and_parse_cli_output(group_policy_cmd)
+        print(group_policy_output)
 
-        for cmd, output in outputs.items():
-            formatted_output += f"\n\n{cmd} Output:\n" + "-" * 80 + f"\n{output.strip()}"
+        # Step 4: Check for split-tunnel-policy
+        if re.search(r"(?<!ipv6-)split-tunnel-policy tunnelspecified", group_policy_output):
+            print("Split tunneling enabled")
 
-        formatted_output += "\n" + "-" * 80
+            # Step 5: Extract ACL name and show access-list
+            acl_match = re.search(r"split-tunnel-network-list value (\S+)", group_policy_output)
+            if acl_match:
+                acl_name = acl_match.group(1)
+                acl_command = f"show access-list {acl_name}"
+                acl_output = get_and_parse_cli_output(acl_command)
+                print(acl_output)
+        elif re.search(r"(?<!ipv6-)split-tunnel-policy tunnelall", group_policy_output):
+            print("Split tunneling disabled")
 
-        if not suppress_output:
-            print(formatted_output)
-
-        return formatted_output  # Ensure it returns a single formatted string
-
-    except Exception as e:
-        error_message = f"[!] Error: {e}"
-        if not suppress_output:
-            print(error_message)
-        return error_message
+    if address_pool:
+        # Show IP local pool configuration
+        ip_pool_cmd = f"show running-config ip local pool {address_pool}"
+        ip_pool_output = get_and_parse_cli_output(ip_pool_cmd)
+        print(ip_pool_output)
