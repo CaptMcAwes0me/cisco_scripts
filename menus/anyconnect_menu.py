@@ -87,7 +87,13 @@ def anyconnect_menu(selected_group):
                 print("\n" + "-" * 80)
                 print(f"Accessing {description}...".center(80))
                 print("-" * 80)
-                function()  # Pass selected_group if needed in these functions
+
+                # Conditionally pass selected_group only to functions that require it
+                if function == anyconnect_config:
+                    function(selected_group)
+                else:
+                    function()
+
             else:
                 print("\nExiting to previous menu...")
                 break
