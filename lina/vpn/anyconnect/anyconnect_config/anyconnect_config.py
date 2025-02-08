@@ -31,20 +31,21 @@ def anyconnect_config(tunnel_group):
         print("-" * 80)
 
         # Step 4: Check for split-tunnel-policy
-        if re.search(r"(?<!ipv6-)split-tunnel-policy tunnelspecified", group_policy_output):
-            print("Split tunneling enabled")
+        for policy_type in ["split-tunnel-policy", "ipv6-split-tunnel-policy"]:
+            if re.search(rf"(?<!ipv6-){policy_type} tunnelspecified", group_policy_output):
+                print(f"{policy_type} enabled")
 
-            # Step 5: Extract ACL name and show access-list
-            acl_match = re.search(r"split-tunnel-network-list value (\S+)", group_policy_output)
-            if acl_match:
-                acl_name = acl_match.group(1)
-                acl_command = f"show access-list {acl_name}"
-                acl_output = get_and_parse_cli_output(acl_command)
-                print("-" * 80)
-                print(acl_output)
-                print("-" * 80)
-        elif re.search(r"(?<!ipv6-)split-tunnel-policy tunnelall", group_policy_output):
-            print("Split tunneling disabled")
+                # Step 5: Extract ACL name and show access-list
+                acl_match = re.search(rf"{policy_type.replace('policy', 'network-list value')} (\S+)", group_policy_output)
+                if acl_match:
+                    acl_name = acl_match.group(1)
+                    acl_command = f"show access-list {acl_name}"
+                    acl_output = get_and_parse_cli_output(acl_command)
+                    print("-" * 80)
+                    print(acl_output)
+                    print("-" * 80)
+            elif re.search(rf"(?<!ipv6-){policy_type} tunnelall", group_policy_output):
+                print(f"{policy_type} disabled")
 
     if address_pool:
         # Show IP local pool configuration
@@ -53,3 +54,16 @@ def anyconnect_config(tunnel_group):
         print("-" * 80)
         print(ip_pool_output)
         print("-" * 80)
+
+    # Step 6: Gather and print sysopt configuration related to VPN
+    sysopt_cmd = "show running-config all sysopt | include vpn"
+    sysopt_output = get_and_parse_cli_output(sysopt_cmd)
+    print("-" * 80)
+    print("Sysopt Configuration (related to VPN):")
+    print("-" * 80)
+    print(sysopt_output)
+    print("-" * 80)
+
+    # Note about NAT configuration
+    print("\nNOTE: This script does not gather NAT configuration. Manual verification is required for NAT-exemption "
+          "and/or Hairpin NAT statements to ensure they are configured properly.")
