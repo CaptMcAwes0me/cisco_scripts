@@ -9,10 +9,10 @@ def s2s_tunnel_groups():
     command = "show running-config tunnel-group | include type ipsec-l2l"
     cli_output = get_and_parse_cli_output(command)
 
-    ikev1_policy_based = []
-    ikev1_vti = []
-    ikev2_policy_based = []
-    ikev2_vti = []
+    ikev1_policy_based = set()
+    ikev1_vti = set()
+    ikev2_policy_based = set()
+    ikev2_vti = set()
 
     tunnel_groups = [line.split()[1] for line in cli_output.splitlines() if line.startswith("tunnel-group")]
 
@@ -34,21 +34,22 @@ def s2s_tunnel_groups():
         # Categorize
         if ikev1:
             if vti_match:
-                ikev1_vti.append(ip)
+                ikev1_vti.add(ip)
             elif policy_match:
-                ikev1_policy_based.append(ip)
+                ikev1_policy_based.add(ip)
 
         if ikev2:
             if vti_match:
-                ikev2_vti.append(ip)
+                ikev2_vti.add(ip)
             elif policy_match:
-                ikev2_policy_based.append(ip)
+                ikev2_policy_based.add(ip)
 
     # Display Results
     def display_section(title, items):
         print("=" * 80)
         print(title.center(80))
         print("=" * 80)
+        items = sorted(list(items))  # Sort for consistent ordering
         if items:
             for idx, ip in enumerate(items, 1):
                 print(f"{idx}. {ip}")
@@ -61,4 +62,4 @@ def s2s_tunnel_groups():
     display_section("IKEv2 Policy-Based Tunnels", ikev2_policy_based)
     display_section("IKEv2 VTI Tunnels", ikev2_vti)
 
-    return ikev1_policy_based, ikev1_vti, ikev2_policy_based, ikev2_vti
+    return list(ikev1_policy_based), list(ikev1_vti), list(ikev2_policy_based), list(ikev2_vti)
