@@ -10,16 +10,13 @@ def s2s_tunnel_groups():
     cli_output = get_and_parse_cli_output(command)
 
     # Store categories
-    ikev1_policy_based = set()
-    ikev1_vti = set()
-    ikev2_policy_based = set()
-    ikev2_vti = set()
+    ikev1_policy_based = []
+    ikev1_vti = []
+    ikev2_policy_based = []
+    ikev2_vti = []
 
     # Gather unique IPs
     tunnel_groups = sorted(set([line.split()[1] for line in cli_output.splitlines() if line.startswith("tunnel-group")]))
-
-    # Assign numbers to IPs
-    ip_mapping = {str(index + 1): ip for index, ip in enumerate(tunnel_groups)}
 
     # Process each IP
     for ip in tunnel_groups:
@@ -40,26 +37,25 @@ def s2s_tunnel_groups():
         # Categorize
         if ikev1:
             if vti_match:
-                ikev1_vti.add(ip)
+                ikev1_vti.append(ip)
             if policy_match:
-                ikev1_policy_based.add(ip)
+                ikev1_policy_based.append(ip)
 
         if ikev2:
             if vti_match:
-                ikev2_vti.add(ip)
+                ikev2_vti.append(ip)
             if policy_match:
-                ikev2_policy_based.add(ip)
+                ikev2_policy_based.append(ip)
 
     # Display Results
     def display_section(title, items):
         print("=" * 80)
         print(title.center(80))
         print("=" * 80)
-        items = sorted(list(items))  # Sort for consistent ordering
+        items = sorted(list(set(items)))  # Remove duplicates and sort
         if items:
-            for ip in items:
-                number = [k for k, v in ip_mapping.items() if v == ip][0]
-                print(f"{number}. {ip}")
+            for idx, ip in enumerate(items, 1):
+                print(f"{idx}. {ip}")
         else:
             print("No tunnels found.")
         print("=" * 80 + "\n")
@@ -69,4 +65,4 @@ def s2s_tunnel_groups():
     display_section("IKEv2 Policy-Based Tunnels", ikev2_policy_based)
     display_section("IKEv2 VTI Tunnels", ikev2_vti)
 
-    return ip_mapping, ikev1_policy_based, ikev1_vti, ikev2_policy_based, ikev2_vti
+    return ikev1_policy_based, ikev1_vti, ikev2_policy_based, ikev2_vti
