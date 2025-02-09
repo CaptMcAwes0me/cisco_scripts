@@ -9,13 +9,19 @@ def s2s_tunnel_groups():
     command = "show running-config tunnel-group | include type ipsec-l2l"
     cli_output = get_and_parse_cli_output(command)
 
+    # Store categories
     ikev1_policy_based = set()
     ikev1_vti = set()
     ikev2_policy_based = set()
     ikev2_vti = set()
 
-    tunnel_groups = [line.split()[1] for line in cli_output.splitlines() if line.startswith("tunnel-group")]
+    # Gather unique IPs
+    tunnel_groups = sorted(set([line.split()[1] for line in cli_output.splitlines() if line.startswith("tunnel-group")]))
 
+    # Assign numbers to IPs
+    ip_mapping = {str(index + 1): ip for index, ip in enumerate(tunnel_groups)}
+
+    # Process each IP
     for ip in tunnel_groups:
         tunnel_output = get_and_parse_cli_output(f"show running-config tunnel-group {ip}")
 
@@ -35,13 +41,13 @@ def s2s_tunnel_groups():
         if ikev1:
             if vti_match:
                 ikev1_vti.add(ip)
-            elif policy_match:
+            if policy_match:
                 ikev1_policy_based.add(ip)
 
         if ikev2:
             if vti_match:
                 ikev2_vti.add(ip)
-            elif policy_match:
+            if policy_match:
                 ikev2_policy_based.add(ip)
 
     # Display Results
@@ -51,8 +57,9 @@ def s2s_tunnel_groups():
         print("=" * 80)
         items = sorted(list(items))  # Sort for consistent ordering
         if items:
-            for idx, ip in enumerate(items, 1):
-                print(f"{idx}. {ip}")
+            for ip in items:
+                number = [k for k, v in ip_mapping.items() if v == ip][0]
+                print(f"{number}. {ip}")
         else:
             print("No tunnels found.")
         print("=" * 80 + "\n")
@@ -62,4 +69,4 @@ def s2s_tunnel_groups():
     display_section("IKEv2 Policy-Based Tunnels", ikev2_policy_based)
     display_section("IKEv2 VTI Tunnels", ikev2_vti)
 
-    return list(ikev1_policy_based), list(ikev1_vti), list(ikev2_policy_based), list(ikev2_vti)
+    return ip_mapping, ikev1_policy_based, ikev1_vti, ikev2_policy_based, ikev2_vti
