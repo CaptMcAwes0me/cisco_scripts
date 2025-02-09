@@ -96,30 +96,56 @@ def anyconnect_config(tunnel_group):
 def anyconnect_config_dump(suppress_output=False):
     """Retrieves and optionally displays the full AnyConnect configuration."""
 
-    commands = [
-        "show running-config all tunnel-group",
-        "show running-config all group-policy",
-        "show running-config all webvpn",
-        "show running-config ip local pool",
-        "show running-config all sysopt",
-        "show running-config all ssl"
-    ]
+    command1 = "show running-config all tunnel-group"
+    command2 = "show running-config all group-policy"
+    command3 = "show running-config all webvpn"
+    command4 = "show running-config ip local pool"
+    command5 = "show running-config all sysopt"
+    command6 = "show running-config all ssl"
 
-    separator = "=" * 80
+    try:
+        output1 = get_and_parse_cli_output(command1)
+        output2 = get_and_parse_cli_output(command2)
+        output3 = get_and_parse_cli_output(command3)
+        output4 = get_and_parse_cli_output(command4)
+        output5 = get_and_parse_cli_output(command5)
+        output6 = get_and_parse_cli_output(command6)
 
-    for command in commands:
-        section = command.replace("show running-config all ", "").replace("show running-config ", "").replace("ip local pool", "IP Local Pools").title()
+        if not suppress_output:
+            print("\n" + "Tunnel Group Output:".center(80))
+            print("-" * 80)
+            print(output1)
+            print("-" * 80)
 
-        try:
-            output = get_and_parse_cli_output(command)
+            print("\n" + "Group Policy Output:".center(80))
+            print("-" * 80)
+            print(output2)
+            print("-" * 80)
 
-            if not suppress_output:  # Suppress output if True
-                print(f"\n{separator}\n{section}\n{separator}")
-                print(output)
-                print(f"{separator}\n")
+            print("\n" + "WebVPN Output:".center(80))
+            print("-" * 80)
+            print(output3)
+            print("-" * 80)
 
-        except Exception as e:
-            error_message = f"[!] Error processing command '{command}': {e}"
-            if not suppress_output:
-                print(error_message)
-            return error_message
+            print("\n" + "IP Local Pool Output:".center(80))
+            print("-" * 80)
+            print(output4)
+            print("-" * 80)
+
+            print("\n" + "Sysopt Output:".center(80))
+            print("-" * 80)
+            print(output5)
+            print("-" * 80)
+
+            print("\n" + "SSL Output:".center(80))
+            print("-" * 80)
+            print(output6)
+            print("-" * 80)
+
+        return output1, output2, output3, output4, output5, output6
+
+    except Exception as e:
+        error_message = f"[!] Error: {e}"
+        if not suppress_output:
+            print(error_message)
+        return error_message
