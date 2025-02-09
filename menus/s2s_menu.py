@@ -5,7 +5,7 @@ from lina.vpn.s2s.crypto_ipsec_sa_detail.crypto_ipsec_sa_detail import crypto_ip
 from lina.vpn.s2s.s2s_help.s2s_help import s2s_help
 
 
-def s2s_menu():
+def s2s_menu(selected_peers):
     """Displays a menu for Site-to-Site VPN-related tasks."""
 
     menu_options = {
@@ -21,7 +21,7 @@ def s2s_menu():
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu("Site-to-Site VPN Menu", options_display)
 
-        choice = input("Select an option (0-3): ").strip()
+        choice = input("Select an option (0-4): ").strip()
 
         if choice in menu_options:
             description, function = menu_options[choice]
@@ -29,9 +29,9 @@ def s2s_menu():
                 print("\n" + "-" * 80)
                 print(f"Accessing {description}...".center(80))
                 print("-" * 80)
-                function()
+                function(selected_peers)  # Pass the selected peers to the function
             else:  # Exit condition
                 print("\nExiting to previous menu...")
                 break
         else:
-            print("\n[!] Invalid choice. Please enter a number between 0 and 3.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 4.")

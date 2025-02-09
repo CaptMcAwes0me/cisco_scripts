@@ -1,5 +1,6 @@
 import re
 from core.utils import get_and_parse_cli_output, display_formatted_menu
+from menus.s2s_menu import s2s_menu
 
 
 def ip_sort_key(ip):
@@ -54,6 +55,7 @@ def s2s_tunnel_groups():
             if policy_match:
                 ikev2_policy_based.append(ip)
 
+
     # Display Results
     def display_section(title, items, start_index):
         print("=" * 80)
@@ -95,4 +97,4 @@ def s2s_tunnel_groups():
         else:
             print("\n[!] Invalid choice. Please enter a valid option.")
 
-    return selected_peers
+    s2s_menu(selected_peers)  # Pass selected peers to the s2s_menu
