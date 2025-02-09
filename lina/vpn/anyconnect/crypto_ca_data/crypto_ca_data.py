@@ -4,43 +4,32 @@ from core.utils import get_and_parse_cli_output
 def crypto_ca_data(suppress_output=False):
     """Retrieves and optionally displays Crypto CA data including Trustpoint, Trustpool, Certificates, and CRLs."""
 
-    command1 = "show crypto ca trustpoint"
-    command2 = "show crypto ca trustpool"
-    command3 = "show crypto ca certificates"
-    command4 = "show crypto ca crls"
+    commands = {
+        "Crypto CA Trustpoint": "show crypto ca trustpoint",
+        "Crypto CA Trustpool": "show crypto ca trustpool",
+        "Crypto CA Certificates": "show crypto ca certificates",
+        "Crypto CA CRLs": "show crypto ca crls"
+    }
 
-    try:
-        output1 = get_and_parse_cli_output(command1)
-        output2 = get_and_parse_cli_output(command2)
-        output3 = get_and_parse_cli_output(command3)
-        output4 = get_and_parse_cli_output(command4)
+    outputs = {}
 
-        if not suppress_output:
-            print("\n" + "Crypto CA Trustpoint Output".center(80))
-            print("-" * 80)
-            print(output1)
-            print("-" * 80)
+    for label, command in commands.items():
+        try:
+            output = get_and_parse_cli_output(command)
+            outputs[label] = output
 
-            print("\n" + "Crypto CA Trustpool Output".center(80))
-            print("-" * 80)
-            print(output2)
-            print("-" * 80)
+            if not suppress_output:
+                print(f"{label} Output".center(80))
+                print(f"Command: {command}".center(80))
+                print("-" * 80)
+                print(output)
+                print("-" * 80)
 
-            print("\n" + "Crypto CA Certificates Output".center(80))
-            print("-" * 80)
-            print(output3)
-            print("-" * 80)
+        except Exception as e:
+            error_message = f"[!] Error retrieving {label}: {e}"
+            outputs[label] = error_message
 
-            print("\n" + "Crypto CA CRLs Output:".center(80))
-            print("-" * 80)
-            print(output4)
-            print("-" * 80)
+            if not suppress_output:
+                print(error_message)
 
-        return output1, output2, output3, output4
-
-    except Exception as e:
-        error_message = f"[!] Error: {e}"
-        if not suppress_output:
-            print(error_message)
-        return error_message
-
+    return outputs
