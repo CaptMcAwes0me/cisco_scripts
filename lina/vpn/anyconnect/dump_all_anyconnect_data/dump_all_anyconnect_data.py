@@ -1,8 +1,7 @@
 import os
 from datetime import datetime
 from lina.vpn.anyconnect.anyconnect_config.anyconnect_config import anyconnect_config_dump
-from lina.vpn.anyconnect.vpn_sessiondb_anyconnect_dump.vpn_sessiondb_anyconnect_dump \
-    import vpn_sessiondb_anyconnect_dump
+from lina.vpn.anyconnect.vpn_sessiondb_anyconnect_dump.vpn_sessiondb_anyconnect_dump import vpn_sessiondb_anyconnect_dump
 from lina.vpn.anyconnect.crypto_ca_data.crypto_ca_data import crypto_ca_data
 from lina.vpn.anyconnect.ssl_cipher.ssl_cipher import ssl_cipher
 from lina.vpn.anyconnect.ssl_information.ssl_information import ssl_information
@@ -46,7 +45,15 @@ def dump_all_anyconnect_data():
                 f.write(f"{'=' * 80}\n")
                 f.write(f"{title}\n")
                 f.write(f"{'-' * 80}\n")
-                f.write(f"{output}\n")
+
+                # Check if the output is a tuple (multiple outputs)
+                if isinstance(output, tuple):
+                    for section in output:
+                        f.write(f"{section}\n")  # Write each output separately
+                        f.write(f"{'-' * 80}\n")  # Optional: separator between outputs
+                else:
+                    f.write(f"{output}\n")  # Single output
+
                 f.write(f"{'=' * 80}\n\n")
 
         print(f"\n[+] All AnyConnect data written to: {log_file}")
