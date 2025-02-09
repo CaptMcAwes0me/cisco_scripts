@@ -148,4 +148,3 @@ def anyconnect_config_dump(suppress_output=False):
         error_message = f"[!] Error: {e}"
         if not suppress_output:
             print(error_message)
-
