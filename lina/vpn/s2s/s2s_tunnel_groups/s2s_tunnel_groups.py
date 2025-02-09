@@ -1,5 +1,5 @@
 import re
-from core.utils import get_and_parse_cli_output, display_formatted_menu
+from core.utils import get_and_parse_cli_output
 from menus.s2s_menu import s2s_menu
 
 
