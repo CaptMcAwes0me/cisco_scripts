@@ -1,5 +1,5 @@
 import re
-from core.utils import get_and_parse_cli_output
+from core.utils import get_and_parse_cli_output, display_formatted_menu
 
 
 def ip_sort_key(ip):
@@ -21,6 +21,9 @@ def s2s_tunnel_groups():
 
     # Gather unique IPs
     tunnel_groups = sorted(set([line.split()[1] for line in cli_output.splitlines() if line.startswith("tunnel-group")]), key=ip_sort_key)
+
+    # Mapping for selection
+    selection_mapping = {}
 
     # Process each IP
     for ip in tunnel_groups:
@@ -61,6 +64,7 @@ def s2s_tunnel_groups():
         if items:
             for ip in items:
                 print(f"{index}. {ip}")
+                selection_mapping[str(index)] = ip
                 index += 1
         else:
             print("No tunnels found.")
@@ -73,4 +77,22 @@ def s2s_tunnel_groups():
     index = display_section("IKEv2 Policy-Based Tunnels", ikev2_policy_based, index)
     index = display_section("IKEv2 VTI Tunnels", ikev2_vti, index)
 
-    return ikev1_policy_based, ikev1_vti, ikev2_policy_based, ikev2_vti
+    # User selection
+    while True:
+        choice = input("Select an option (0 to exit, Enter for All): ").strip()
+
+        if choice == "0":
+            print("\nExiting to previous menu...")
+            return None
+        elif choice == "":
+            print("\nSelected All Tunnel Groups")
+            selected_peers = tunnel_groups
+            break
+        elif choice in selection_mapping:
+            selected_peers = [selection_mapping[choice]]
+            print(f"\nSelected Tunnel Group: {selection_mapping[choice]}")
+            break
+        else:
+            print("\n[!] Invalid choice. Please enter a valid option.")
+
+    return selected_peers
