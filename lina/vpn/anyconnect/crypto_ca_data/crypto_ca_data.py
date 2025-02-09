@@ -16,17 +16,17 @@ def crypto_ca_data(suppress_output=False):
         output4 = get_and_parse_cli_output(command4)
 
         if not suppress_output:
-            print("\n" + "Crypto CA Trustpoint Output:".center(80))
+            print("\n" + "Crypto CA Trustpoint Output".center(80))
             print("-" * 80)
             print(output1)
             print("-" * 80)
 
-            print("\n" + "Crypto CA Trustpool Output:".center(80))
+            print("\n" + "Crypto CA Trustpool Output".center(80))
             print("-" * 80)
             print(output2)
             print("-" * 80)
 
-            print("\n" + "Crypto CA Certificates Output:".center(80))
+            print("\n" + "Crypto CA Certificates Output".center(80))
             print("-" * 80)
             print(output3)
             print("-" * 80)
