@@ -141,3 +141,43 @@ def s2s_vti_config(ip_address, ike_version):
     print("and/or Hairpin NAT statements to ensure they are configured properly.\n")
 
 
+def s2s_policy_based_config(ip_address, ike_version):
+    """
+    Gathers and displays configuration details for Site-to-Site IKEv1 and IKEv2 Policy-Based VPNs (Crypto Map).
+    """
+    print("=" * 80)
+    print(f"Policy-Based Configuration for {ip_address} ({ike_version.upper()})".center(80))
+    print("=" * 80)
+
+    # Gather Crypto Map Configuration
+    crypto_map_output = get_and_parse_cli_output(f"show running-config crypto map | include {ip_address}")
+    print(crypto_map_output)
+    print("=" * 80 + "\n")
+
+    # Extract Transform-Set or Proposal
+    if ike_version == 'ikev2':
+        proposal_command = f"show running-config crypto ipsec ikev2 ipsec-proposal"
+    else:
+        proposal_command = f"show running-config crypto ipsec transform-set"
+
+    proposal_output = get_and_parse_cli_output(proposal_command)
+    print("=" * 80)
+    print(f"{('IKEv2 IPSec Proposal' if ike_version == 'ikev2' else 'IKEv1 Transform-Set')} Configuration".center(80))
+    print("=" * 80)
+    print(proposal_output)
+    print("=" * 80 + "\n")
+
+    # Display IKE-specific configurations
+    if ike_version == 'ikev2':
+        ike_output = get_and_parse_cli_output("show running-config crypto ikev2")
+    else:
+        ike_output = get_and_parse_cli_output("show running-config crypto isakmp")
+
+    print("=" * 80)
+    print(f"Crypto {ike_version.upper()} Configuration".center(80))
+    print("=" * 80)
+    print(ike_output)
+    print("=" * 80 + "\n")
+
+    print("NOTE: This script does not gather NAT configuration. Manual verification is required for NAT-exemption")
+    print("and/or Hairpin NAT statements to ensure they are configured properly.\n")
