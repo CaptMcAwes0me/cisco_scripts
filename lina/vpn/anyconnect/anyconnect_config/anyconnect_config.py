@@ -10,7 +10,7 @@ def anyconnect_config(tunnel_group):
     print("=" * 80)
     print(f"Tunnel Group {tunnel_group} Configuration".center(80))
     print("=" * 80)
-    command = f"show running-config tunnel-group {tunnel_group}"
+    command = f"show running-config all tunnel-group {tunnel_group}"
     output = get_and_parse_cli_output(command)
     print(output)
     print("=" * 80 + "\n")
@@ -27,7 +27,7 @@ def anyconnect_config(tunnel_group):
         print("=" * 80)
         print(f"Group Policy Configuration for {tunnel_group}".center(80))
         print("=" * 80)
-        group_policy_cmd = f"show running-config group-policy {group_policy}"
+        group_policy_cmd = f"show running-config all group-policy {group_policy}"
         group_policy_output = get_and_parse_cli_output(group_policy_cmd)
         print(group_policy_output)
         print("=" * 80 + "\n")
