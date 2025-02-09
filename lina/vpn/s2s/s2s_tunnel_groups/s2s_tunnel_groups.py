@@ -52,21 +52,25 @@ def s2s_tunnel_groups():
                 ikev2_policy_based.append(ip)
 
     # Display Results
-    def display_section(title, items):
+    def display_section(title, items, start_index):
         print("=" * 80)
         print(title.center(80))
         print("=" * 80)
         items = sorted(list(set(items)), key=ip_sort_key)  # Remove duplicates, sort numerically
+        index = start_index
         if items:
-            for idx, ip in enumerate(items, 1):
-                print(f"{idx}. {ip}")
+            for ip in items:
+                print(f"{index}. {ip}")
+                index += 1
         else:
             print("No tunnels found.")
         print("=" * 80 + "\n")
+        return index
 
-    display_section("IKEv1 Policy-Based Tunnels", ikev1_policy_based)
-    display_section("IKEv1 VTI Tunnels", ikev1_vti)
-    display_section("IKEv2 Policy-Based Tunnels", ikev2_policy_based)
-    display_section("IKEv2 VTI Tunnels", ikev2_vti)
+    index = 1
+    index = display_section("IKEv1 Policy-Based Tunnels", ikev1_policy_based, index)
+    index = display_section("IKEv1 VTI Tunnels", ikev1_vti, index)
+    index = display_section("IKEv2 Policy-Based Tunnels", ikev2_policy_based, index)
+    index = display_section("IKEv2 VTI Tunnels", ikev2_vti, index)
 
     return ikev1_policy_based, ikev1_vti, ikev2_policy_based, ikev2_vti
