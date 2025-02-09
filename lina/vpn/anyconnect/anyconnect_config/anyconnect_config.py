@@ -91,3 +91,35 @@ def anyconnect_config(tunnel_group):
     print("NOTE: This script does not gather NAT configuration. Manual verification is required for NAT-exemption "
           "and/or Hairpin NAT statements to ensure they are configured properly.")
     print("\n")
+
+
+def anyconnect_config_dump(suppress_output=False):
+    """Retrieves and optionally displays the full AnyConnect configuration."""
+
+    commands = [
+        "show running-config all tunnel-group",
+        "show running-config all group-policy",
+        "show running-config all webvpn",
+        "show running-config ip local pool",
+        "show running-config all sysopt",
+        "show running-config all ssl"
+    ]
+
+    separator = "=" * 80
+
+    for command in commands:
+        section = command.replace("show running-config all ", "").replace("show running-config ", "").replace("ip local pool", "IP Local Pools").title()
+
+        try:
+            output = get_and_parse_cli_output(command)
+
+            if not suppress_output:  # Suppress output if True
+                print(f"\n{separator}\n{section}\n{separator}")
+                print(output)
+                print(f"{separator}\n")
+
+        except Exception as e:
+            error_message = f"[!] Error processing command '{command}': {e}"
+            if not suppress_output:
+                print(error_message)
+            return error_message

@@ -1,12 +1,9 @@
 import os
 from datetime import datetime
-from lina.vpn.anyconnect.anyconnect_config.anyconnect_config import anyconnect_config
+from lina.vpn.anyconnect.anyconnect_config.anyconnect_config import anyconnect_config_dump
 from lina.vpn.anyconnect.vpn_sessiondb_anyconnect_dump.vpn_sessiondb_anyconnect_dump \
     import vpn_sessiondb_anyconnect_dump
-from lina.vpn.anyconnect.crypto_ca_certificates.crypto_ca_certificates import crypto_ca_certificates
-from lina.vpn.anyconnect.crypto_ca_trustpoint.crypto_ca_trustpoint import crypto_ca_trustpoint
-from lina.vpn.anyconnect.crypto_ca_trustpool.crypto_ca_trustpool import crypto_ca_trustpool
-from lina.vpn.anyconnect.crypto_ca_crls.crypto_ca_crls import crypto_ca_crls
+from lina.vpn.anyconnect.crypto_ca_data.crypto_ca_data import crypto_ca_data
 from lina.vpn.anyconnect.ssl_cipher.ssl_cipher import ssl_cipher
 from lina.vpn.anyconnect.ssl_information.ssl_information import ssl_information
 from lina.vpn.anyconnect.ssl_errors.ssl_errors import ssl_errors
@@ -35,12 +32,9 @@ def dump_all_anyconnect_data():
     try:
         # Gather outputs
         data_to_dump = [
-            ("AnyConnect Configuration", anyconnect_config(suppress_output=True)),
+            ("AnyConnect Configuration", anyconnect_config_dump(suppress_output=True)),
             ("VPN Session Database", vpn_sessiondb_anyconnect_dump(suppress_output=True)),
-            ("Crypto CA Certificates", crypto_ca_certificates(suppress_output=True)),
-            ("Crypto CA Trustpoints", crypto_ca_trustpoint(suppress_output=True)),
-            ("Crypto CA Trustpool", crypto_ca_trustpool(suppress_output=True)),
-            ("Crypto CA CRLs", crypto_ca_crls(suppress_output=True)),
+            ("Crypto CA Data", crypto_ca_data(suppress_output=True)),
             ("SSL Cipher", ssl_cipher(suppress_output=True)),
             ("SSL Information", ssl_information(suppress_output=True)),
             ("SSL Errors", ssl_errors(suppress_output=True))
