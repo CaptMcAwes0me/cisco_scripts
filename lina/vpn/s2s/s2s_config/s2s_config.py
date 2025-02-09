@@ -49,16 +49,12 @@ def s2s_ikev2_vti_config():
         if ip_address == '0':
             return
 
-        gathered_output = False  # Track if any output is gathered
-
         if ip_address:
             print("=" * 80)
             print(f"Tunnel Group {ip_address} Configuration".center(80))
             print("=" * 80)
             command = f"show running-config all tunnel-group {ip_address}"
             output = get_and_parse_cli_output(command)
-            if output:
-                gathered_output = True
             print(output)
             print("=" * 80 + "\n")
 
@@ -72,8 +68,6 @@ def s2s_ikev2_vti_config():
                 print("=" * 80)
                 gp_command = f"show running-config all group-policy {group_policy}"
                 gp_output = get_and_parse_cli_output(gp_command)
-                if gp_output:
-                    gathered_output = True
                 print(gp_output)
                 print("=" * 80 + "\n")
 
@@ -88,8 +82,6 @@ def s2s_ikev2_vti_config():
                 print("=" * 80)
                 tunnel_interface_cmd = f"show running-config all interface {tunnel_interface}"
                 tunnel_interface_output = get_and_parse_cli_output(tunnel_interface_cmd)
-                if tunnel_interface_output:
-                    gathered_output = True
                 print(tunnel_interface_output)
                 print("=" * 80 + "\n")
 
@@ -99,8 +91,6 @@ def s2s_ikev2_vti_config():
 
                 # Step 7: IPSec Profile and Proposal Configuration
                 ipsec_output = get_and_parse_cli_output("show running-config ipsec")
-                if ipsec_output:
-                    gathered_output = True
                 if ipsec_profile:
                     print("=" * 80)
                     print(f"IPSec Profile Configuration: {ipsec_profile}".center(80))
@@ -123,22 +113,10 @@ def s2s_ikev2_vti_config():
 
                 # Step 8: Crypto IKEv2 Configuration
                 ikev2_output = get_and_parse_cli_output("show running-config crypto ikev2")
-                if ikev2_output:
-                    gathered_output = True
                 print("=" * 80)
                 print("Crypto IKEv2 Configuration".center(80))
                 print("=" * 80)
                 print(ikev2_output)
-                print("=" * 80 + "\n")
-
-                # Step 8.5: Sysopt Configuration Related to VPN
-                sysopt_output = get_and_parse_cli_output("show running-config all sysopt | include vpn")
-                if sysopt_output:
-                    gathered_output = True
-                print("=" * 80)
-                print("Sysopt Configuration (related to VPN)".center(80))
-                print("=" * 80)
-                print(sysopt_output)
                 print("=" * 80 + "\n")
 
                 # Step 9: Show Route Interface
@@ -146,14 +124,11 @@ def s2s_ikev2_vti_config():
                 nameif = nameif_match.group(1) if nameif_match else None
                 if nameif:
                     route_output = get_and_parse_cli_output(f"show route interface {nameif}")
-                    if route_output:
-                        gathered_output = True
                     print("=" * 80)
                     print(f"Route Configuration for Interface: {nameif}".center(80))
                     print("=" * 80)
                     print(route_output)
                     print("=" * 80 + "\n")
 
-        if gathered_output:
-            print("NOTE: This script does not gather NAT configuration. Manual verification is required for NAT-exemption")
-            print("and/or Hairpin NAT statements to ensure they are configured properly.\n")
+        print("NOTE: This script does not gather NAT configuration. Manual verification is required for NAT-exemption ")
+        print("and/or Hairpin NAT statements to ensure they are configured properly.\n")
