@@ -92,7 +92,7 @@ def anyconnect_menu(selected_group, tunnel_groups=[]):
                 print("-" * 80)
 
                 # Conditionally handle multiple tunnel groups
-                if function == [anyconnect_config, vpn_sessiondb_anyconnect]:
+                if function in [anyconnect_config, vpn_sessiondb_anyconnect]:
                     for group in tunnel_groups:
                         function(group)
                 else:
