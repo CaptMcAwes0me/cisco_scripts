@@ -2,6 +2,10 @@ import re
 from core.utils import get_and_parse_cli_output
 
 
+def ip_sort_key(ip):
+    return tuple(map(int, ip.split('.')))
+
+
 def s2s_tunnel_groups():
     """
     Gathers all IPSec S2S tunnels, identifies IKE version, and categorizes as Policy-Based or VTI.
@@ -16,7 +20,7 @@ def s2s_tunnel_groups():
     ikev2_vti = []
 
     # Gather unique IPs
-    tunnel_groups = sorted(set([line.split()[1] for line in cli_output.splitlines() if line.startswith("tunnel-group")]))
+    tunnel_groups = sorted(set([line.split()[1] for line in cli_output.splitlines() if line.startswith("tunnel-group")]), key=ip_sort_key)
 
     # Process each IP
     for ip in tunnel_groups:
@@ -52,7 +56,7 @@ def s2s_tunnel_groups():
         print("=" * 80)
         print(title.center(80))
         print("=" * 80)
-        items = sorted(list(set(items)))  # Remove duplicates and sort
+        items = sorted(list(set(items)), key=ip_sort_key)  # Remove duplicates, sort numerically
         if items:
             for idx, ip in enumerate(items, 1):
                 print(f"{idx}. {ip}")
