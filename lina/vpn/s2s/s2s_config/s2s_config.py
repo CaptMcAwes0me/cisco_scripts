@@ -50,6 +50,11 @@ def s2s_ikev2_vti_config():
         print("=" * 80)
         command = f"show running-config all tunnel-group {ip_address}"
         output = get_and_parse_cli_output(command)
+
+        # Skip remote-access tunnel-groups
+        if re.search(r"tunnel-group \S+ type remote-access", output):
+            return
+
         print(output)
         print("=" * 80 + "\n")
 
@@ -151,10 +156,11 @@ def s2s_ikev2_vti_config():
             process_tunnel_group(ip_address)
         else:
             tunnel_groups_output = get_and_parse_cli_output("show running-config tunnel-group | include tunnel-group")
-            ip_addresses = re.findall(r"tunnel-group (\S+) type", tunnel_groups_output)
+            ip_addresses = re.findall(r"tunnel-group (\S+) type (?!remote-access)", tunnel_groups_output)
             for ip in ip_addresses:
                 process_tunnel_group(ip)
 
         print("NOTE: This script does not gather NAT configuration. Manual verification is required for NAT-exemption")
         print("and/or Hairpin NAT statements to ensure they are configured properly.\n")
+
 
