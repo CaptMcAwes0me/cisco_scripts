@@ -18,7 +18,8 @@ def ssl_data(suppress_output=False):
             outputs[label] = output
 
             if not suppress_output:
-                print(f"{label} Output (Command = {command})".center(80))
+                print(f"{label} Output".center(80))
+                print(f"Command: {command}".center(80))
                 print("-" * 80)
                 print(output)
                 print("-" * 80)
