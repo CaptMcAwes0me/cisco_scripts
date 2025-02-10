@@ -150,3 +150,12 @@ def display_formatted_menu(title, options):
     for key, description in options.items():
         print(f"{key}) {description}")
     print("=" * 80)
+
+
+def print_section(title, content):
+    separator = "-" * 80
+    print(separator)
+    print(title.center(80))
+    print(separator)
+    print(content)
+    print(separator + "\n")

@@ -1,4 +1,4 @@
-from core.utils import get_and_parse_cli_output
+from core.utils import get_and_parse_cli_output, print_section
 import re
 
 
@@ -43,77 +43,42 @@ def s2s_config(suppress_output=False):
 def s2s_ikev1_policy_based_config(ip_address):
     print(f"[IKEv1 Policy-Based] Configuration for {ip_address}")
 
-    # Tunnel Group Configuration
     tunnel_output = get_and_parse_cli_output(f"show running-config tunnel-group {ip_address}")
-    print("=" * 80)
-    print(f"Tunnel Group Configuration for {ip_address}".center(80))
-    print("=" * 80)
-    print(tunnel_output)
-    print("=" * 80 + "\n")
+    print_section(f"Tunnel Group Configuration for {ip_address}", tunnel_output)
 
-    # Group Policy Extraction
     group_policy_match = re.search(r"default-group-policy (\S+)", tunnel_output)
     if group_policy_match:
         group_policy = group_policy_match.group(1)
         group_policy_output = get_and_parse_cli_output(f"show running-config group-policy {group_policy}")
-        print("=" * 80)
-        print(f"Group Policy Configuration for {group_policy}".center(80))
-        print("=" * 80)
-        print(group_policy_output)
-        print("=" * 80 + "\n")
+        print_section(f"Group Policy Configuration for {group_policy}", group_policy_output)
 
-    # Crypto Map Configuration
     crypto_map_output = get_and_parse_cli_output(f"show running-config crypto map | include {ip_address}")
-    print("=" * 80)
-    print(f"Crypto Map Configuration for {ip_address}".center(80))
-    print("=" * 80)
-    print(crypto_map_output)
-    print("=" * 80 + "\n")
+    print_section(f"Crypto Map Configuration for {ip_address}", crypto_map_output)
 
-    # Extract Crypto Map Name and Sequence
     crypto_map_match = re.search(r"crypto map (\S+) (\d+) set peer", crypto_map_output)
     if crypto_map_match:
         crypto_map_name, crypto_map_number = crypto_map_match.groups()
         crypto_map_details = get_and_parse_cli_output(
             f"show running-config crypto map | include {crypto_map_name} {crypto_map_number}"
         )
-        print("=" * 80)
-        print(f"Detailed Crypto Map Configuration: {crypto_map_name} {crypto_map_number}".center(80))
-        print("=" * 80)
-        print(crypto_map_details)
-        print("=" * 80 + "\n")
+        print_section(f"Detailed Crypto Map Configuration: {crypto_map_name} {crypto_map_number}", crypto_map_details)
 
-        # Extract ACL Name
         acl_match = re.search(r"match address (\S+)", crypto_map_details)
         if acl_match:
             acl_name = acl_match.group(1)
             acl_output = get_and_parse_cli_output(f"show access-list {acl_name}")
-            print("=" * 80)
-            print(f"Access-List Configuration: {acl_name}".center(80))
-            print("=" * 80)
-            print(acl_output)
-            print("=" * 80 + "\n")
+            print_section(f"Access-List Configuration: {acl_name}", acl_output)
 
-            # Extract Transform-Set Name
             transform_set_match = re.search(r"set ikev1 transform-set (\S+)", crypto_map_details)
             if transform_set_match:
                 transform_set = transform_set_match.group(1)
                 transform_set_output = get_and_parse_cli_output(
                     f"show running-config crypto | include crypto ipsec ikev1 transform-set {transform_set}"
                 )
-                print("=" * 80)
-                print(f"Transform-Set Configuration: {transform_set}".center(80))
-                print("=" * 80)
-                print(transform_set_output)
-                print("=" * 80 + "\n")
+                print_section(f"Transform-Set Configuration: {transform_set}", transform_set_output)
 
-    # Sysopt Configuration
     sysopt_output = get_and_parse_cli_output("show running-config all sysopt | include vpn")
-    print("=" * 80)
-    print("Sysopt Configuration (related to VPN)".center(80))
-    print("=" * 80)
-    print(sysopt_output)
-    print("=" * 80 + "\n")
+    print_section("Sysopt Configuration (related to VPN)", sysopt_output)
 
     print("NOTE: This script does not gather NAT configuration. Manual verification is required for NAT-exemption")
     print("and/or Hairpin NAT statements to ensure they are configured properly.\n")
