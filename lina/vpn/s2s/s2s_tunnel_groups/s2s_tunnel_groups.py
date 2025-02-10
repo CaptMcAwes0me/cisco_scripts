@@ -69,7 +69,7 @@ def s2s_tunnel_groups():
                 index += 1
         else:
             print("No tunnels found.")
-        print("=" * 80 + "\n")
+        print("-" * 80 + "\n")
         return index
 
     index = 1
