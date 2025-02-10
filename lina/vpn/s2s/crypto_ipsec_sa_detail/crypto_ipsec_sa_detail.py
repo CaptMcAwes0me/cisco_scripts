@@ -1,23 +1,20 @@
 from core.utils import get_and_parse_cli_output
 
 
-def crypto_ipsec_sa_detail():
-    """Retrieves and displays detailed IPSec Security Association (SA) information, optionally filtered by peer IP."""
-
-    peer_ip = input("Enter peer IP to filter (Press Enter for all SAs): ").strip()
-
-    if peer_ip:
-        command = f"show crypto ipsec sa peer {peer_ip} detail"
-    else:
-        command = "show crypto ipsec sa detail"
+def crypto_ipsec_sa_detail(selected_peers):
+    """Retrieves and displays detailed IPSec Security Association (SA) information for selected peers."""
 
     try:
-        output = get_and_parse_cli_output(command)
+        for peer in selected_peers:
+            ip_address = peer[0]  # Extract the IP address from the peer tuple
 
-        print(f"\n{command} Output:")
-        print("-" * 80)
-        print(output)
-        print("-" * 80)
+            command = f"show crypto ipsec sa peer {ip_address} detail"
+            output = get_and_parse_cli_output(command)
+
+            print(f"\n{command} Output for {ip_address}:")
+            print("-" * 80)
+            print(output)
+            print("-" * 80)
 
         return output
 

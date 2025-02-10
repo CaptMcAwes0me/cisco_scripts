@@ -1,13 +1,13 @@
 from core.utils import display_formatted_menu
-from menus.anyconnect_menu import anyconnect_menu
+from lina.vpn.anyconnect.anyconnect_tunnel_groups.anyconnect_tunnel_groups import anyconnect_tunnel_groups
+from lina.vpn.s2s.s2s_tunnel_groups.s2s_tunnel_groups import s2s_tunnel_groups
 from menus.vpn_menu_help.vpn_menu_help import vpn_menu_help
-from menus.s2s_menu import s2s_menu
 
 
 def vpn_menu():
     menu_options = {
-        "1": ("AnyConnect (Secure Client) Menu", anyconnect_menu),
-        "2": ("Site-to-Site VPN Menu", s2s_menu),
+        "1": ("AnyConnect (Secure Client) Menu", anyconnect_tunnel_groups),
+        "2": ("Site-to-Site VPN Menu", s2s_tunnel_groups),
         "3": ("VPN Menu Help", vpn_menu_help),
         "0": ("Exit", None),
     }
