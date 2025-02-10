@@ -154,8 +154,9 @@ def display_formatted_menu(title, options):
 
 def print_section(title, content):
     separator = "-" * 80
+    title_line = f"| {title.center(76)} |"
     print(separator)
-    print(title.center(80))
+    print(title_line)
     print(separator)
     print(content)
     print(separator + "\n")
