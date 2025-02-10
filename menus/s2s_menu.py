@@ -16,19 +16,47 @@ def detect_and_route(ip_address, selected_ike_version=None):
     """
     # Detect IKE version
     tunnel_output = get_and_parse_cli_output(f"show running-config tunnel-group {ip_address}")
+    ikev1_present = re.search(r"ikev1 pre-shared-key", tunnel_output)
+    ikev2_present = re.search(r"ikev2 (remote|local)-authentication", tunnel_output)
+
     ike_version = None
 
     if selected_ike_version:
         ike_version = selected_ike_version
-    else:
-        if re.search(r"ikev1 pre-shared-key", tunnel_output):
-            ike_version = 'ikev1'
-        elif re.search(r"ikev2 (remote|local)-authentication", tunnel_output):
-            ike_version = 'ikev2'
+    elif ikev1_present and not ikev2_present:
+        ike_version = 'ikev1'
+    elif ikev2_present and not ikev1_present:
+        ike_version = 'ikev2'
+    elif ikev1_present and ikev2_present:
+        print("Both IKEv1 and IKEv2 are configured for this peer.")
+        print("1) IKEv1")
+        print("2) IKEv2")
+        choice = input("Select the IKE version to view (1 or 2): ").strip()
+        ike_version = 'ikev1' if choice == '1' else 'ikev2' if choice == '2' else None
 
     if not ike_version:
         print(f"Unable to determine IKE version for {ip_address}.")
         return
+
+    # Display Tunnel Group Configuration
+    print("=" * 80)
+    print(f"Tunnel Group Configuration for {ip_address}".center(80))
+    print("=" * 80)
+    print(tunnel_output)
+    print("=" * 80 + "\n")
+
+    # Extract default-group-policy
+    group_policy_match = re.search(r"default-group-policy (\S+)", tunnel_output)
+    group_policy = group_policy_match.group(1) if group_policy_match else None
+
+    if group_policy:
+        print("=" * 80)
+        print(f"Group Policy Configuration for {group_policy}".center(80))
+        print("=" * 80)
+        gp_command = f"show running-config all group-policy {group_policy}"
+        gp_output = get_and_parse_cli_output(gp_command)
+        print(gp_output)
+        print("=" * 80 + "\n")
 
     # Detect VPN Type (VTI or Policy-Based)
     vti_output = get_and_parse_cli_output("show running-config interface | begin Tunnel")
