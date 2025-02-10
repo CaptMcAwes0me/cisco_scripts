@@ -4,6 +4,7 @@ from lina.vpn.anyconnect.anyconnect_config.anyconnect_config import anyconnect_c
 from lina.vpn.anyconnect.vpn_sessiondb_anyconnect.vpn_sessiondb_anyconnect import vpn_sessiondb_anyconnect_dump
 from lina.vpn.anyconnect.crypto_ca_data.crypto_ca_data import crypto_ca_data
 from lina.vpn.anyconnect.ssl_data.ssl_data import ssl_data
+from lina.vpn.anyconnect.anyconnect_crypto_accelerator_data.anyconnect_crypto_accelerator_data import anyconnect_crypto_accelerator_data
 
 
 def dump_all_anyconnect_data():
@@ -32,7 +33,8 @@ def dump_all_anyconnect_data():
             ("AnyConnect Configuration", anyconnect_config_dump(suppress_output=True)),
             ("VPN Session Database", vpn_sessiondb_anyconnect_dump(suppress_output=True)),
             ("Crypto CA Data", crypto_ca_data(suppress_output=True)),
-            ("SSL Data", ssl_data(suppress_output=True))
+            ("SSL Data", ssl_data(suppress_output=True)),
+            ("Crypto Accelerator Data", anyconnect_crypto_accelerator_data(suppress_output=True))
         ]
 
         # Write all outputs to the log file

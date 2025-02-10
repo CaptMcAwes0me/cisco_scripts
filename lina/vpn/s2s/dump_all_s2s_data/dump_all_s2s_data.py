@@ -3,6 +3,7 @@ from datetime import datetime
 from lina.vpn.s2s.s2s_config.s2s_config import s2s_config
 from lina.vpn.s2s.crypto_isakmp_sa_detail.crypto_isakmp_sa_detail import crypto_isakmp_sa_detail
 from lina.vpn.s2s.crypto_ipsec_sa_detail_dump.crypto_ipsec_sa_detail_dump import crypto_ipsec_sa_detail_dump
+from lina.vpn.s2s.s2s_crypto_accelerator_data.s2s_crypto_accelerator_data import s2s_crypto_accelerator_data
 
 
 def dump_all_s2s_data():
@@ -30,7 +31,8 @@ def dump_all_s2s_data():
         data_to_dump = [
             ("S2S Configuration", s2s_config(suppress_output=True)),
             ("Crypto ISAKMP SA Detail", crypto_isakmp_sa_detail(suppress_output=True)),
-            ("Crypto IPSec SA Detail", crypto_ipsec_sa_detail_dump(suppress_output=True))
+            ("Crypto IPSec SA Detail", crypto_ipsec_sa_detail_dump(suppress_output=True)),
+            ("Crypto Accelerator Data", s2s_crypto_accelerator_data(suppress_output=True))
         ]
 
         # Write all outputs to the log file

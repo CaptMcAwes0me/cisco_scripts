@@ -5,6 +5,7 @@ from lina.vpn.s2s.s2s_config.s2s_config import (
     s2s_ikev2_policy_based_config
 )
 from core.utils import display_formatted_menu
+from lina.vpn.s2s.s2s_crypto_accelerator_data.s2s_crypto_accelerator_data import s2s_crypto_accelerator_data
 from lina.vpn.s2s.crypto_isakmp_sa_detail.crypto_isakmp_sa_detail import crypto_isakmp_sa_detail
 from lina.vpn.s2s.crypto_ipsec_sa_detail.crypto_ipsec_sa_detail import crypto_ipsec_sa_detail
 from lina.vpn.s2s.s2s_help.s2s_help import s2s_help
@@ -18,7 +19,8 @@ def s2s_menu(selected_peers):
         "1": ("Site-to-Site Configuration", None),
         "2": ("Crypto ISAKMP SA Detail", crypto_isakmp_sa_detail),
         "3": ("Crypto IPSec SA Detail", crypto_ipsec_sa_detail),
-        "4": ("Site-to-Site Help", s2s_help),
+        "4": ("Crypto Accelerator Data", s2s_crypto_accelerator_data),
+        "5": ("Site-to-Site Help", s2s_help),
         "0": ("Exit", None),
     }
 
@@ -48,7 +50,7 @@ def s2s_menu(selected_peers):
                 print(f"Accessing {description}...".center(80))
                 print("-" * 80)
 
-                if choice in ["2", "4"]:
+                if choice in ["2", "4", "5"]:
                     function()
                 else:
                     function(selected_peers)

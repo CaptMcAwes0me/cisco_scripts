@@ -4,6 +4,7 @@ from lina.vpn.anyconnect.vpn_sessiondb_anyconnect.vpn_sessiondb_anyconnect impor
 from lina.vpn.anyconnect.crypto_ca_data.crypto_ca_data import crypto_ca_data
 from lina.vpn.anyconnect.ssl_data.ssl_data import ssl_data
 from lina.vpn.anyconnect.anyconnect_help.anyconnect_help import anyconnect_help
+from lina.vpn.anyconnect.anyconnect_crypto_accelerator_data.anyconnect_crypto_accelerator_data import anyconnect_crypto_accelerator_data
 
 
 def anyconnect_menu(selected_group, tunnel_groups=[]):
@@ -17,7 +18,8 @@ def anyconnect_menu(selected_group, tunnel_groups=[]):
         "2": ("VPN Session Database", vpn_sessiondb_anyconnect),
         "3": ("Crypto CA Data", crypto_ca_data),
         "4": ("SSL Data", ssl_data),
-        "5": ("Anyconnect Help", anyconnect_help),
+        "5": ("Crypto Accelerator Data", anyconnect_crypto_accelerator_data),
+        "6": ("Anyconnect Help", anyconnect_help),
         "0": ("Exit", None),
     }
 
@@ -25,7 +27,7 @@ def anyconnect_menu(selected_group, tunnel_groups=[]):
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu(f"AnyConnect Menu - Selected Group: {selected_group}", options_display)
 
-        choice = input("Select an option (0-5): ").strip()
+        choice = input("Select an option (0-6): ").strip()
 
         if choice in menu_options:
             description, function = menu_options[choice]
@@ -45,4 +47,4 @@ def anyconnect_menu(selected_group, tunnel_groups=[]):
                 print("\nExiting to previous menu...")
                 break
         else:
-            print("\n[!] Invalid choice. Please enter a number between 0 and 5.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 6.")
