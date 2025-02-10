@@ -202,5 +202,12 @@ def s2s_policy_based_config(ip_address, ike_version):
     print(ike_output)
     print("=" * 80 + "\n")
 
+    sysopt_output = get_and_parse_cli_output("show running-config all sysopt | include vpn")
+    print("=" * 80)
+    print("Sysopt Configuration (related to VPN)".center(80))
+    print("=" * 80)
+    print(sysopt_output)
+    print("=" * 80 + "\n")
+
     print("NOTE: This script does not gather NAT configuration. Manual verification is required for NAT-exemption")
     print("and/or Hairpin NAT statements to ensure they are configured properly.\n")
