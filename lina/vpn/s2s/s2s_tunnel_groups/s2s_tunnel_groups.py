@@ -1,6 +1,5 @@
 import re
 from core.utils import get_and_parse_cli_output
-from lina.vpn.s2s.dump_all_s2s_data.dump_all_s2s_data import dump_all_s2s_data
 from menus.s2s_menu import s2s_menu
 
 
@@ -98,4 +97,3 @@ def s2s_tunnel_groups():
             print("\n[!] Invalid choice. Please enter a valid option.")
 
     s2s_menu(selected_peers)  # Pass selected peers to the s2s_menu
-    dump_all_s2s_data(selected_peers)  # Dump all S2S data to a file
