@@ -101,7 +101,7 @@ def s2s_vti_config(ip_address, ike_version):
                 print("=" * 80)
                 print(f"IPSec Proposal/Transform-Set Configuration: {ipsec_proposal}".center(80))
                 print("=" * 80)
-                proposal_output = re.findall(rf"crypto ipsec (ikev2 ipsec-proposal|transform-set) {ipsec_proposal}[\s\S]+?(?=crypto|$)", ipsec_output)
+                proposal_output = re.findall(rf"crypto ipsec ikev2 ipsec-proposal {ipsec_proposal}[\s\S]+?(?=crypto|$)", ipsec_output)
                 for section in proposal_output:
                     print(section.strip())
                 print("=" * 80 + "\n")
