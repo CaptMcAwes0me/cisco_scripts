@@ -31,19 +31,19 @@ def detect_and_route(ip_address):
     vti_output = get_and_parse_cli_output("show running-config interface | begin Tunnel")
     policy_output = get_and_parse_cli_output("show running-config crypto map")
 
-    # Refined regex to ensure accurate tunnel interface detection
-    vti_matches = re.findall(
-        rf"(interface Tunnel\S+[\s\S]*?tunnel destination {re.escape(ip_address)}[\s\S]*?)(?=\ninterface|\Z)",
-        vti_output
-    )
+    # Extract all tunnel interface blocks
+    tunnel_blocks = re.findall(r"(interface Tunnel\S+[\s\S]*?)(?=\ninterface|\Z)", vti_output)
+
+    matched_interface = None
+    for block in tunnel_blocks:
+        if re.search(rf"tunnel destination {re.escape(ip_address)}", block):
+            matched_interface = re.search(r"interface (Tunnel\S+)", block).group(1)
+            break
+
     policy_match = re.search(rf"set peer {re.escape(ip_address)}", policy_output)
 
-    if vti_matches:
-        for tunnel_block in vti_matches:
-            tunnel_interface_match = re.search(r"interface (Tunnel\S+)", tunnel_block)
-            if tunnel_interface_match:
-                tunnel_interface = tunnel_interface_match.group(1)
-                s2s_vti_config(ip_address, ike_version, tunnel_interface)
+    if matched_interface:
+        s2s_vti_config(ip_address, ike_version, matched_interface)
     elif policy_match:
         s2s_policy_based_config(ip_address, ike_version)
     else:
