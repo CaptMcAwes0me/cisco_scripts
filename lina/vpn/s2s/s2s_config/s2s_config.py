@@ -40,110 +40,10 @@ def s2s_config(suppress_output=False):
         return error_message
 
 
-def s2s_vti_config(ip_address, ike_version, tunnel_interface):
-    """
-    Gathers and displays configuration details for Site-to-Site IKEv1 and IKEv2 VTI connections.
-    """
-    print("=" * 80)
-    print(f"Tunnel Group {ip_address} Configuration ({ike_version.upper()})".center(80))
-    print("=" * 80)
-    command = f"show running-config all tunnel-group {ip_address}"
-    output = get_and_parse_cli_output(command)
-    print(output)
-    print("=" * 80 + "\n")
+def s2s_ikev1_policy_based_config(ip_address):
+    print(f"[IKEv1 Policy-Based] Configuration for {ip_address}")
 
-    # Extract default-group-policy
-    group_policy_match = re.search(r"default-group-policy (\S+)", output)
-    group_policy = group_policy_match.group(1) if group_policy_match else None
-
-    if group_policy:
-        print("=" * 80)
-        print(f"Group Policy Configuration for {group_policy}".center(80))
-        print("=" * 80)
-        gp_command = f"show running-config all group-policy {group_policy}"
-        gp_output = get_and_parse_cli_output(gp_command)
-        print(gp_output)
-        print("=" * 80 + "\n")
-
-    print("=" * 80)
-    print(f"Tunnel Interface Configuration: {tunnel_interface}".center(80))
-    print("=" * 80)
-    tunnel_interface_cmd = f"show running-config all interface {tunnel_interface}"
-    tunnel_interface_output = get_and_parse_cli_output(tunnel_interface_cmd)
-    print(tunnel_interface_output)
-    print("=" * 80 + "\n")
-
-    # Extract IPSec Profile
-    ipsec_profile_match = re.search(r"tunnel protection ipsec profile (\S+)", tunnel_interface_output)
-    ipsec_profile = ipsec_profile_match.group(1) if ipsec_profile_match else None
-
-    # IPSec Profile and Proposal Configuration
-    ipsec_output = get_and_parse_cli_output("show running-config ipsec")
-    if ipsec_profile:
-        print("=" * 80)
-        print(f"IPSec Profile Configuration: {ipsec_profile}".center(80))
-        print("=" * 80)
-        profile_output = re.findall(rf"crypto ipsec profile {ipsec_profile}[\s\S]+?(?=crypto|$)", ipsec_output)
-        for section in profile_output:
-            print(section.strip())
-        print("=" * 80 + "\n")
-
-        ipsec_proposal_match = re.search(rf"set ikev2 ipsec-proposal (\S+)", ipsec_output) if ike_version == 'ikev2' else re.search(rf"set transform-set (\S+)", ipsec_output)
-        ipsec_proposal = ipsec_proposal_match.group(1) if ipsec_proposal_match else None
-
-        if ipsec_proposal:
-            print("=" * 80)
-            print(f"IPSec Proposal/Transform-Set Configuration: {ipsec_proposal}".center(80))
-            print("=" * 80)
-            proposal_output = re.findall(rf"crypto ipsec ikev2 ipsec-proposal {ipsec_proposal}[\s\S]+?(?=crypto|$)", ipsec_output)
-            for section in proposal_output:
-                print(section.strip())
-            print("=" * 80 + "\n")
-
-    # Display IKE-specific configurations
-    if ike_version == 'ikev2':
-        ike_output = get_and_parse_cli_output("show running-config crypto ikev2")
-    else:
-        ike_output = get_and_parse_cli_output("show running-config crypto ikev1")
-
-    print("=" * 80)
-    print(f"Crypto {ike_version.upper()} Configuration".center(80))
-    print("=" * 80)
-    print(ike_output)
-    print("=" * 80 + "\n")
-
-    # Sysopt Configuration Related to VPN
-    sysopt_output = get_and_parse_cli_output("show running-config all sysopt | include vpn")
-    print("=" * 80)
-    print("Sysopt Configuration (related to VPN)".center(80))
-    print("=" * 80)
-    print(sysopt_output)
-    print("=" * 80 + "\n")
-
-    # Show Route Interface
-    nameif_match = re.search(r"nameif (\S+)", tunnel_interface_output)
-    nameif = nameif_match.group(1) if nameif_match else None
-    if nameif:
-        route_output = get_and_parse_cli_output(f"show route interface {nameif}")
-        print("=" * 80)
-        print(f"Route Configuration for Interface: {nameif}".center(80))
-        print("=" * 80)
-        print(route_output)
-        print("=" * 80 + "\n")
-
-    print("NOTE: This script does not gather NAT configuration. Manual verification is required for NAT-exemption")
-    print("and/or Hairpin NAT statements to ensure they are configured properly.\n")
-
-
-def s2s_policy_based_config(ip_address, ike_version):
-    """
-    Gathers and displays configuration details for Site-to-Site IKEv1 and IKEv2 Policy-Based VPNs (Crypto Map).
-    """
-    print("=" * 80)
-    print(f"Policy-Based Configuration for {ip_address} ({ike_version.upper()})".center(80))
-    print("=" * 80)
-
-    # Gather Tunnel Group Configuration
+    # Tunnel Group Configuration
     tunnel_output = get_and_parse_cli_output(f"show running-config tunnel-group {ip_address}")
     print("=" * 80)
     print(f"Tunnel Group Configuration for {ip_address}".center(80))
@@ -151,78 +51,63 @@ def s2s_policy_based_config(ip_address, ike_version):
     print(tunnel_output)
     print("=" * 80 + "\n")
 
-    # Extract default-group-policy
+    # Group Policy Extraction
     group_policy_match = re.search(r"default-group-policy (\S+)", tunnel_output)
-    group_policy = group_policy_match.group(1) if group_policy_match else None
-
-    if group_policy:
+    if group_policy_match:
+        group_policy = group_policy_match.group(1)
+        group_policy_output = get_and_parse_cli_output(f"show running-config group-policy {group_policy}")
         print("=" * 80)
         print(f"Group Policy Configuration for {group_policy}".center(80))
         print("=" * 80)
-        gp_command = f"show running-config all group-policy {group_policy}"
-        gp_output = get_and_parse_cli_output(gp_command)
-        print(gp_output)
+        print(group_policy_output)
         print("=" * 80 + "\n")
 
-    # Gather Crypto Map Configuration
-    crypto_map_output = get_and_parse_cli_output(f"show running-config crypto map")
-    crypto_map_lines = [line for line in crypto_map_output.splitlines() if ip_address in line]
+    # Crypto Map Configuration
+    crypto_map_output = get_and_parse_cli_output(f"show running-config crypto map | include {ip_address}")
+    print("=" * 80)
+    print(f"Crypto Map Configuration for {ip_address}".center(80))
+    print("=" * 80)
+    print(crypto_map_output)
+    print("=" * 80 + "\n")
 
-    if crypto_map_lines:
-        # Extract Crypto Map Name and Sequence Number
-        crypto_map_match = re.search(rf"crypto map (\S+) (\d+) set peer {re.escape(ip_address)}", "\n".join(crypto_map_lines))
-        if crypto_map_match:
-            crypto_map_name, crypto_map_number = crypto_map_match.groups()
+    # Extract Crypto Map Name and Sequence
+    crypto_map_match = re.search(r"crypto map (\S+) (\d+) set peer", crypto_map_output)
+    if crypto_map_match:
+        crypto_map_name, crypto_map_number = crypto_map_match.groups()
+        crypto_map_details = get_and_parse_cli_output(
+            f"show running-config crypto map | include {crypto_map_name} {crypto_map_number}"
+        )
+        print("=" * 80)
+        print(f"Detailed Crypto Map Configuration: {crypto_map_name} {crypto_map_number}".center(80))
+        print("=" * 80)
+        print(crypto_map_details)
+        print("=" * 80 + "\n")
 
-            # Get the full crypto map configuration
-            crypto_map_details = get_and_parse_cli_output(
-                f"show running-config crypto map | include {crypto_map_name} {crypto_map_number}"
-            )
-
+        # Extract ACL Name
+        acl_match = re.search(r"match address (\S+)", crypto_map_details)
+        if acl_match:
+            acl_name = acl_match.group(1)
+            acl_output = get_and_parse_cli_output(f"show access-list {acl_name}")
             print("=" * 80)
-            print(f"Crypto Map Configuration: {crypto_map_name} {crypto_map_number}".center(80))
+            print(f"Access-List Configuration: {acl_name}".center(80))
             print("=" * 80)
-            print(crypto_map_details)
+            print(acl_output)
             print("=" * 80 + "\n")
 
-            # Extract the transform-set name
-            transform_set_match = re.search(rf"set ikev1 transform-set (\S+)", crypto_map_details)
-            transform_set_name = transform_set_match.group(1) if transform_set_match else None
-
-            if transform_set_name:
+            # Extract IKEv1 Transform-Set
+            transform_set_match = re.search(r"crypto ipsec ikev1 transform-set (\S+)", acl_output)
+            if transform_set_match:
+                transform_set = transform_set_match.group(1)
                 transform_set_output = get_and_parse_cli_output(
-                    f"show running-config crypto | include crypto ipsec ikev1 transform-set {transform_set_name}"
+                    f"show running-config crypto | include crypto ipsec ikev1 transform-set {transform_set}"
                 )
                 print("=" * 80)
-                print(f"Transform-Set Configuration: {transform_set_name}".center(80))
+                print(f"IKEv1 Transform-Set Configuration: {transform_set}".center(80))
                 print("=" * 80)
                 print(transform_set_output)
                 print("=" * 80 + "\n")
 
-            # Extract the ACL name
-            acl_match = re.search(rf"match address (\S+)", crypto_map_details)
-            acl_name = acl_match.group(1) if acl_match else None
-
-            if acl_name:
-                acl_output = get_and_parse_cli_output(f"show access-list {acl_name}")
-                print("=" * 80)
-                print(f"Access-List Configuration: {acl_name}".center(80))
-                print("=" * 80)
-                print(acl_output)
-                print("=" * 80 + "\n")
-
-    # Display IKE-specific configurations
-    if ike_version == 'ikev2':
-        ike_output = get_and_parse_cli_output("show running-config crypto ikev2")
-    else:
-        ike_output = get_and_parse_cli_output("show running-config crypto ikev1")
-
-    print("=" * 80)
-    print(f"Crypto {ike_version.upper()} Configuration".center(80))
-    print("=" * 80)
-    print(ike_output)
-    print("=" * 80 + "\n")
-
+    # Sysopt Configuration
     sysopt_output = get_and_parse_cli_output("show running-config all sysopt | include vpn")
     print("=" * 80)
     print("Sysopt Configuration (related to VPN)".center(80))
@@ -233,3 +118,252 @@ def s2s_policy_based_config(ip_address, ike_version):
     print("NOTE: This script does not gather NAT configuration. Manual verification is required for NAT-exemption")
     print("and/or Hairpin NAT statements to ensure they are configured properly.\n")
 
+
+def s2s_ikev1_vti_config(ip_address):
+    print(f"[IKEv1 VTI] Configuration for {ip_address}")
+
+    # Tunnel Group Configuration
+    tunnel_output = get_and_parse_cli_output(f"show running-config tunnel-group {ip_address}")
+    print("=" * 80)
+    print(f"Tunnel Group Configuration for {ip_address}".center(80))
+    print("=" * 80)
+    print(tunnel_output)
+    print("=" * 80 + "\n")
+
+    # Group Policy Extraction
+    group_policy_match = re.search(r"default-group-policy (\S+)", tunnel_output)
+    if group_policy_match:
+        group_policy = group_policy_match.group(1)
+        group_policy_output = get_and_parse_cli_output(f"show running-config group-policy {group_policy}")
+        print("=" * 80)
+        print(f"Group Policy Configuration for {group_policy}".center(80))
+        print("=" * 80)
+        print(group_policy_output)
+        print("=" * 80 + "\n")
+
+    # Tunnel Interface Configuration
+    tunnel_interface_output = get_and_parse_cli_output(f"show running-config interface | include Tunnel|{ip_address}")
+    tunnel_interface_match = re.search(r"interface (Tunnel\d+)", tunnel_interface_output)
+    if tunnel_interface_match:
+        tunnel_interface = tunnel_interface_match.group(1)
+        interface_details = get_and_parse_cli_output(f"show running-config interface {tunnel_interface}")
+        print("=" * 80)
+        print(f"Tunnel Interface Configuration: {tunnel_interface}".center(80))
+        print("=" * 80)
+        print(interface_details)
+        print("=" * 80 + "\n")
+
+        # Extract IPSec Profile
+        ipsec_profile_match = re.search(r"tunnel protection ipsec profile (\S+)", interface_details)
+        if ipsec_profile_match:
+            ipsec_profile = ipsec_profile_match.group(1)
+            ipsec_output = get_and_parse_cli_output(
+                f"show running-config crypto | include {ipsec_profile}|set ikev1 transform-set"
+            )
+            print("=" * 80)
+            print(f"IPSec Profile Configuration: {ipsec_profile}".center(80))
+            print("=" * 80)
+            print(ipsec_output)
+            print("=" * 80 + "\n")
+
+            # Extract Transform Set
+            transform_set_match = re.search(r"set ikev1 transform-set (\S+)", ipsec_output)
+            if transform_set_match:
+                transform_set = transform_set_match.group(1)
+                transform_set_output = get_and_parse_cli_output(
+                    f"show running-config crypto | include crypto ipsec ikev1 transform-set {transform_set}"
+                )
+                print("=" * 80)
+                print(f"Transform-Set Configuration: {transform_set}".center(80))
+                print("=" * 80)
+                print(transform_set_output)
+                print("=" * 80 + "\n")
+
+    # Crypto IKEv1 Configuration
+    ikev1_output = get_and_parse_cli_output("show running-config crypto ikev1")
+    print("=" * 80)
+    print("Crypto IKEv1 Configuration".center(80))
+    print("=" * 80)
+    print(ikev1_output)
+    print("=" * 80 + "\n")
+
+    # Route Configuration
+    route_output = get_and_parse_cli_output(f"show running-config route | include {tunnel_interface}")
+    print("=" * 80)
+    print(f"Route Configuration for {tunnel_interface}".center(80))
+    print("=" * 80)
+    print(route_output)
+    print("=" * 80 + "\n")
+
+    # Sysopt Configuration
+    sysopt_output = get_and_parse_cli_output("show running-config all sysopt | include vpn")
+    print("=" * 80)
+    print("Sysopt Configuration (related to VPN)".center(80))
+    print("=" * 80)
+    print(sysopt_output)
+    print("=" * 80 + "\n")
+
+    print("NOTE: This script does not gather NAT configuration. Manual verification is required for NAT-exemption")
+    print("and/or Hairpin NAT statements to ensure they are configured properly.\n")
+
+
+def s2s_ikev2_policy_based_config(ip_address):
+    print(f"[IKEv2 Policy-Based] Configuration for {ip_address}")
+
+    # Tunnel Group Configuration
+    tunnel_output = get_and_parse_cli_output(f"show running-config tunnel-group {ip_address}")
+    print("=" * 80)
+    print(f"Tunnel Group Configuration for {ip_address}".center(80))
+    print("=" * 80)
+    print(tunnel_output)
+    print("=" * 80 + "\n")
+
+    # Group Policy Extraction
+    group_policy_match = re.search(r"default-group-policy (\S+)", tunnel_output)
+    if group_policy_match:
+        group_policy = group_policy_match.group(1)
+        group_policy_output = get_and_parse_cli_output(f"show running-config group-policy {group_policy}")
+        print("=" * 80)
+        print(f"Group Policy Configuration for {group_policy}".center(80))
+        print("=" * 80)
+        print(group_policy_output)
+        print("=" * 80 + "\n")
+
+    # Crypto Map Configuration
+    crypto_map_output = get_and_parse_cli_output(f"show running-config crypto map | include {ip_address}")
+    print("=" * 80)
+    print(f"Crypto Map Configuration for {ip_address}".center(80))
+    print("=" * 80)
+    print(crypto_map_output)
+    print("=" * 80 + "\n")
+
+    # Extract Crypto Map Name and Sequence
+    crypto_map_match = re.search(r"crypto map (\S+) (\d+) set peer", crypto_map_output)
+    if crypto_map_match:
+        crypto_map_name, crypto_map_number = crypto_map_match.groups()
+        crypto_map_details = get_and_parse_cli_output(
+            f"show running-config crypto map | include crypto map {crypto_map_name} {crypto_map_number}"
+        )
+        print("=" * 80)
+        print(f"Detailed Crypto Map Configuration: {crypto_map_name} {crypto_map_number}".center(80))
+        print("=" * 80)
+        print(crypto_map_details)
+        print("=" * 80 + "\n")
+
+        # Extract ACL Name
+        acl_match = re.search(r"match address (\S+)", crypto_map_details)
+        if acl_match:
+            acl_name = acl_match.group(1)
+            acl_output = get_and_parse_cli_output(f"show access-list {acl_name}")
+            print("=" * 80)
+            print(f"Access-List Configuration: {acl_name}".center(80))
+            print("=" * 80)
+            print(acl_output)
+            print("=" * 80 + "\n")
+
+        # Extract IPSec Proposal
+        ipsec_proposal_match = re.search(r"set ikev2 ipsec-proposal (\S+)", crypto_map_details)
+        if ipsec_proposal_match:
+            ipsec_proposal = ipsec_proposal_match.group(1)
+            ipsec_proposal_output = get_and_parse_cli_output(
+                f"show running-config crypto | include crypto ipsec ikev2 ipsec-proposal {ipsec_proposal}|protocol esp encryption|protocol esp integrity"
+            )
+            print("=" * 80)
+            print(f"IPSec Proposal Configuration: {ipsec_proposal}".center(80))
+            print("=" * 80)
+            print(ipsec_proposal_output)
+            print("=" * 80 + "\n")
+
+    # Sysopt Configuration
+    sysopt_output = get_and_parse_cli_output("show running-config all sysopt | include vpn")
+    print("=" * 80)
+    print("Sysopt Configuration (related to VPN)".center(80))
+    print("=" * 80)
+    print(sysopt_output)
+    print("=" * 80 + "\n")
+
+    print("NOTE: This script does not gather NAT configuration. Manual verification is required for NAT-exemption")
+    print("and/or Hairpin NAT statements to ensure they are configured properly.\n")
+
+
+def s2s_ikev2_vti_config(ip_address):
+    print(f"[IKEv2 VTI] Configuration for {ip_address}")
+
+    # Tunnel Group Configuration
+    tunnel_output = get_and_parse_cli_output(f"show running-config tunnel-group {ip_address}")
+    print("=" * 80)
+    print(f"Tunnel Group Configuration for {ip_address}".center(80))
+    print("=" * 80)
+    print(tunnel_output)
+    print("=" * 80 + "\n")
+
+    # Group Policy Extraction
+    group_policy_match = re.search(r"default-group-policy (\S+)", tunnel_output)
+    if group_policy_match:
+        group_policy = group_policy_match.group(1)
+        group_policy_output = get_and_parse_cli_output(f"show running-config group-policy {group_policy}")
+        print("=" * 80)
+        print(f"Group Policy Configuration for {group_policy}".center(80))
+        print("=" * 80)
+        print(group_policy_output)
+        print("=" * 80 + "\n")
+
+    # Tunnel Interface Configuration
+    interface_output = get_and_parse_cli_output(f"show running-config interface | include Tunnel|{ip_address}")
+    interface_match = re.search(r"interface (Tunnel\S+)", interface_output)
+    if interface_match:
+        tunnel_interface = interface_match.group(1)
+        tunnel_interface_output = get_and_parse_cli_output(f"show running-config interface {tunnel_interface}")
+        print("=" * 80)
+        print(f"Tunnel Interface Configuration for {tunnel_interface}".center(80))
+        print("=" * 80)
+        print(tunnel_interface_output)
+        print("=" * 80 + "\n")
+
+        # IPSec Profile Extraction
+        ipsec_profile_match = re.search(r"tunnel protection ipsec profile (\S+)", tunnel_interface_output)
+        if ipsec_profile_match:
+            ipsec_profile = ipsec_profile_match.group(1)
+            ipsec_profile_output = get_and_parse_cli_output(
+                f"show running-config crypto | include {ipsec_profile}|set ikev2 ipsec-proposal"
+            )
+            print("=" * 80)
+            print(f"IPSec Profile Configuration: {ipsec_profile}".center(80))
+            print("=" * 80)
+            print(ipsec_profile_output)
+            print("=" * 80 + "\n")
+
+            # IPSec Proposal Extraction
+            ipsec_proposal_match = re.search(r"set ikev2 ipsec-proposal (\S+)", ipsec_profile_output)
+            if ipsec_proposal_match:
+                ipsec_proposal = ipsec_proposal_match.group(1)
+                ipsec_proposal_output = get_and_parse_cli_output(
+                    f"show running-config crypto | include {ipsec_proposal}|protocol esp encryption|protocol esp integrity"
+                )
+                print("=" * 80)
+                print(f"IPSec Proposal Configuration: {ipsec_proposal}".center(80))
+                print("=" * 80)
+                print(ipsec_proposal_output)
+                print("=" * 80 + "\n")
+
+    # Route Configuration
+    nameif_match = re.search(r"nameif (\S+)", tunnel_interface_output)
+    if nameif_match:
+        nameif = nameif_match.group(1)
+        route_output = get_and_parse_cli_output(f"show running-config route | include {nameif}")
+        print("=" * 80)
+        print(f"Route Configuration for {nameif}".center(80))
+        print("=" * 80)
+        print(route_output)
+        print("=" * 80 + "\n")
+
+    # Sysopt Configuration
+    sysopt_output = get_and_parse_cli_output("show running-config all sysopt | include vpn")
+    print("=" * 80)
+    print("Sysopt Configuration (related to VPN)".center(80))
+    print("=" * 80)
+    print(sysopt_output)
+    print("=" * 80 + "\n")
+
+    print("NOTE: This script does not gather NAT configuration. Manual verification is required for NAT-exemption")
+    print("and/or Hairpin NAT statements to ensure they are configured properly.\n")

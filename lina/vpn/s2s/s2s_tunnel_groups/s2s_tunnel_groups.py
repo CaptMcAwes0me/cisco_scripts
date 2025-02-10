@@ -1,6 +1,6 @@
 import re
 from core.utils import get_and_parse_cli_output
-from menus.s2s_menu import s2s_menu
+
 
 
 def ip_sort_key(ip):
@@ -8,68 +8,51 @@ def ip_sort_key(ip):
 
 
 def s2s_tunnel_groups():
-    """
-    Gathers all IPSec S2S tunnels, identifies IKE version, and categorizes as Policy-Based or VTI.
-    """
     command = "show running-config tunnel-group | include type ipsec-l2l"
     cli_output = get_and_parse_cli_output(command)
 
-    # Store categories
     ikev1_policy_based = []
     ikev1_vti = []
     ikev2_policy_based = []
     ikev2_vti = []
 
-    # Gather unique IPs
     tunnel_groups = sorted(set([line.split()[1] for line in cli_output.splitlines() if line.startswith("tunnel-group")]), key=ip_sort_key)
-
-    # Mapping for selection
     selection_mapping = {}
 
-    # Process each IP
     for ip in tunnel_groups:
         tunnel_output = get_and_parse_cli_output(f"show running-config tunnel-group {ip}")
 
-        # Determine IKE version
         ikev1 = bool(re.search(r"ikev1 pre-shared-key", tunnel_output))
         ikev2 = bool(re.search(r"ikev2 (remote|local)-authentication pre-shared-key", tunnel_output))
 
-        # Check for Virtual Tunnel Interface
         vti_output = get_and_parse_cli_output("show running-config interface | begin Tunnel")
         vti_match = re.search(rf"tunnel destination {re.escape(ip)}", vti_output)
 
-        # Check for Policy-Based VPN
         policy_output = get_and_parse_cli_output("show running-config crypto map")
         policy_match = re.search(rf"set peer {re.escape(ip)}", policy_output)
 
-        # Categorize
         if ikev1:
             if vti_match:
-                ikev1_vti.append(ip)
+                ikev1_vti.append((ip, vti_match.group()))
             if policy_match:
                 ikev1_policy_based.append(ip)
 
         if ikev2:
             if vti_match:
-                ikev2_vti.append(ip)
+                ikev2_vti.append((ip, vti_match.group()))
             if policy_match:
                 ikev2_policy_based.append(ip)
 
-
-    # Display Results
     def display_section(title, items, start_index):
         print("=" * 80)
         print(title.center(80))
         print("=" * 80)
-        items = sorted(list(set(items)), key=ip_sort_key)  # Remove duplicates, sort numerically
         index = start_index
-        if items:
-            for ip in items:
-                print(f"{index}. {ip}")
-                selection_mapping[str(index)] = ip
-                index += 1
-        else:
-            print("No tunnels found.")
+        for item in items:
+            ip = item[0] if isinstance(item, tuple) else item
+            print(f"{index}. {ip}")
+            selection_mapping[str(index)] = item
+            index += 1
         print("=" * 80 + "\n")
         return index
 
@@ -79,7 +62,6 @@ def s2s_tunnel_groups():
     index = display_section("IKEv2 Policy-Based Tunnels", ikev2_policy_based, index)
     index = display_section("IKEv2 VTI Tunnels", ikev2_vti, index)
 
-    # User selection
     while True:
         choice = input("Select an option (0 to exit, Enter for All): ").strip()
 
@@ -91,10 +73,18 @@ def s2s_tunnel_groups():
             selected_peers = tunnel_groups
             break
         elif choice in selection_mapping:
-            selected_peers = [selection_mapping[choice]]
-            print(f"\nSelected Tunnel Group: {selection_mapping[choice]}")
+            selected_item = selection_mapping[choice]
+            ip_address = selected_item[0] if isinstance(selected_item, tuple) else selected_item
+            matched_interface = selected_item[1] if isinstance(selected_item, tuple) else None
+
+            if selected_item in ikev1_vti:
+                s2s_ikev1_vti_config(ip_address, matched_interface)
+            elif selected_item in ikev1_policy_based:
+                s2s_ikev1_policy_based_config(ip_address)
+            elif selected_item in ikev2_vti:
+                s2s_ikev2_vti_config(ip_address, matched_interface)
+            elif selected_item in ikev2_policy_based:
+                s2s_ikev2_policy_based_config(ip_address)
             break
         else:
             print("\n[!] Invalid choice. Please enter a valid option.")
-
-    s2s_menu(selected_peers)  # Pass selected peers to the s2s_menu
