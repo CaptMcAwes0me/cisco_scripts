@@ -149,33 +149,39 @@ def s2s_policy_based_config(ip_address, ike_version):
     print("=" * 80)
 
     # Gather Crypto Map Configuration
-    crypto_map_output = get_and_parse_cli_output(f"show running-config crypto map | include {ip_address}")
-    print(crypto_map_output)
-    print("=" * 80 + "\n")
+    crypto_map_output = get_and_parse_cli_output(f"show running-config crypto map")
+    crypto_map_lines = [line for line in crypto_map_output.splitlines() if ip_address in line]
 
-    # Extract Crypto Map Name and Sequence Number
-    crypto_map_match = re.search(rf"crypto map (\S+) (\d+) set peer {re.escape(ip_address)}", crypto_map_output)
-    if crypto_map_match:
-        crypto_map_name, crypto_map_number = crypto_map_match.groups()
+    if crypto_map_lines:
+        # Extract Crypto Map Name and Sequence Number
+        crypto_map_match = re.search(rf"crypto map (\S+) (\d+) set peer {re.escape(ip_address)}", "\n".join(crypto_map_lines))
+        if crypto_map_match:
+            crypto_map_name, crypto_map_number = crypto_map_match.groups()
 
-        # Get the full crypto map configuration
-        crypto_map_details = get_and_parse_cli_output(
-            f"show running-config crypto map | include {crypto_map_name} {crypto_map_number}"
-        )
-
-        # Extract the transform-set name
-        transform_set_match = re.search(rf"set ikev1 transform-set (\S+)", crypto_map_details)
-        transform_set_name = transform_set_match.group(1) if transform_set_match else None
-
-        if transform_set_name:
-            transform_set_output = get_and_parse_cli_output(
-                f"show running-config crypto | include crypto ipsec ikev1 transform-set {transform_set_name}"
+            # Get the full crypto map configuration
+            crypto_map_details = get_and_parse_cli_output(
+                f"show running-config crypto map | include {crypto_map_name} {crypto_map_number}"
             )
+
             print("=" * 80)
-            print(f"Transform-Set Configuration: {transform_set_name}".center(80))
+            print(f"Crypto Map Configuration: {crypto_map_name} {crypto_map_number}".center(80))
             print("=" * 80)
-            print(transform_set_output)
+            print(crypto_map_details)
             print("=" * 80 + "\n")
+
+            # Extract the transform-set name
+            transform_set_match = re.search(rf"set ikev1 transform-set (\S+)", crypto_map_details)
+            transform_set_name = transform_set_match.group(1) if transform_set_match else None
+
+            if transform_set_name:
+                transform_set_output = get_and_parse_cli_output(
+                    f"show running-config crypto | include crypto ipsec ikev1 transform-set {transform_set_name}"
+                )
+                print("=" * 80)
+                print(f"Transform-Set Configuration: {transform_set_name}".center(80))
+                print("=" * 80)
+                print(transform_set_output)
+                print("=" * 80 + "\n")
 
     # Display IKE-specific configurations
     if ike_version == 'ikev2':
@@ -191,4 +197,3 @@ def s2s_policy_based_config(ip_address, ike_version):
 
     print("NOTE: This script does not gather NAT configuration. Manual verification is required for NAT-exemption")
     print("and/or Hairpin NAT statements to ensure they are configured properly.\n")
-
