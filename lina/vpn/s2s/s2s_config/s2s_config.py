@@ -137,7 +137,7 @@ def s2s_vti_config(ip_address, ike_version, tunnel_interface):
 
 def s2s_policy_based_config(ip_address, ike_version):
     """
-    Gathers and displays configuration details for Site-to-Site IKEv1 and IKEv2 Policy-Based VPNs.
+    Gathers and displays configuration details for Site-to-Site IKEv1 and IKEv2 Policy-Based VPNs (Crypto Map).
     """
     print("=" * 80)
     print(f"Policy-Based Configuration for {ip_address} ({ike_version.upper()})".center(80))
@@ -145,6 +145,9 @@ def s2s_policy_based_config(ip_address, ike_version):
 
     # Gather Tunnel Group Configuration
     tunnel_output = get_and_parse_cli_output(f"show running-config tunnel-group {ip_address}")
+    print("=" * 80)
+    print(f"Tunnel Group Configuration for {ip_address}".center(80))
+    print("=" * 80)
     print(tunnel_output)
     print("=" * 80 + "\n")
 
@@ -161,7 +164,7 @@ def s2s_policy_based_config(ip_address, ike_version):
         print(gp_output)
         print("=" * 80 + "\n")
 
-    # Gather Full Crypto Map Configuration
+    # Gather Crypto Map Configuration
     crypto_map_output = get_and_parse_cli_output(f"show running-config crypto map")
     crypto_map_lines = [line for line in crypto_map_output.splitlines() if ip_address in line]
 
@@ -182,7 +185,44 @@ def s2s_policy_based_config(ip_address, ike_version):
             print(crypto_map_details)
             print("=" * 80 + "\n")
 
-    # Sysopt Configuration Related to VPN
+            # Extract the transform-set name
+            transform_set_match = re.search(rf"set ikev1 transform-set (\S+)", crypto_map_details)
+            transform_set_name = transform_set_match.group(1) if transform_set_match else None
+
+            if transform_set_name:
+                transform_set_output = get_and_parse_cli_output(
+                    f"show running-config crypto | include crypto ipsec ikev1 transform-set {transform_set_name}"
+                )
+                print("=" * 80)
+                print(f"Transform-Set Configuration: {transform_set_name}".center(80))
+                print("=" * 80)
+                print(transform_set_output)
+                print("=" * 80 + "\n")
+
+            # Extract the ACL name
+            acl_match = re.search(rf"match address (\S+)", crypto_map_details)
+            acl_name = acl_match.group(1) if acl_match else None
+
+            if acl_name:
+                acl_output = get_and_parse_cli_output(f"show access-list {acl_name}")
+                print("=" * 80)
+                print(f"Access-List Configuration: {acl_name}".center(80))
+                print("=" * 80)
+                print(acl_output)
+                print("=" * 80 + "\n")
+
+    # Display IKE-specific configurations
+    if ike_version == 'ikev2':
+        ike_output = get_and_parse_cli_output("show running-config crypto ikev2")
+    else:
+        ike_output = get_and_parse_cli_output("show running-config crypto ikev1")
+
+    print("=" * 80)
+    print(f"Crypto {ike_version.upper()} Configuration".center(80))
+    print("=" * 80)
+    print(ike_output)
+    print("=" * 80 + "\n")
+
     sysopt_output = get_and_parse_cli_output("show running-config all sysopt | include vpn")
     print("=" * 80)
     print("Sysopt Configuration (related to VPN)".center(80))
@@ -192,3 +232,4 @@ def s2s_policy_based_config(ip_address, ike_version):
 
     print("NOTE: This script does not gather NAT configuration. Manual verification is required for NAT-exemption")
     print("and/or Hairpin NAT statements to ensure they are configured properly.\n")
+
