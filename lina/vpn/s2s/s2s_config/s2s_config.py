@@ -94,15 +94,15 @@ def s2s_ikev1_policy_based_config(ip_address):
             print(acl_output)
             print("=" * 80 + "\n")
 
-            # Extract IKEv1 Transform-Set
-            transform_set_match = re.search(r"crypto ipsec ikev1 transform-set (\S+)", acl_output)
+            # Extract Transform-Set Name
+            transform_set_match = re.search(r"set ikev1 transform-set (\S+)", crypto_map_details)
             if transform_set_match:
                 transform_set = transform_set_match.group(1)
                 transform_set_output = get_and_parse_cli_output(
                     f"show running-config crypto | include crypto ipsec ikev1 transform-set {transform_set}"
                 )
                 print("=" * 80)
-                print(f"IKEv1 Transform-Set Configuration: {transform_set}".center(80))
+                print(f"Transform-Set Configuration: {transform_set}".center(80))
                 print("=" * 80)
                 print(transform_set_output)
                 print("=" * 80 + "\n")
