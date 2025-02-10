@@ -48,7 +48,7 @@ def s2s_menu(selected_peers):
                 print(f"Accessing {description}...".center(80))
                 print("-" * 80)
 
-                if choice in ["2", "3"]:
+                if choice in ["2"]:
                     function()
                 else:
                     function(selected_peers)
