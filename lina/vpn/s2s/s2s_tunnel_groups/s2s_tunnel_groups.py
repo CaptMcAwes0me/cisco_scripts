@@ -83,11 +83,11 @@ def s2s_tunnel_groups():
             matched_interface = selected_item[1] if isinstance(selected_item, tuple) else None
 
             if selected_item in ikev1_vti:
-                s2s_ikev1_vti_config(ip_address, matched_interface)
+                s2s_ikev1_vti_config(ip_address)
             elif selected_item in ikev1_policy_based:
                 s2s_ikev1_policy_based_config(ip_address)
             elif selected_item in ikev2_vti:
-                s2s_ikev2_vti_config(ip_address, matched_interface)
+                s2s_ikev2_vti_config(ip_address)
             elif selected_item in ikev2_policy_based:
                 s2s_ikev2_policy_based_config(ip_address)
             break
