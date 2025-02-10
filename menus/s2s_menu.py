@@ -40,13 +40,19 @@ def s2s_menu(selected_peers):
                     ikev2 = bool(re.search(r"ikev2 (remote|local)-authentication pre-shared-key", tunnel_output))
 
                     vti_output = get_and_parse_cli_output("show running-config interface | begin Tunnel")
-                    vti_match = re.search(rf"tunnel destination {re.escape(ip_address)}", vti_output)
+                    interface_sections = re.findall(r"interface (Tunnel\S+)([\s\S]*?)(?=^interface|\Z)", vti_output, re.MULTILINE)
 
-                    if ikev1 and vti_match:
+                    matched_interface = None
+                    for interface, config in interface_sections:
+                        if re.search(rf"tunnel destination {re.escape(ip_address)}", config):
+                            matched_interface = interface
+                            break
+
+                    if ikev1 and matched_interface:
                         s2s_ikev1_vti_config(ip_address)
                     elif ikev1:
                         s2s_ikev1_policy_based_config(ip_address)
-                    elif ikev2 and vti_match:
+                    elif ikev2 and matched_interface:
                         s2s_ikev2_vti_config(ip_address)
                     elif ikev2:
                         s2s_ikev2_policy_based_config(ip_address)

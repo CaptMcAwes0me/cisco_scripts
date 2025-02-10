@@ -142,58 +142,55 @@ def s2s_ikev1_vti_config(ip_address):
         print("=" * 80 + "\n")
 
     # Tunnel Interface Configuration
-    tunnel_interface_output = get_and_parse_cli_output(f"show running-config interface | include Tunnel|{ip_address}")
-    tunnel_interface_match = re.search(r"interface (Tunnel\d+)", tunnel_interface_output)
-    if tunnel_interface_match:
-        tunnel_interface = tunnel_interface_match.group(1)
-        interface_details = get_and_parse_cli_output(f"show running-config interface {tunnel_interface}")
-        print("=" * 80)
-        print(f"Tunnel Interface Configuration: {tunnel_interface}".center(80))
-        print("=" * 80)
-        print(interface_details)
-        print("=" * 80 + "\n")
+    interface_output = get_and_parse_cli_output("show running-config interface | begin Tunnel")
+    interface_sections = re.findall(r"interface (Tunnel\S+)([\s\S]*?)(?=^interface|\Z)", interface_output, re.MULTILINE)
 
-        # Extract IPSec Profile
-        ipsec_profile_match = re.search(r"tunnel protection ipsec profile (\S+)", interface_details)
-        if ipsec_profile_match:
-            ipsec_profile = ipsec_profile_match.group(1)
-            ipsec_output = get_and_parse_cli_output(
-                f"show running-config crypto | include {ipsec_profile}|set ikev1 transform-set"
-            )
+    for interface, config in interface_sections:
+        if re.search(rf"tunnel destination {re.escape(ip_address)}", config):
+            tunnel_interface = interface
+            tunnel_interface_output = get_and_parse_cli_output(f"show running-config interface {tunnel_interface}")
             print("=" * 80)
-            print(f"IPSec Profile Configuration: {ipsec_profile}".center(80))
+            print(f"Tunnel Interface Configuration for {tunnel_interface}".center(80))
             print("=" * 80)
-            print(ipsec_output)
+            print(tunnel_interface_output)
             print("=" * 80 + "\n")
 
-            # Extract Transform Set
-            transform_set_match = re.search(r"set ikev1 transform-set (\S+)", ipsec_output)
-            if transform_set_match:
-                transform_set = transform_set_match.group(1)
-                transform_set_output = get_and_parse_cli_output(
-                    f"show running-config crypto | include crypto ipsec ikev1 transform-set {transform_set}"
+            # IPSec Profile Extraction
+            ipsec_profile_match = re.search(r"tunnel protection ipsec profile (\S+)", tunnel_interface_output)
+            if ipsec_profile_match:
+                ipsec_profile = ipsec_profile_match.group(1)
+                ipsec_profile_output = get_and_parse_cli_output(
+                    f"show running-config crypto | include {ipsec_profile}|set ikev1 transform-set"
                 )
                 print("=" * 80)
-                print(f"Transform-Set Configuration: {transform_set}".center(80))
+                print(f"IPSec Profile Configuration: {ipsec_profile}".center(80))
                 print("=" * 80)
-                print(transform_set_output)
+                print(ipsec_profile_output)
                 print("=" * 80 + "\n")
 
-    # Crypto IKEv1 Configuration
-    ikev1_output = get_and_parse_cli_output("show running-config crypto ikev1")
-    print("=" * 80)
-    print("Crypto IKEv1 Configuration".center(80))
-    print("=" * 80)
-    print(ikev1_output)
-    print("=" * 80 + "\n")
+                # Transform-Set Extraction
+                transform_set_match = re.search(r"set ikev1 transform-set (\S+)", ipsec_profile_output)
+                if transform_set_match:
+                    transform_set = transform_set_match.group(1)
+                    transform_set_output = get_and_parse_cli_output(
+                        f"show running-config crypto | include crypto ipsec ikev1 transform-set {transform_set}"
+                    )
+                    print("=" * 80)
+                    print(f"Transform-Set Configuration: {transform_set}".center(80))
+                    print("=" * 80)
+                    print(transform_set_output)
+                    print("=" * 80 + "\n")
 
-    # Route Configuration
-    route_output = get_and_parse_cli_output(f"show running-config route | include {tunnel_interface}")
-    print("=" * 80)
-    print(f"Route Configuration for {tunnel_interface}".center(80))
-    print("=" * 80)
-    print(route_output)
-    print("=" * 80 + "\n")
+            # Route Configuration
+            nameif_match = re.search(r"nameif (\S+)", tunnel_interface_output)
+            if nameif_match:
+                nameif = nameif_match.group(1)
+                route_output = get_and_parse_cli_output(f"show running-config route | include {nameif}")
+                print("=" * 80)
+                print(f"Route Configuration for {nameif}".center(80))
+                print("=" * 80)
+                print(route_output)
+                print("=" * 80 + "\n")
 
     # Sysopt Configuration
     sysopt_output = get_and_parse_cli_output("show running-config all sysopt | include vpn")
@@ -309,53 +306,55 @@ def s2s_ikev2_vti_config(ip_address):
         print("=" * 80 + "\n")
 
     # Tunnel Interface Configuration
-    interface_output = get_and_parse_cli_output(f"show running-config interface | include Tunnel|{ip_address}")
-    interface_match = re.search(r"interface (Tunnel\S+)", interface_output)
-    if interface_match:
-        tunnel_interface = interface_match.group(1)
-        tunnel_interface_output = get_and_parse_cli_output(f"show running-config interface {tunnel_interface}")
-        print("=" * 80)
-        print(f"Tunnel Interface Configuration for {tunnel_interface}".center(80))
-        print("=" * 80)
-        print(tunnel_interface_output)
-        print("=" * 80 + "\n")
+    interface_output = get_and_parse_cli_output("show running-config interface | begin Tunnel")
+    interface_sections = re.findall(r"interface (Tunnel\S+)([\s\S]*?)(?=^interface|\Z)", interface_output, re.MULTILINE)
 
-        # IPSec Profile Extraction
-        ipsec_profile_match = re.search(r"tunnel protection ipsec profile (\S+)", tunnel_interface_output)
-        if ipsec_profile_match:
-            ipsec_profile = ipsec_profile_match.group(1)
-            ipsec_profile_output = get_and_parse_cli_output(
-                f"show running-config crypto | include {ipsec_profile}|set ikev2 ipsec-proposal"
-            )
+    for interface, config in interface_sections:
+        if re.search(rf"tunnel destination {re.escape(ip_address)}", config):
+            tunnel_interface = interface
+            tunnel_interface_output = get_and_parse_cli_output(f"show running-config interface {tunnel_interface}")
             print("=" * 80)
-            print(f"IPSec Profile Configuration: {ipsec_profile}".center(80))
+            print(f"Tunnel Interface Configuration for {tunnel_interface}".center(80))
             print("=" * 80)
-            print(ipsec_profile_output)
+            print(tunnel_interface_output)
             print("=" * 80 + "\n")
 
-            # IPSec Proposal Extraction
-            ipsec_proposal_match = re.search(r"set ikev2 ipsec-proposal (\S+)", ipsec_profile_output)
-            if ipsec_proposal_match:
-                ipsec_proposal = ipsec_proposal_match.group(1)
-                ipsec_proposal_output = get_and_parse_cli_output(
-                    f"show running-config crypto | include {ipsec_proposal}|protocol esp encryption|protocol esp integrity"
+            # IPSec Profile Extraction
+            ipsec_profile_match = re.search(r"tunnel protection ipsec profile (\S+)", tunnel_interface_output)
+            if ipsec_profile_match:
+                ipsec_profile = ipsec_profile_match.group(1)
+                ipsec_profile_output = get_and_parse_cli_output(
+                    f"show running-config crypto | include {ipsec_profile}|set ikev2 ipsec-proposal"
                 )
                 print("=" * 80)
-                print(f"IPSec Proposal Configuration: {ipsec_proposal}".center(80))
+                print(f"IPSec Profile Configuration: {ipsec_profile}".center(80))
                 print("=" * 80)
-                print(ipsec_proposal_output)
+                print(ipsec_profile_output)
                 print("=" * 80 + "\n")
 
-    # Route Configuration
-    nameif_match = re.search(r"nameif (\S+)", tunnel_interface_output)
-    if nameif_match:
-        nameif = nameif_match.group(1)
-        route_output = get_and_parse_cli_output(f"show running-config route | include {nameif}")
-        print("=" * 80)
-        print(f"Route Configuration for {nameif}".center(80))
-        print("=" * 80)
-        print(route_output)
-        print("=" * 80 + "\n")
+                # IPSec Proposal Extraction
+                ipsec_proposal_match = re.search(r"set ikev2 ipsec-proposal (\S+)", ipsec_profile_output)
+                if ipsec_proposal_match:
+                    ipsec_proposal = ipsec_proposal_match.group(1)
+                    ipsec_proposal_output = get_and_parse_cli_output(
+                        f"show running-config crypto | include {ipsec_proposal}|protocol esp encryption|protocol esp integrity"
+                    )
+                    print("=" * 80)
+                    print(f"IPSec Proposal Configuration: {ipsec_proposal}".center(80))
+                    print("=" * 80)
+                    print(ipsec_proposal_output)
+                    print("=" * 80 + "\n")
+
+            # Route Configuration
+            nameif_match = re.search(r"nameif (\S+)", tunnel_interface_output)
+            if nameif_match:
+                nameif = nameif_match.group(1)
+                route_output = get_and_parse_cli_output(f"show running-config route | include {nameif}")
+                print("=" * 80)
+                print(f"Route Configuration for {nameif}".center(80))
+                print("=" * 80)
+                print(route_output)
+                print("=" * 80 + "\n")
 
     # Sysopt Configuration
     sysopt_output = get_and_parse_cli_output("show running-config all sysopt | include vpn")
