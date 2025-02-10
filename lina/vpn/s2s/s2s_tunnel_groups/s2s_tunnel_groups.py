@@ -57,9 +57,10 @@ def s2s_tunnel_groups():
 
     # Display Results
     def display_section(title, items, start_index):
-        print("=" * 80)
+        print("\n")
+        print("-" * 80)
         print(title.center(80))
-        print("=" * 80)
+        print("-" * 80)
         items = sorted(list(set(items)), key=lambda x: ip_sort_key(x[0]))  # Remove duplicates, sort numerically
         index = start_index
         if items:
