@@ -211,7 +211,7 @@ def s2s_ikev2_vti_config(ip_address):
             if ipsec_profile_match:
                 ipsec_profile = ipsec_profile_match.group(1)
                 ipsec_profile_output = get_and_parse_cli_output(
-                    f"show running-config crypto | include {ipsec_profile}|set ikev2 ipsec-proposal"
+                    f"show running-config crypto | include crypto ipsec profile {ipsec_profile}|set ikev2 ipsec-proposal"
                 )
                 print_section(f"IPSec Profile Configuration: {ipsec_profile}", ipsec_profile_output)
 
@@ -219,7 +219,7 @@ def s2s_ikev2_vti_config(ip_address):
                 if ipsec_proposal_match:
                     ipsec_proposal = ipsec_proposal_match.group(1)
                     ipsec_proposal_output = get_and_parse_cli_output(
-                        f"show running-config crypto | include {ipsec_proposal}|protocol esp encryption|protocol esp integrity"
+                        f"show running-config crypto | include crypto ipsec ikev2 ipsec-proposal {ipsec_proposal}|protocol esp encryption|protocol esp integrity"
                     )
                     print_section(f"IPSec Proposal Configuration: {ipsec_proposal}", ipsec_proposal_output)
 
