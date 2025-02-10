@@ -153,18 +153,29 @@ def s2s_policy_based_config(ip_address, ike_version):
     print(crypto_map_output)
     print("=" * 80 + "\n")
 
-    # Extract Transform-Set or Proposal
-    if ike_version == 'ikev2':
-        proposal_command = f"show running-config crypto ipsec ikev2 ipsec-proposal"
-    else:
-        proposal_command = f"show running-config crypto ipsec transform-set"
+    # Extract Crypto Map Name and Sequence Number
+    crypto_map_match = re.search(rf"crypto map (\S+) (\d+) set peer {re.escape(ip_address)}", crypto_map_output)
+    if crypto_map_match:
+        crypto_map_name, crypto_map_number = crypto_map_match.groups()
 
-    proposal_output = get_and_parse_cli_output(proposal_command)
-    print("=" * 80)
-    print(f"{('IKEv2 IPSec Proposal' if ike_version == 'ikev2' else 'IKEv1 Transform-Set')} Configuration".center(80))
-    print("=" * 80)
-    print(proposal_output)
-    print("=" * 80 + "\n")
+        # Get the full crypto map configuration
+        crypto_map_details = get_and_parse_cli_output(
+            f"show running-config crypto map | include {crypto_map_name} {crypto_map_number}"
+        )
+
+        # Extract the transform-set name
+        transform_set_match = re.search(rf"set ikev1 transform-set (\S+)", crypto_map_details)
+        transform_set_name = transform_set_match.group(1) if transform_set_match else None
+
+        if transform_set_name:
+            transform_set_output = get_and_parse_cli_output(
+                f"show running-config crypto | include crypto ipsec ikev1 transform-set {transform_set_name}"
+            )
+            print("=" * 80)
+            print(f"Transform-Set Configuration: {transform_set_name}".center(80))
+            print("=" * 80)
+            print(transform_set_output)
+            print("=" * 80 + "\n")
 
     # Display IKE-specific configurations
     if ike_version == 'ikev2':
@@ -180,3 +191,4 @@ def s2s_policy_based_config(ip_address, ike_version):
 
     print("NOTE: This script does not gather NAT configuration. Manual verification is required for NAT-exemption")
     print("and/or Hairpin NAT statements to ensure they are configured properly.\n")
+
