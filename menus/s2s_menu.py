@@ -33,14 +33,17 @@ def detect_and_route(ip_address):
 
     # Refined regex to ensure accurate tunnel interface detection
     vti_matches = re.findall(
-        rf"interface (Tunnel\S+)[\s\S]+?tunnel destination {re.escape(ip_address)}[\s\S]+?(?=interface|$)",
+        rf"(interface Tunnel\S+[\s\S]*?tunnel destination {re.escape(ip_address)}[\s\S]*?)(?=\ninterface|\Z)",
         vti_output
     )
     policy_match = re.search(rf"set peer {re.escape(ip_address)}", policy_output)
 
     if vti_matches:
-        for tunnel_interface in vti_matches:
-            s2s_vti_config(ip_address, ike_version, tunnel_interface)
+        for tunnel_block in vti_matches:
+            tunnel_interface_match = re.search(r"interface (Tunnel\S+)", tunnel_block)
+            if tunnel_interface_match:
+                tunnel_interface = tunnel_interface_match.group(1)
+                s2s_vti_config(ip_address, ike_version, tunnel_interface)
     elif policy_match:
         s2s_policy_based_config(ip_address, ike_version)
     else:
