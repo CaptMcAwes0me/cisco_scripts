@@ -40,7 +40,7 @@ def s2s_config(suppress_output=False):
         return error_message
 
 
-def s2s_vti_config(ip_address, ike_version):
+def s2s_vti_config(ip_address, ike_version, tunnel_interface):
     """
     Gathers and displays configuration details for Site-to-Site IKEv1 and IKEv2 VTI connections.
     """
@@ -65,46 +65,40 @@ def s2s_vti_config(ip_address, ike_version):
         print(gp_output)
         print("=" * 80 + "\n")
 
-    # Identify Tunnel Interface
-    tunnel_output = get_and_parse_cli_output("show running-config interface | begin Tunnel")
-    tunnel_match = re.search(r"interface (Tunnel\S+)[\s\S]+?tunnel destination " + re.escape(ip_address), tunnel_output)
+    print("=" * 80)
+    print(f"Tunnel Interface Configuration: {tunnel_interface}".center(80))
+    print("=" * 80)
+    tunnel_interface_cmd = f"show running-config all interface {tunnel_interface}"
+    tunnel_interface_output = get_and_parse_cli_output(tunnel_interface_cmd)
+    print(tunnel_interface_output)
+    print("=" * 80 + "\n")
 
-    if tunnel_match:
-        tunnel_interface = tunnel_match.group(1)
+    # Extract IPSec Profile
+    ipsec_profile_match = re.search(r"tunnel protection ipsec profile (\S+)", tunnel_interface_output)
+    ipsec_profile = ipsec_profile_match.group(1) if ipsec_profile_match else None
+
+    # IPSec Profile and Proposal Configuration
+    ipsec_output = get_and_parse_cli_output("show running-config ipsec")
+    if ipsec_profile:
         print("=" * 80)
-        print(f"Tunnel Interface Configuration: {tunnel_interface}".center(80))
+        print(f"IPSec Profile Configuration: {ipsec_profile}".center(80))
         print("=" * 80)
-        tunnel_interface_cmd = f"show running-config all interface {tunnel_interface}"
-        tunnel_interface_output = get_and_parse_cli_output(tunnel_interface_cmd)
-        print(tunnel_interface_output)
+        profile_output = re.findall(rf"crypto ipsec profile {ipsec_profile}[\s\S]+?(?=crypto|$)", ipsec_output)
+        for section in profile_output:
+            print(section.strip())
         print("=" * 80 + "\n")
 
-        # Extract IPSec Profile
-        ipsec_profile_match = re.search(r"tunnel protection ipsec profile (\S+)", tunnel_interface_output)
-        ipsec_profile = ipsec_profile_match.group(1) if ipsec_profile_match else None
+        ipsec_proposal_match = re.search(rf"set ikev2 ipsec-proposal (\S+)", ipsec_output) if ike_version == 'ikev2' else re.search(rf"set transform-set (\S+)", ipsec_output)
+        ipsec_proposal = ipsec_proposal_match.group(1) if ipsec_proposal_match else None
 
-        # IPSec Profile and Proposal Configuration
-        ipsec_output = get_and_parse_cli_output("show running-config ipsec")
-        if ipsec_profile:
+        if ipsec_proposal:
             print("=" * 80)
-            print(f"IPSec Profile Configuration: {ipsec_profile}".center(80))
+            print(f"IPSec Proposal/Transform-Set Configuration: {ipsec_proposal}".center(80))
             print("=" * 80)
-            profile_output = re.findall(rf"crypto ipsec profile {ipsec_profile}[\s\S]+?(?=crypto|$)", ipsec_output)
-            for section in profile_output:
+            proposal_output = re.findall(rf"crypto ipsec ikev2 ipsec-proposal {ipsec_proposal}[\s\S]+?(?=crypto|$)", ipsec_output)
+            for section in proposal_output:
                 print(section.strip())
             print("=" * 80 + "\n")
-
-            ipsec_proposal_match = re.search(rf"set ikev2 ipsec-proposal (\S+)", ipsec_output) if ike_version == 'ikev2' else re.search(rf"set transform-set (\S+)", ipsec_output)
-            ipsec_proposal = ipsec_proposal_match.group(1) if ipsec_proposal_match else None
-
-            if ipsec_proposal:
-                print("=" * 80)
-                print(f"IPSec Proposal/Transform-Set Configuration: {ipsec_proposal}".center(80))
-                print("=" * 80)
-                proposal_output = re.findall(rf"crypto ipsec ikev2 ipsec-proposal {ipsec_proposal}[\s\S]+?(?=crypto|$)", ipsec_output)
-                for section in proposal_output:
-                    print(section.strip())
-                print("=" * 80 + "\n")
 
     # Display IKE-specific configurations
     if ike_version == 'ikev2':
