@@ -39,6 +39,7 @@ def s2s_config(suppress_output=False):
             print(error_message)
         return error_message
 
+
 def s2s_vti_config(ip_address, ike_version):
     """
     Gathers and displays configuration details for Site-to-Site IKEv1 and IKEv2 VTI connections.
@@ -140,50 +141,6 @@ def s2s_vti_config(ip_address, ike_version):
     print("and/or Hairpin NAT statements to ensure they are configured properly.\n")
 
 
-import re
-from core.utils import get_and_parse_cli_output, display_formatted_menu
-from lina.vpn.s2s.s2s_config.s2s_config import s2s_ikev2_vti_config, s2s_policy_based_config
-from lina.vpn.s2s.crypto_isakmp_sa_detail.crypto_isakmp_sa_detail import crypto_isakmp_sa_detail
-from lina.vpn.s2s.crypto_ipsec_sa_detail.crypto_ipsec_sa_detail import crypto_ipsec_sa_detail
-from lina.vpn.s2s.s2s_help.s2s_help import s2s_help
-
-
-def ip_sort_key(ip):
-    return tuple(map(int, ip.split('.')))
-
-
-def detect_and_route(ip_address):
-    """
-    Detects the IKE version and VPN type (VTI or Policy-Based) for the given IP and routes to the correct function.
-    """
-    # Detect IKE version
-    tunnel_output = get_and_parse_cli_output(f"show running-config tunnel-group {ip_address}")
-    ike_version = None
-
-    if re.search(r"ikev2 (remote|local)-authentication", tunnel_output):
-        ike_version = 'ikev2'
-    elif re.search(r"ikev1 pre-shared-key", tunnel_output):
-        ike_version = 'ikev1'
-
-    if not ike_version:
-        print(f"Unable to determine IKE version for {ip_address}.")
-        return
-
-    # Detect VPN Type (VTI or Policy-Based)
-    vti_output = get_and_parse_cli_output("show running-config interface | begin Tunnel")
-    policy_output = get_and_parse_cli_output("show running-config crypto map")
-
-    vti_match = re.search(rf"tunnel destination {re.escape(ip_address)}", vti_output)
-    policy_match = re.search(rf"set peer {re.escape(ip_address)}", policy_output)
-
-    if vti_match:
-        s2s_ikev2_vti_config(ip_address, ike_version)
-    elif policy_match:
-        s2s_policy_based_config(ip_address, ike_version)
-    else:
-        print(f"Unable to determine VPN type for {ip_address}.")
-
-
 def s2s_policy_based_config(ip_address, ike_version):
     """
     Gathers and displays configuration details for Site-to-Site IKEv1 and IKEv2 Policy-Based VPNs (Crypto Map).
@@ -253,4 +210,3 @@ def s2s_policy_based_config(ip_address, ike_version):
 
     print("NOTE: This script does not gather NAT configuration. Manual verification is required for NAT-exemption")
     print("and/or Hairpin NAT statements to ensure they are configured properly.\n")
-
