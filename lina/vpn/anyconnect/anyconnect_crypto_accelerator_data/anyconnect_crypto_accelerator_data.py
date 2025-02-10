@@ -6,7 +6,7 @@ def anyconnect_crypto_accelerator_data(suppress_output=False):
 
     commands = {
         "Crypto Accelerator Load-balance SSL": "show crypto accelerator load-balance ssl",
-        "Crypto Accelerator Load-balance Detail": "show crypto accelerator detail",
+        "Crypto Accelerator Load-balance Detail": "show crypto accelerator load-balance detail",
         "Crypto Accelerator Statistics": "show crypto accelerator statistics",
         "Crypto Accelerator Status": "show crypto accelerator status",
         "Crypto Accelerator Usage Detail": "show crypto accelerator usage detail"
