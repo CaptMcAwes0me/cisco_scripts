@@ -110,7 +110,7 @@ def s2s_vti_config(ip_address, ike_version):
     if ike_version == 'ikev2':
         ike_output = get_and_parse_cli_output("show running-config crypto ikev2")
     else:
-        ike_output = get_and_parse_cli_output("show running-config crypto isakmp")
+        ike_output = get_and_parse_cli_output("show running-config crypto ikev1")
 
     print("=" * 80)
     print(f"Crypto {ike_version.upper()} Configuration".center(80))
