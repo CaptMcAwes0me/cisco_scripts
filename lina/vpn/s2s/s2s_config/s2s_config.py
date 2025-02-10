@@ -79,6 +79,8 @@ def s2s_ikev1_policy_based_config(ip_address):
                 )
                 print_section(f"Transform-Set Configuration: {transform_set}", transform_set_output)
 
+    ikev1_output = get_and_parse_cli_output("show running-config all crypto ikev1")
+    print_section("IKEv1 Configuration", ikev1_output)
     sysopt_output = get_and_parse_cli_output("show running-config all sysopt | include vpn")
     print_section("Sysopt Configuration (related to VPN)", sysopt_output)
 
@@ -131,6 +133,8 @@ def s2s_ikev1_vti_config(ip_address):
                 route_output = get_and_parse_cli_output(f"show running-config route | include {nameif}")
                 print_section(f"Route Configuration for {nameif}", route_output)
 
+    ikev1_output = get_and_parse_cli_output("show running-config all crypto ikev1")
+    print_section("IKEv1 Configuration", ikev1_output)
     sysopt_output = get_and_parse_cli_output("show running-config all sysopt | include vpn")
     print_section("Sysopt Configuration (related to VPN)", sysopt_output)
 
@@ -177,6 +181,8 @@ def s2s_ikev2_policy_based_config(ip_address):
             )
             print_section(f"IPSec Proposal Configuration: {ipsec_proposal}", ipsec_proposal_output)
 
+    ikev2_output = get_and_parse_cli_output("show running-config all crypto ikev2")
+    print_section("IKEv2 Configuration", ikev2_output)
     sysopt_output = get_and_parse_cli_output("show running-config all sysopt | include vpn")
     print_section("Sysopt Configuration (related to VPN)", sysopt_output)
 
@@ -229,6 +235,8 @@ def s2s_ikev2_vti_config(ip_address):
                 route_output = get_and_parse_cli_output(f"show running-config route | include {nameif}")
                 print_section(f"Route Configuration for {nameif}", route_output)
 
+    ikev2_output = get_and_parse_cli_output("show running-config all crypto ikev2")
+    print_section("IKEv2 Configuration", ikev2_output)
     sysopt_output = get_and_parse_cli_output("show running-config all sysopt | include vpn")
     print_section("Sysopt Configuration (related to VPN)", sysopt_output)
 
