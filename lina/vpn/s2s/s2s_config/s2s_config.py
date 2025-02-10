@@ -41,6 +41,8 @@ def s2s_config(suppress_output=False):
 
 
 def s2s_ikev1_policy_based_config(ip_address):
+    print("\n")
+    print("-" * 80)
     print(f"*** IKEv1 Policy-Based Configuration for {ip_address} ***".center(80))
 
     tunnel_output = get_and_parse_cli_output(f"show running-config tunnel-group {ip_address}")
@@ -85,6 +87,8 @@ def s2s_ikev1_policy_based_config(ip_address):
 
 
 def s2s_ikev1_vti_config(ip_address):
+    print("\n")
+    print("-" * 80)
     print(f"*** IKEv1 VTI Configuration for {ip_address} ***".center(80))
 
     # Tunnel Group Configuration
@@ -170,6 +174,8 @@ def s2s_ikev1_vti_config(ip_address):
 
 
 def s2s_ikev2_policy_based_config(ip_address):
+    print("\n")
+    print("-" * 80)
     print(f"*** IKEv2 Policy-Based Configuration for {ip_address} ***".center(80))
 
     # Tunnel Group Configuration
@@ -249,6 +255,8 @@ def s2s_ikev2_policy_based_config(ip_address):
 
 
 def s2s_ikev2_vti_config(ip_address):
+    print("\n")
+    print("-" * 80)
     print(f"*** IKEv2 VTI Configuration for {ip_address} ***".center(80))
 
     # Tunnel Group Configuration
