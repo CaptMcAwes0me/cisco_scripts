@@ -1,6 +1,11 @@
 import re
 from core.utils import get_and_parse_cli_output
-
+from lina.vpn.s2s.s2s_config.s2s_config import (
+    s2s_ikev1_vti_config,
+    s2s_ikev1_policy_based_config,
+    s2s_ikev2_vti_config,
+    s2s_ikev2_policy_based_config
+)
 
 
 def ip_sort_key(ip):
