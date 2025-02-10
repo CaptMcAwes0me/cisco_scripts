@@ -10,7 +10,7 @@ def ip_sort_key(ip):
     return tuple(map(int, ip.split('.')))
 
 
-def detect_and_route(ip_address):
+def detect_and_route(ip_address, selected_ike_version=None):
     """
     Detects the IKE version and VPN type (VTI or Policy-Based) for the given IP and routes to the correct function.
     """
@@ -18,10 +18,13 @@ def detect_and_route(ip_address):
     tunnel_output = get_and_parse_cli_output(f"show running-config tunnel-group {ip_address}")
     ike_version = None
 
-    if re.search(r"ikev2 (remote|local)-authentication", tunnel_output):
-        ike_version = 'ikev2'
-    elif re.search(r"ikev1 pre-shared-key", tunnel_output):
-        ike_version = 'ikev1'
+    if selected_ike_version:
+        ike_version = selected_ike_version
+    else:
+        if re.search(r"ikev1 pre-shared-key", tunnel_output):
+            ike_version = 'ikev1'
+        elif re.search(r"ikev2 (remote|local)-authentication", tunnel_output):
+            ike_version = 'ikev2'
 
     if not ike_version:
         print(f"Unable to determine IKE version for {ip_address}.")
