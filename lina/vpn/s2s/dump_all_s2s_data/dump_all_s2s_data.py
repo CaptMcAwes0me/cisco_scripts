@@ -14,7 +14,6 @@ from lina.vpn.s2s.s2s_crypto_accelerator_data.s2s_crypto_accelerator_data import
 from lina.vpn.s2s.crypto_isakmp_sa_detail.crypto_isakmp_sa_detail import crypto_isakmp_sa_detail
 from lina.vpn.s2s.crypto_ipsec_sa_detail.crypto_ipsec_sa_detail import crypto_ipsec_sa_detail
 
-
 def dump_s2s_tunnel_groups():
     """
     Gathers all IPSec S2S tunnels, identifies IKE version, and categorizes as Policy-Based or VTI.
@@ -90,10 +89,8 @@ def dump_s2s_menu(selected_peers):
         elif ike_version == 'ikev2' and vpn_type == 'policy':
             peer_data['configuration'] = s2s_ikev2_policy_based_config(ip_address)
 
-        print(f"Running IPSec SA detail for IP: {ip_address}")
-
         # Gather Crypto IPSec SA Detail
-        peer_data['ipsec_sa_detail'] = crypto_ipsec_sa_detail(ip_address)
+        peer_data['ipsec_sa_detail'] = crypto_ipsec_sa_detail([peer])  # Fixed to pass a list
 
         # Store data in the dictionary with IP as the key
         collected_data[ip_address] = peer_data
