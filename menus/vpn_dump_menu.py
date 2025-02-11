@@ -1,6 +1,7 @@
-from core.utils import display_formatted_menu
+from lina.vpn.s2s.s2s_tunnel_groups.s2s_tunnel_groups import s2s_tunnel_groups
 from lina.vpn.anyconnect.dump_all_anyconnect_data.dump_all_anyconnect_data import dump_all_anyconnect_data
 from lina.vpn.s2s.dump_all_s2s_data.dump_all_s2s_data import dump_all_s2s_data
+from core.utils import display_formatted_menu
 
 
 def vpn_dump_menu():
@@ -11,7 +12,6 @@ def vpn_dump_menu():
     }
 
     while True:
-        # Prepare the menu options for display
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu("VPN Menu", options_display)
 
@@ -19,12 +19,21 @@ def vpn_dump_menu():
 
         if choice in menu_options:
             description, function = menu_options[choice]
-            if function:  # If a function is assigned
+            if function:
                 print("\n" + "-" * 80)
                 print(f"Accessing {description}...".center(80))
                 print("-" * 80)
-                function()
-            else:  # Exit condition
+
+                if choice == "2":  # Site-to-Site VPN Dump
+                    selected_peers = s2s_tunnel_groups()  # Gather tunnel groups
+                    if selected_peers:
+                        function(selected_peers)
+                    else:
+                        print("[!] No tunnel groups found.")
+                else:
+                    function()
+
+            else:
                 print("\nExiting to previous menu...")
                 break
         else:
