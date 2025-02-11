@@ -76,7 +76,6 @@ def dump_s2s_menu(selected_peers):
     Gathers and stores the data in memory.
     """
     collected_data = {}
-    print(f"Selected Peers: {selected_peers}")
     for peer in selected_peers:
         ip_address, ike_version, vpn_type = peer
         peer_data = {}
