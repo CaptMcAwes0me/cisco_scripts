@@ -70,7 +70,6 @@ def dump_s2s_tunnel_groups():
     # Save collected data to files
     save_collected_data(collected_data)
 
-
 def dump_s2s_menu(selected_peers):
     """
     Processes Site-to-Site VPN-related tasks for all selected peers without user interaction.
@@ -93,7 +92,7 @@ def dump_s2s_menu(selected_peers):
             peer_data['configuration'] = s2s_ikev2_policy_based_config(ip_address)
 
         # Gather Crypto IPSec SA Detail
-        peer_data['ipsec_sa_detail'] = crypto_ipsec_sa_detail(peer_data)
+        peer_data['ipsec_sa_detail'] = crypto_ipsec_sa_detail()
 
         # Store data in the dictionary with IP as the key
         collected_data[ip_address] = peer_data
@@ -106,7 +105,6 @@ def dump_s2s_menu(selected_peers):
 
     return collected_data
 
-
 def save_output_to_file(ip_address, data_type, data):
     """
     Saves specific data type output directly to a file for a given peer.
@@ -118,7 +116,6 @@ def save_output_to_file(ip_address, data_type, data):
     file_path = os.path.join(base_dir, f"{timestamp}_{ip_address}_{data_type}.txt")
     with open(file_path, 'w') as f:
         f.write(data)
-
 
 def save_collected_data(collected_data):
     """
