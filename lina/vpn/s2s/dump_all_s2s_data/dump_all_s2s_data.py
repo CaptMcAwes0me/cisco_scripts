@@ -1,7 +1,3 @@
-import os
-import shutil
-from datetime import datetime
-from contextlib import redirect_stdout
 from lina.vpn.s2s.s2s_config.s2s_config import (
     s2s_ikev1_vti_config,
     s2s_ikev1_policy_based_config,
@@ -13,16 +9,10 @@ from lina.vpn.s2s.crypto_isakmp_sa_detail.crypto_isakmp_sa_detail import crypto_
 from lina.vpn.s2s.crypto_ipsec_sa_detail.crypto_ipsec_sa_detail import crypto_ipsec_sa_detail
 
 
-def suppress_function_output(func, *args, **kwargs):
-    """Suppresses output of the given function."""
-    with open(os.devnull, 'w') as fnull:
-        with redirect_stdout(fnull):
-            return func(*args, **kwargs)
-
-
 def dump_all_s2s_data(selected_peers):
-    """Gathers output from all Site-to-Site VPN-related commands, writes them to separate directories for each peer,
-    and compresses all directories into a single archive."""
+    from datetime import datetime
+    import os
+    import shutil
 
     troubleshooting_dir = "/var/log/fp_troubleshooting_data"
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -48,17 +38,17 @@ def dump_all_s2s_data(selected_peers):
             log_file = os.path.join(peer_dir, f"{ip_address}_s2s_data.log")
             data_to_dump = []
 
-            # Gather Site-to-Site Configuration Data
+            # ✅ Call S2S Configuration Functions (Mimicking s2s_menu behavior)
             if ike_version == 'ikev1' and vpn_type == 'vti':
-                data_to_dump.append(("IKEv1 VTI Config", suppress_function_output(s2s_ikev1_vti_config, ip_address) or "No data available"))
+                data_to_dump.append(("IKEv1 VTI Config", s2s_ikev1_vti_config(ip_address) or "No data available"))
             elif ike_version == 'ikev1' and vpn_type == 'policy':
-                data_to_dump.append(("IKEv1 Policy-Based Config", suppress_function_output(s2s_ikev1_policy_based_config, ip_address) or "No data available"))
+                data_to_dump.append(("IKEv1 Policy-Based Config", s2s_ikev1_policy_based_config(ip_address) or "No data available"))
             elif ike_version == 'ikev2' and vpn_type == 'vti':
-                data_to_dump.append(("IKEv2 VTI Config", suppress_function_output(s2s_ikev2_vti_config, ip_address) or "No data available"))
+                data_to_dump.append(("IKEv2 VTI Config", s2s_ikev2_vti_config(ip_address) or "No data available"))
             elif ike_version == 'ikev2' and vpn_type == 'policy':
-                data_to_dump.append(("IKEv2 Policy-Based Config", suppress_function_output(s2s_ikev2_policy_based_config, ip_address) or "No data available"))
+                data_to_dump.append(("IKEv2 Policy-Based Config", s2s_ikev2_policy_based_config(ip_address) or "No data available"))
 
-            # Gather Additional VPN-Related Data
+            # ✅ Gather Additional VPN-Related Data
             data_to_dump.append(("Crypto ISAKMP SA Detail", crypto_isakmp_sa_detail(suppress_output=True)))
             data_to_dump.append(("Crypto IPSec SA Detail", crypto_ipsec_sa_detail(selected_peers=[peer])))
             data_to_dump.append(("Crypto Accelerator Data", s2s_crypto_accelerator_data(suppress_output=True)))
@@ -83,7 +73,7 @@ def dump_all_s2s_data(selected_peers):
 
                     f.write(f"{'=' * 80}\n\n")
 
-        # Compress all peer directories into a single archive
+        # ✅ Compress all peer directories into a single archive
         shutil.make_archive(archive_path, 'zip', troubleshooting_dir)
         print(f"\n[+] All Site-to-Site VPN data archived to: {archive_path}.zip")
 
