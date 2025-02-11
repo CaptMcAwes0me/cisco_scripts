@@ -8,7 +8,7 @@ def ip_sort_key(ip):
     return tuple(map(int, ip.split('.')))
 
 
-def s2s_tunnel_groups():
+def s2s_tunnel_groups(auto_dump=False):
     """
     Gathers all IPSec S2S tunnels, identifies IKE version, and categorizes as Policy-Based or VTI.
     """
@@ -90,6 +90,10 @@ def s2s_tunnel_groups():
         elif choice == "":
             print("\nSelected All Tunnel Groups")
             selected_peers = ikev1_policy_based + ikev1_vti + ikev2_policy_based + ikev2_vti
+            if auto_dump:
+                dump_all_s2s_data(selected_peers)  # Skip menu, dump data automatically
+            else:
+                s2s_menu(selected_peers)
             break
         elif choice in selection_mapping:
             selected_peers = [selection_mapping[choice]]
@@ -97,6 +101,3 @@ def s2s_tunnel_groups():
             break
         else:
             print("\n[!] Invalid choice. Please enter a valid option.")
-
-    s2s_menu(selected_peers)  # Pass selected peers to the s2s_menu
-    dump_all_s2s_data(selected_peers)  # Dump all S2S data
