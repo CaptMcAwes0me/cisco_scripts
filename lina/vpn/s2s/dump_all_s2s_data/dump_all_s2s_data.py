@@ -96,19 +96,20 @@ def dump_s2s_menu(selected_peers):
         # Suppress output for IPSec SA Detail
         buffer_ipsec = io.StringIO()
         with redirect_stdout(buffer_ipsec):
-            peer_data['ipsec_sa_detail'] = crypto_ipsec_sa_detail([peer])
+            crypto_ipsec_sa_detail([peer])
+        peer_data['ipsec_sa_detail'] = buffer_ipsec.getvalue()
 
         # Suppress output for ISAKMP SA Detail
         buffer_isakmp = io.StringIO()
         with redirect_stdout(buffer_isakmp):
-            isakmp_data = crypto_isakmp_sa_detail()
-        save_output_to_file(ip_address, 'isakmp_sa_detail', isakmp_data)
+            crypto_isakmp_sa_detail()
+        peer_data['isakmp_sa_detail'] = buffer_isakmp.getvalue()
 
         # Suppress output for Crypto Accelerator Data
         buffer_crypto = io.StringIO()
         with redirect_stdout(buffer_crypto):
-            crypto_data = s2s_crypto_accelerator_data()
-        save_output_to_file(ip_address, 'crypto_accelerator_data', crypto_data)
+            s2s_crypto_accelerator_data()
+        peer_data['crypto_accelerator_data'] = buffer_crypto.getvalue()
 
         # Save data for the peer
         save_peer_data(ip_address, peer_data)
@@ -158,4 +159,4 @@ def compress_and_cleanup():
                 tar.add(os.path.join(base_dir, file), arcname=file)
                 os.remove(os.path.join(base_dir, file))
 
-    print(f"Data has been successfully compressed and saved to {archive_name}")
+    print(f"Data has been successfully compressed and saved to /var/log/fp_troubleshooting_data/{archive_name}")
