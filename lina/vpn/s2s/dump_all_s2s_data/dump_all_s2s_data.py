@@ -159,4 +159,4 @@ def compress_and_cleanup():
                 tar.add(os.path.join(base_dir, file), arcname=file)
                 os.remove(os.path.join(base_dir, file))
 
-    print(f"Data has been successfully compressed and saved to /var/log/fp_troubleshooting_data/{archive_name}")
+    print(f"Data has been successfully compressed and saved to {archive_name}")
