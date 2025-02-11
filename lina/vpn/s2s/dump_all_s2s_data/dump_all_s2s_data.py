@@ -1,5 +1,4 @@
 import os
-import shutil
 import re
 from datetime import datetime
 from core.utils import get_and_parse_cli_output, ip_sort_key
@@ -63,17 +62,13 @@ def dump_s2s_tunnel_groups():
     selected_peers = ikev1_policy_based + ikev1_vti + ikev2_policy_based + ikev2_vti
 
     # Proceed with data dump for all selected peers
-    collected_data = dump_s2s_menu(selected_peers)
-
-    # Save collected data to files
-    save_collected_data(collected_data)
+    dump_s2s_menu(selected_peers)
 
 def dump_s2s_menu(selected_peers):
     """
     Processes Site-to-Site VPN-related tasks for all selected peers without user interaction.
     Gathers and stores the data in memory.
     """
-    collected_data = {}
     for peer in selected_peers:
         ip_address, ike_version, vpn_type = peer
         peer_data = {}
@@ -89,10 +84,10 @@ def dump_s2s_menu(selected_peers):
             peer_data['configuration'] = s2s_ikev2_policy_based_config(ip_address)
 
         # Gather Crypto IPSec SA Detail
-        peer_data['ipsec_sa_detail'] = crypto_ipsec_sa_detail([peer])  # Fixed to pass a list
+        peer_data['ipsec_sa_detail'] = crypto_ipsec_sa_detail([peer])
 
-        # Store data in the dictionary with IP as the key
-        collected_data[ip_address] = peer_data
+        # Save data for the peer
+        save_peer_data(ip_address, peer_data)
 
         # Save Crypto ISAKMP SA Detail directly to file
         save_output_to_file(ip_address, 'isakmp_sa_detail', crypto_isakmp_sa_detail())
@@ -100,46 +95,25 @@ def dump_s2s_menu(selected_peers):
         # Save Crypto Accelerator Data directly to file
         save_output_to_file(ip_address, 'crypto_accelerator_data', s2s_crypto_accelerator_data())
 
-    return collected_data
-
 def save_output_to_file(ip_address, data_type, data):
     """
     Saves specific data type output directly to a file for a given peer.
     """
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    base_dir = f"/var/log/fp_troubleshooting_data/{timestamp}_s2s_dump/{timestamp}_{ip_address}_s2s_dump"
-    os.makedirs(base_dir, exist_ok=True)
-
-    file_path = os.path.join(base_dir, f"{timestamp}_{ip_address}_{data_type}.txt")
-    with open(file_path, 'w') as f:
+    file_path = f"/var/log/fp_troubleshooting_data/{ip_address}_{timestamp}_s2s_dump.txt"
+    with open(file_path, 'a') as f:
+        f.write(f"=== {data_type.upper()} ===\n")
         f.write(data if isinstance(data, str) else str(data))
+        f.write("\n\n")
 
-def save_collected_data(collected_data):
+def save_peer_data(ip_address, data):
     """
-    Saves the collected data for each peer into individual files and compresses them.
+    Saves collected peer data into a single file.
     """
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    base_dir = f"/var/log/fp_troubleshooting_data/{timestamp}_s2s_dump"
-    os.makedirs(base_dir, exist_ok=True)
-
-    # Save data for each peer
-    for ip_address, data in collected_data.items():
-        peer_dir = os.path.join(base_dir, f"{timestamp}_{ip_address}_s2s_dump")
-        os.makedirs(peer_dir, exist_ok=True)
-
-        file_path = os.path.join(peer_dir, f"{timestamp}_{ip_address}_s2s_dump.txt")
-        with open(file_path, 'w') as f:
-            for key, value in data.items():
-                f.write(f"=== {key.upper()} ===\n")
-                f.write(value if isinstance(value, str) else str(value))
-                f.write("\n\n")
-
-    # Compress the parent directory
-    compressed_file = f"/var/log/fp_troubleshooting_data/{timestamp}_s2s_dump.tar.gz"
-    shutil.make_archive(base_dir, 'gztar', root_dir="/var/log/fp_troubleshooting_data", base_dir=f"{timestamp}_s2s_dump")
-
-    # Remove the uncompressed directory after archiving
-    if os.path.exists(base_dir):
-        shutil.rmtree(base_dir)
-
-    print(f"Data has been collected and saved to {compressed_file}")
+    file_path = f"/var/log/fp_troubleshooting_data/{ip_address}_{timestamp}_s2s_dump.txt"
+    with open(file_path, 'w') as f:
+        for key, value in data.items():
+            f.write(f"=== {key.upper()} ===\n")
+            f.write(value if isinstance(value, str) else str(value))
+            f.write("\n\n")
