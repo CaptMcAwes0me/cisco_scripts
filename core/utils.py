@@ -160,3 +160,6 @@ def print_section(title, content):
     print(separator)
     print(content)
     print(separator + "\n")
+
+def ip_sort_key(ip):
+    return tuple(map(int, ip.split('.')))
