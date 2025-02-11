@@ -83,6 +83,9 @@ def dump_s2s_menu(selected_peers):
         elif ike_version == 'ikev2' and vpn_type == 'policy':
             peer_data['configuration'] = s2s_ikev2_policy_based_config(ip_address)
 
+        # Debug: Check configuration output
+        print(f"Config output for {ip_address}: {peer_data['configuration']}")
+
         # Gather Crypto IPSec SA Detail
         peer_data['ipsec_sa_detail'] = crypto_ipsec_sa_detail([peer])
 
@@ -103,7 +106,11 @@ def save_output_to_file(ip_address, data_type, data):
     file_path = f"/var/log/fp_troubleshooting_data/{ip_address}_{timestamp}_s2s_dump.txt"
     with open(file_path, 'a') as f:
         f.write(f"=== {data_type.upper()} ===\n")
-        f.write(data if isinstance(data, str) else str(data))
+        if isinstance(data, dict):
+            for key, value in data.items():
+                f.write(f"{key}: {value}\n")
+        else:
+            f.write(data if isinstance(data, str) else str(data))
         f.write("\n\n")
 
 def save_peer_data(ip_address, data):
@@ -115,5 +122,9 @@ def save_peer_data(ip_address, data):
     with open(file_path, 'w') as f:
         for key, value in data.items():
             f.write(f"=== {key.upper()} ===\n")
-            f.write(value if isinstance(value, str) else str(value))
+            if isinstance(value, dict):
+                for sub_key, sub_value in value.items():
+                    f.write(f"{sub_key}: {sub_value}\n")
+            else:
+                f.write(value if isinstance(value, str) else str(value))
             f.write("\n\n")
