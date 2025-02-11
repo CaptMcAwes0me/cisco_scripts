@@ -1,6 +1,7 @@
 import os
 import re
 import io
+import tarfile
 from contextlib import redirect_stdout
 from datetime import datetime
 from core.utils import get_and_parse_cli_output, ip_sort_key
@@ -65,6 +66,9 @@ def dump_s2s_tunnel_groups():
 
     # Proceed with data dump for all selected peers
     dump_s2s_menu(selected_peers)
+
+    # Compress and clean up files
+    compress_and_cleanup()
 
 def dump_s2s_menu(selected_peers):
     """
@@ -139,3 +143,19 @@ def save_peer_data(ip_address, data):
             else:
                 f.write(value if isinstance(value, str) else str(value))
             f.write("\n\n")
+
+def compress_and_cleanup():
+    """
+    Compresses all S2S dump files into a single archive and removes the original files.
+    """
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    base_dir = "/var/log/fp_troubleshooting_data/"
+    archive_name = f"{base_dir}{timestamp}_s2s_data.tar.gz"
+
+    with tarfile.open(archive_name, "w:gz") as tar:
+        for file in os.listdir(base_dir):
+            if file.endswith("_s2s_dump.txt"):
+                tar.add(os.path.join(base_dir, file), arcname=file)
+                os.remove(os.path.join(base_dir, file))
+
+    print(f"Data has been successfully compressed and saved to {archive_name}")
