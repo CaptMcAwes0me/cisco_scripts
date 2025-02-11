@@ -76,7 +76,7 @@ def dump_s2s_menu(selected_peers):
     Gathers and stores the data in memory.
     """
     collected_data = {}
-
+    print(f"Selected Peers: {selected_peers}")
     for peer in selected_peers:
         ip_address, ike_version, vpn_type = peer
         peer_data = {}
@@ -92,7 +92,7 @@ def dump_s2s_menu(selected_peers):
             peer_data['configuration'] = s2s_ikev2_policy_based_config(ip_address)
 
         # Gather Crypto IPSec SA Detail
-        peer_data['ipsec_sa_detail'] = crypto_ipsec_sa_detail()
+        peer_data['ipsec_sa_detail'] = crypto_ipsec_sa_detail(ip_address)
 
         # Store data in the dictionary with IP as the key
         collected_data[ip_address] = peer_data
