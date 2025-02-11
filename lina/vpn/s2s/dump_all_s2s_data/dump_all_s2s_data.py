@@ -18,6 +18,7 @@ def suppress_function_output(func, *args, **kwargs):
         with redirect_stdout(fnull):
             return func(*args, **kwargs)
 
+
 def dump_all_s2s_data(selected_peers):
     """Gathers output from all Site-to-Site VPN-related commands and writes them to a log file under
     /var/log/fp_troubleshooting_data."""
