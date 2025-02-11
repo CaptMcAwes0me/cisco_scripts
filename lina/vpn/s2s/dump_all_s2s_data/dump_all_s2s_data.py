@@ -92,7 +92,7 @@ def dump_s2s_menu(selected_peers):
             peer_data['configuration'] = s2s_ikev2_policy_based_config(ip_address)
 
         # Gather Crypto IPSec SA Detail
-        peer_data['ipsec_sa_detail'] = crypto_ipsec_sa_detail(ip_address)
+        peer_data['ipsec_sa_detail'] = crypto_ipsec_sa_detail()
 
         # Store data in the dictionary with IP as the key
         collected_data[ip_address] = peer_data
