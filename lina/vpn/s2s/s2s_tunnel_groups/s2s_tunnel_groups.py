@@ -1,5 +1,6 @@
 import re
 from core.utils import get_and_parse_cli_output
+from menus.s2s_menu import s2s_menu
 
 
 def ip_sort_key(ip):
@@ -95,3 +96,5 @@ def s2s_tunnel_groups():
             break
         else:
             print("\n[!] Invalid choice. Please enter a valid option.")
+
+    s2s_menu(selected_peers)
