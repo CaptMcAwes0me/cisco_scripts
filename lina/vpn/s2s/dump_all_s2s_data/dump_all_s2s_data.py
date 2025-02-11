@@ -1,5 +1,4 @@
 import os
-import json
 import shutil
 import re
 from datetime import datetime
@@ -113,10 +112,7 @@ def save_output_to_file(ip_address, data_type, data):
 
     file_path = os.path.join(base_dir, f"{timestamp}_{ip_address}_{data_type}.txt")
     with open(file_path, 'w') as f:
-        if isinstance(data, dict):
-            json.dump(data, f, indent=4)
-        else:
-            f.write(str(data))
+        f.write(data if isinstance(data, str) else str(data))
 
 def save_collected_data(collected_data):
     """
@@ -131,11 +127,14 @@ def save_collected_data(collected_data):
         peer_dir = os.path.join(base_dir, f"{timestamp}_{ip_address}_s2s_dump")
         os.makedirs(peer_dir, exist_ok=True)
 
-        file_path = os.path.join(peer_dir, f"{timestamp}_{ip_address}_s2s_dump.json")
+        file_path = os.path.join(peer_dir, f"{timestamp}_{ip_address}_s2s_dump.txt")
         with open(file_path, 'w') as f:
-            json.dump(data, f, indent=4)
+            for key, value in data.items():
+                f.write(f"=== {key.upper()} ===\n")
+                f.write(value if isinstance(value, str) else str(value))
+                f.write("\n\n")
 
-    # Compress the parent directory instead of just the contents
+    # Compress the parent directory
     compressed_file = f"/var/log/fp_troubleshooting_data/{timestamp}_s2s_dump.tar.gz"
     shutil.make_archive(base_dir, 'gztar', root_dir="/var/log/fp_troubleshooting_data", base_dir=f"{timestamp}_s2s_dump")
 
