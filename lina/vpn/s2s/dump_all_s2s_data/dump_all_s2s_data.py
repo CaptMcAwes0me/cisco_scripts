@@ -89,17 +89,25 @@ def dump_s2s_menu(selected_peers):
 
         peer_data['configuration'] = buffer.getvalue()
 
-        # Gather Crypto IPSec SA Detail
-        peer_data['ipsec_sa_detail'] = crypto_ipsec_sa_detail([peer])
+        # Suppress output for IPSec SA Detail
+        buffer_ipsec = io.StringIO()
+        with redirect_stdout(buffer_ipsec):
+            peer_data['ipsec_sa_detail'] = crypto_ipsec_sa_detail([peer])
+
+        # Suppress output for ISAKMP SA Detail
+        buffer_isakmp = io.StringIO()
+        with redirect_stdout(buffer_isakmp):
+            isakmp_data = crypto_isakmp_sa_detail()
+        save_output_to_file(ip_address, 'isakmp_sa_detail', isakmp_data)
+
+        # Suppress output for Crypto Accelerator Data
+        buffer_crypto = io.StringIO()
+        with redirect_stdout(buffer_crypto):
+            crypto_data = s2s_crypto_accelerator_data()
+        save_output_to_file(ip_address, 'crypto_accelerator_data', crypto_data)
 
         # Save data for the peer
         save_peer_data(ip_address, peer_data)
-
-        # Save Crypto ISAKMP SA Detail directly to file
-        save_output_to_file(ip_address, 'isakmp_sa_detail', crypto_isakmp_sa_detail())
-
-        # Save Crypto Accelerator Data directly to file
-        save_output_to_file(ip_address, 'crypto_accelerator_data', s2s_crypto_accelerator_data())
 
 def save_output_to_file(ip_address, data_type, data):
     """
