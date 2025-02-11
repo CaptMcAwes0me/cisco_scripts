@@ -15,6 +15,7 @@ from lina.vpn.s2s.s2s_crypto_accelerator_data.s2s_crypto_accelerator_data import
 from lina.vpn.s2s.crypto_isakmp_sa_detail.crypto_isakmp_sa_detail import crypto_isakmp_sa_detail
 from lina.vpn.s2s.crypto_ipsec_sa_detail.crypto_ipsec_sa_detail import crypto_ipsec_sa_detail
 
+
 def dump_s2s_tunnel_groups():
     """
     Gathers all IPSec S2S tunnels, identifies IKE version, and categorizes as Policy-Based or VTI.
@@ -70,6 +71,7 @@ def dump_s2s_tunnel_groups():
     # Compress and clean up files
     compress_and_cleanup()
 
+
 def dump_s2s_menu(selected_peers):
     """
     Processes Site-to-Site VPN-related tasks for all selected peers without user interaction.
@@ -114,20 +116,21 @@ def dump_s2s_menu(selected_peers):
         # Save data for the peer
         save_peer_data(ip_address, peer_data)
 
-def save_output_to_file(ip_address, data_type, data):
+
+def save_output_to_file(ip_address, data):
     """
     Saves specific data type output directly to a file for a given peer.
     """
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     file_path = f"/var/log/fp_troubleshooting_data/{ip_address}_{timestamp}_s2s_dump.txt"
     with open(file_path, 'a') as f:
-        f.write(f"=== {data_type.upper()} ===\n")
         if isinstance(data, dict):
             for key, value in data.items():
                 f.write(f"{key}: {value}\n")
         else:
             f.write(data if isinstance(data, str) else str(data))
         f.write("\n\n")
+
 
 def save_peer_data(ip_address, data):
     """
@@ -137,13 +140,13 @@ def save_peer_data(ip_address, data):
     file_path = f"/var/log/fp_troubleshooting_data/{ip_address}_{timestamp}_s2s_dump.txt"
     with open(file_path, 'w') as f:
         for key, value in data.items():
-            f.write(f"=== {key.upper()} ===\n")
             if isinstance(value, dict):
                 for sub_key, sub_value in value.items():
                     f.write(f"{sub_key}: {sub_value}\n")
             else:
                 f.write(value if isinstance(value, str) else str(value))
             f.write("\n\n")
+
 
 def compress_and_cleanup():
     """
