@@ -1,3 +1,8 @@
+import io
+from contextlib import redirect_stdout
+from datetime import datetime
+import os
+import shutil
 from lina.vpn.s2s.s2s_config.s2s_config import (
     s2s_ikev1_vti_config,
     s2s_ikev1_policy_based_config,
@@ -9,11 +14,15 @@ from lina.vpn.s2s.crypto_isakmp_sa_detail.crypto_isakmp_sa_detail import crypto_
 from lina.vpn.s2s.crypto_ipsec_sa_detail.crypto_ipsec_sa_detail import crypto_ipsec_sa_detail
 
 
-def dump_all_s2s_data(selected_peers):
-    from datetime import datetime
-    import os
-    import shutil
+def capture_function_output(func, *args, **kwargs):
+    """Captures printed output from functions that do not return data."""
+    buffer = io.StringIO()
+    with redirect_stdout(buffer):
+        func(*args, **kwargs)
+    return buffer.getvalue().strip()  # Return captured output
 
+
+def dump_all_s2s_data(selected_peers):
     troubleshooting_dir = "/var/log/fp_troubleshooting_data"
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     archive_name = f"{timestamp}_s2s_dump"
@@ -38,39 +47,35 @@ def dump_all_s2s_data(selected_peers):
             log_file = os.path.join(peer_dir, f"{ip_address}_s2s_data.log")
             data_to_dump = []
 
-            # ✅ Call S2S Configuration Functions (Mimicking s2s_menu behavior)
+            # ✅ Capture printed output from the s2s_ike* functions
             if ike_version == 'ikev1' and vpn_type == 'vti':
-                data_to_dump.append(("IKEv1 VTI Config", s2s_ikev1_vti_config(ip_address) or "No data available"))
+                output = capture_function_output(s2s_ikev1_vti_config, ip_address)
+                data_to_dump.append(("IKEv1 VTI Config", output or "No data available"))
+
             elif ike_version == 'ikev1' and vpn_type == 'policy':
-                data_to_dump.append(("IKEv1 Policy-Based Config", s2s_ikev1_policy_based_config(ip_address) or "No data available"))
+                output = capture_function_output(s2s_ikev1_policy_based_config, ip_address)
+                data_to_dump.append(("IKEv1 Policy-Based Config", output or "No data available"))
+
             elif ike_version == 'ikev2' and vpn_type == 'vti':
-                data_to_dump.append(("IKEv2 VTI Config", s2s_ikev2_vti_config(ip_address) or "No data available"))
+                output = capture_function_output(s2s_ikev2_vti_config, ip_address)
+                data_to_dump.append(("IKEv2 VTI Config", output or "No data available"))
+
             elif ike_version == 'ikev2' and vpn_type == 'policy':
-                data_to_dump.append(("IKEv2 Policy-Based Config", s2s_ikev2_policy_based_config(ip_address) or "No data available"))
+                output = capture_function_output(s2s_ikev2_policy_based_config, ip_address)
+                data_to_dump.append(("IKEv2 Policy-Based Config", output or "No data available"))
 
             # ✅ Gather Additional VPN-Related Data
-            data_to_dump.append(("Crypto ISAKMP SA Detail", crypto_isakmp_sa_detail(suppress_output=True)))
-            data_to_dump.append(("Crypto IPSec SA Detail", crypto_ipsec_sa_detail(selected_peers=[peer])))
-            data_to_dump.append(("Crypto Accelerator Data", s2s_crypto_accelerator_data(suppress_output=True)))
+            data_to_dump.append(("Crypto ISAKMP SA Detail", capture_function_output(crypto_isakmp_sa_detail, suppress_output=True)))
+            data_to_dump.append(("Crypto IPSec SA Detail", capture_function_output(crypto_ipsec_sa_detail, selected_peers=[peer])))
+            data_to_dump.append(("Crypto Accelerator Data", capture_function_output(s2s_crypto_accelerator_data, suppress_output=True)))
 
+            # ✅ Write gathered data to log file
             with open(log_file, "w") as f:
                 for title, output in data_to_dump:
                     f.write(f"{'=' * 80}\n")
                     f.write(f"{title}\n")
                     f.write(f"{'-' * 80}\n")
-
-                    # Handle dictionary outputs
-                    if isinstance(output, dict):
-                        for key, value in output.items():
-                            f.write(f"{key}:\n")
-                            f.write(f"{'-' * 40}\n")
-                            f.write(f"{value}\n")
-                            f.write(f"{'-' * 80}\n")
-
-                    # Handle single string output
-                    else:
-                        f.write(f"{output}\n")
-
+                    f.write(f"{output}\n" if output else "No data available\n")
                     f.write(f"{'=' * 80}\n\n")
 
         # ✅ Compress all peer directories into a single archive
