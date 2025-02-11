@@ -7,7 +7,7 @@ from core.utils import display_formatted_menu
 def vpn_dump_menu():
     menu_options = {
         "1": ("AnyConnect (Secure Client) Dump", dump_all_anyconnect_data),
-        "2": ("Site-to-Site VPN Dump", dump_s2s_tunnel_groups()),
+        "2": ("Site-to-Site VPN Dump", dump_s2s_tunnel_groups),
         "0": ("Exit", None),
     }
 
