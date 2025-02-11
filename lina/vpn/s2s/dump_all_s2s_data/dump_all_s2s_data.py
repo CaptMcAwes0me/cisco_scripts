@@ -90,6 +90,8 @@ def dump_s2s_menu(selected_peers):
         elif ike_version == 'ikev2' and vpn_type == 'policy':
             peer_data['configuration'] = s2s_ikev2_policy_based_config(ip_address)
 
+        print(f"Running IPSec SA detail for IP: {ip_address}")
+
         # Gather Crypto IPSec SA Detail
         peer_data['ipsec_sa_detail'] = crypto_ipsec_sa_detail(ip_address)
 
