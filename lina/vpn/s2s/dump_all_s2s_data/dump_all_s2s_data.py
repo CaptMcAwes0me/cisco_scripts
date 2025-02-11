@@ -1,5 +1,7 @@
 import os
 import re
+import io
+from contextlib import redirect_stdout
 from datetime import datetime
 from core.utils import get_and_parse_cli_output, ip_sort_key
 from lina.vpn.s2s.s2s_config.s2s_config import (
@@ -73,18 +75,19 @@ def dump_s2s_menu(selected_peers):
         ip_address, ike_version, vpn_type = peer
         peer_data = {}
 
-        # Gather Site-to-Site Configuration
-        if ike_version == 'ikev1' and vpn_type == 'vti':
-            peer_data['configuration'] = s2s_ikev1_vti_config(ip_address)
-        elif ike_version == 'ikev1' and vpn_type == 'policy':
-            peer_data['configuration'] = s2s_ikev1_policy_based_config(ip_address)
-        elif ike_version == 'ikev2' and vpn_type == 'vti':
-            peer_data['configuration'] = s2s_ikev2_vti_config(ip_address)
-        elif ike_version == 'ikev2' and vpn_type == 'policy':
-            peer_data['configuration'] = s2s_ikev2_policy_based_config(ip_address)
+        # Capture output for configuration (suppressing console output)
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            if ike_version == 'ikev1' and vpn_type == 'vti':
+                s2s_ikev1_vti_config(ip_address)
+            elif ike_version == 'ikev1' and vpn_type == 'policy':
+                s2s_ikev1_policy_based_config(ip_address)
+            elif ike_version == 'ikev2' and vpn_type == 'vti':
+                s2s_ikev2_vti_config(ip_address)
+            elif ike_version == 'ikev2' and vpn_type == 'policy':
+                s2s_ikev2_policy_based_config(ip_address)
 
-        # Debug: Check configuration output
-        print(f"Config output for {ip_address}: {peer_data['configuration']}")
+        peer_data['configuration'] = buffer.getvalue()
 
         # Gather Crypto IPSec SA Detail
         peer_data['ipsec_sa_detail'] = crypto_ipsec_sa_detail([peer])
