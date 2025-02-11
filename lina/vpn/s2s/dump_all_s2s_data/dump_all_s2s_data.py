@@ -113,7 +113,10 @@ def save_output_to_file(ip_address, data_type, data):
 
     file_path = os.path.join(base_dir, f"{timestamp}_{ip_address}_{data_type}.txt")
     with open(file_path, 'w') as f:
-        f.write(data)
+        if isinstance(data, dict):
+            json.dump(data, f, indent=4)
+        else:
+            f.write(str(data))
 
 def save_collected_data(collected_data):
     """
