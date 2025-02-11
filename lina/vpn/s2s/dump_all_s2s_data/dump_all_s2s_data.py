@@ -139,7 +139,8 @@ def save_collected_data(collected_data):
     compressed_file = f"/var/log/fp_troubleshooting_data/{timestamp}_s2s_dump.tar.gz"
     shutil.make_archive(base_dir, 'gztar', base_dir)
 
-    # Optionally, remove the uncompressed directory after archiving
-    shutil.rmtree(base_dir)
+    # Remove the uncompressed directory after archiving
+    if os.path.exists(base_dir):
+        shutil.rmtree(base_dir)
 
     print(f"Data has been collected and saved to {compressed_file}")
