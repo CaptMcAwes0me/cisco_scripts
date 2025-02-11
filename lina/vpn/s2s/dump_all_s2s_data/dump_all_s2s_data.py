@@ -1,4 +1,5 @@
 import os
+import shutil
 from datetime import datetime
 from contextlib import redirect_stdout
 from lina.vpn.s2s.s2s_config.s2s_config import (
@@ -20,10 +21,13 @@ def suppress_function_output(func, *args, **kwargs):
 
 
 def dump_all_s2s_data(selected_peers):
-    """Gathers output from all Site-to-Site VPN-related commands and writes them to a log file under
-    /var/log/fp_troubleshooting_data."""
+    """Gathers output from all Site-to-Site VPN-related commands, writes them to separate directories for each peer,
+    and compresses all directories into a single archive."""
 
     troubleshooting_dir = "/var/log/fp_troubleshooting_data"
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    archive_name = f"{timestamp}_s2s_dump"
+    archive_path = os.path.join(troubleshooting_dir, archive_name)
 
     if not os.path.exists(troubleshooting_dir):
         try:
@@ -33,51 +37,55 @@ def dump_all_s2s_data(selected_peers):
             print(f"[!] Error creating directory: {e}")
             return
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_file = os.path.join(troubleshooting_dir, f"{timestamp}_s2s_dump.log")
-
     try:
-        data_to_dump = []
-
-        # Gather Site-to-Site Configuration Data
         for peer in selected_peers:
             ip_address, ike_version, vpn_type = peer
+            peer_dir = os.path.join(troubleshooting_dir, f"{ip_address}_{ike_version}_{vpn_type}")
 
+            if not os.path.exists(peer_dir):
+                os.makedirs(peer_dir)
+
+            log_file = os.path.join(peer_dir, f"{ip_address}_s2s_data.log")
+            data_to_dump = []
+
+            # Gather Site-to-Site Configuration Data
             if ike_version == 'ikev1' and vpn_type == 'vti':
-                data_to_dump.append((f"IKEv1 VTI Config for {ip_address}", suppress_function_output(s2s_ikev1_vti_config, ip_address) or "No data available"))
+                data_to_dump.append(("IKEv1 VTI Config", suppress_function_output(s2s_ikev1_vti_config, ip_address) or "No data available"))
             elif ike_version == 'ikev1' and vpn_type == 'policy':
-                data_to_dump.append((f"IKEv1 Policy-Based Config for {ip_address}", suppress_function_output(s2s_ikev1_policy_based_config, ip_address) or "No data available"))
+                data_to_dump.append(("IKEv1 Policy-Based Config", suppress_function_output(s2s_ikev1_policy_based_config, ip_address) or "No data available"))
             elif ike_version == 'ikev2' and vpn_type == 'vti':
-                data_to_dump.append((f"IKEv2 VTI Config for {ip_address}", suppress_function_output(s2s_ikev2_vti_config, ip_address) or "No data available"))
+                data_to_dump.append(("IKEv2 VTI Config", suppress_function_output(s2s_ikev2_vti_config, ip_address) or "No data available"))
             elif ike_version == 'ikev2' and vpn_type == 'policy':
-                data_to_dump.append((f"IKEv2 Policy-Based Config for {ip_address}", suppress_function_output(s2s_ikev2_policy_based_config, ip_address) or "No data available"))
+                data_to_dump.append(("IKEv2 Policy-Based Config", suppress_function_output(s2s_ikev2_policy_based_config, ip_address) or "No data available"))
 
-        # Gather Additional VPN-Related Data
-        data_to_dump.append(("Crypto ISAKMP SA Detail", crypto_isakmp_sa_detail(suppress_output=True)))
-        data_to_dump.append(("Crypto IPSec SA Detail", crypto_ipsec_sa_detail(selected_peers=selected_peers)))
-        data_to_dump.append(("Crypto Accelerator Data", s2s_crypto_accelerator_data(suppress_output=True)))
+            # Gather Additional VPN-Related Data
+            data_to_dump.append(("Crypto ISAKMP SA Detail", crypto_isakmp_sa_detail(suppress_output=True)))
+            data_to_dump.append(("Crypto IPSec SA Detail", crypto_ipsec_sa_detail(selected_peers=[peer])))
+            data_to_dump.append(("Crypto Accelerator Data", s2s_crypto_accelerator_data(suppress_output=True)))
 
-        with open(log_file, "w") as f:
-            for title, output in data_to_dump:
-                f.write(f"{'=' * 80}\n")
-                f.write(f"{title}\n")
-                f.write(f"{'-' * 80}\n")
+            with open(log_file, "w") as f:
+                for title, output in data_to_dump:
+                    f.write(f"{'=' * 80}\n")
+                    f.write(f"{title}\n")
+                    f.write(f"{'-' * 80}\n")
 
-                # Handle dictionary outputs
-                if isinstance(output, dict):
-                    for key, value in output.items():
-                        f.write(f"{key}:\n")
-                        f.write(f"{'-' * 40}\n")
-                        f.write(f"{value}\n")
-                        f.write(f"{'-' * 80}\n")
+                    # Handle dictionary outputs
+                    if isinstance(output, dict):
+                        for key, value in output.items():
+                            f.write(f"{key}:\n")
+                            f.write(f"{'-' * 40}\n")
+                            f.write(f"{value}\n")
+                            f.write(f"{'-' * 80}\n")
 
-                # Handle single string output
-                else:
-                    f.write(f"{output}\n")
+                    # Handle single string output
+                    else:
+                        f.write(f"{output}\n")
 
-                f.write(f"{'=' * 80}\n\n")
+                    f.write(f"{'=' * 80}\n\n")
 
-        print(f"\n[+] All Site-to-Site VPN data written to: {log_file}")
+        # Compress all peer directories into a single archive
+        shutil.make_archive(archive_path, 'zip', troubleshooting_dir)
+        print(f"\n[+] All Site-to-Site VPN data archived to: {archive_path}.zip")
 
     except Exception as e:
         print(f"[!] Error writing Site-to-Site VPN data to file: {e}")
