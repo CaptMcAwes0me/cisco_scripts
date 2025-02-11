@@ -25,7 +25,7 @@ def vpn_dump_menu():
                 print("-" * 80)
 
                 if choice == "2":  # Site-to-Site VPN Dump
-                    selected_peers = s2s_tunnel_groups(auto_gather=True)  # ✅ Auto-gather for VPN Dump
+                    selected_peers = s2s_tunnel_groups()  # ✅ Auto-gather for VPN Dump
                     if selected_peers:
                         function(selected_peers)
                     else:
