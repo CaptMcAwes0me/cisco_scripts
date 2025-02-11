@@ -135,9 +135,9 @@ def save_collected_data(collected_data):
         with open(file_path, 'w') as f:
             json.dump(data, f, indent=4)
 
-    # Compress all peer directories into a single archive
+    # Compress the parent directory instead of just the contents
     compressed_file = f"/var/log/fp_troubleshooting_data/{timestamp}_s2s_dump.tar.gz"
-    shutil.make_archive(base_dir, 'gztar', base_dir)
+    shutil.make_archive(base_dir, 'gztar', root_dir="/var/log/fp_troubleshooting_data", base_dir=f"{timestamp}_s2s_dump")
 
     # Remove the uncompressed directory after archiving
     if os.path.exists(base_dir):
