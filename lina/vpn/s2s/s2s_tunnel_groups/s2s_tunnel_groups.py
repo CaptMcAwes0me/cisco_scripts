@@ -1,14 +1,12 @@
 import re
 from core.utils import get_and_parse_cli_output
-from menus.s2s_menu import s2s_menu
-from lina.vpn.s2s.dump_all_s2s_data.dump_all_s2s_data import dump_all_s2s_data
 
 
 def ip_sort_key(ip):
     return tuple(map(int, ip.split('.')))
 
 
-def s2s_tunnel_groups(auto_dump=False):
+def s2s_tunnel_groups():
     """
     Gathers all IPSec S2S tunnels, identifies IKE version, and categorizes as Policy-Based or VTI.
     """
@@ -90,10 +88,6 @@ def s2s_tunnel_groups(auto_dump=False):
         elif choice == "":
             print("\nSelected All Tunnel Groups")
             selected_peers = ikev1_policy_based + ikev1_vti + ikev2_policy_based + ikev2_vti
-            if auto_dump:
-                dump_all_s2s_data(selected_peers)  # Skip menu, dump data automatically
-            else:
-                s2s_menu(selected_peers)
             break
         elif choice in selection_mapping:
             selected_peers = [selection_mapping[choice]]
