@@ -7,7 +7,7 @@ def ip_sort_key(ip):
     return tuple(map(int, ip.split('.')))
 
 
-def s2s_tunnel_groups(auto_gather=False):
+def s2s_tunnel_groups():
     command = "show running-config tunnel-group | include type ipsec-l2l"
     cli_output = get_and_parse_cli_output(command)
 
@@ -44,12 +44,7 @@ def s2s_tunnel_groups(auto_gather=False):
 
     selected_peers = ikev1_policy_based + ikev1_vti + ikev2_policy_based + ikev2_vti
 
-    # ✅ Auto-gather mode for VPN Dump (skip manual selection)
-    if auto_gather:
-        print("\n[+] Auto-gathering ALL tunnel groups for VPN Dump...")
-        return selected_peers
 
-    # 🔒 Manual selection mode (default)
     index = 1
     def display_section(title, items, start_index):
         print("\n")

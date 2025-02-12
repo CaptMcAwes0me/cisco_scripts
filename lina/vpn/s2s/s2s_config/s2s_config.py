@@ -242,4 +242,3 @@ def s2s_ikev2_vti_config(ip_address):
 
     print("NOTE: This script does not gather NAT configuration. Manual verification is required for NAT-exemption")
     print("and/or Hairpin NAT statements to ensure they are configured properly.\n")
-
