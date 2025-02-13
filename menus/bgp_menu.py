@@ -1,3 +1,19 @@
+# Description: This script contains the BGP menu and its associated functions.
+
+from core.utils import display_formatted_menu
+from lina.routing.bgp.bgp_running_config.bgp_running_config import bgp_running_config
+from lina.routing.bgp.bgp_summary.bgp_summary import bgp_summary
+from lina.routing.bgp.bgp_neighbors.bgp_neighbors import bgp_neighbors
+from lina.routing.bgp.bgp_ipv4_unicast.bgp_ipv4_unicast import bgp_ipv4_unicast
+from lina.routing.bgp.bgp_cidr_only.bgp_cidr_only import bgp_cidr_only
+from lina.routing.bgp.bgp_paths.bgp_paths import bgp_paths
+from lina.routing.bgp.bgp_pending_prefixes.bgp_pending_prefixes import bgp_pending_prefixes
+from lina.routing.bgp.bgp_rib_failure.bgp_rib_failure import bgp_rib_failure
+from lina.routing.bgp.bgp_help.bgp_help import bgp_help
+from lina.routing.bgp.bgp_advertised_routes.bgp_advertised_routes import bgp_advertised_routes
+from lina.routing.bgp.bgp_update_group.bgp_update_group import bgp_update_group
+
+
 def bgp_menu():
     menu_options = {
         "1": ("BGP Running Configuration", bgp_running_config),
