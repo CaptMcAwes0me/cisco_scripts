@@ -1,63 +1,60 @@
 def ospf_help():
-    help_text = """
-    Lina "OSPF" Commands Help
-    =========================
+    """Displays how different OSPF commands relate to each other with practical examples."""
 
-    1. **show running-config all router ospf**  
-       - Displays the complete running configuration for OSPF (Open Shortest Path First).  
-       - This command shows the OSPF-specific configuration on the router, including router IDs, area configurations, and network advertisements.
+    help_sections = {
+        "1. Verifying OSPF Configuration & Process": [
+            "🔹 Use `show run all router ospf` to verify OSPF process settings, areas, and interfaces.",
+            "🔹 Use `show ospf all` to get a high-level summary of OSPF, including areas, SPF runs, and LSAs.",
+            "🔹 Example:",
+            "   1️⃣ Run: show run all router ospf (Confirm process ID, network statements, and area assignments)",
+            "   2️⃣ Run: show ospf all (Verify general OSPF health, neighbor count, and LSAs)",
+        ],
+        "2. Checking OSPF Neighbor Adjacencies": [
+            "🔹 Use `show ospf neighbor` to check if neighbors have formed adjacencies.",
+            "🔹 If an expected neighbor is missing, check interface status using `show ospf interface`.",
+            "🔹 Example:",
+            "   1️⃣ Run: show ospf neighbor (Confirm if neighbors are FULL or stuck in INIT/TWO-WAY)",
+            "   2️⃣ If neighbors are missing, check: show ospf interface (Verify interface OSPF state)",
+            "   3️⃣ If the interface is down, check: show run all router ospf (Confirm network statements)",
+        ],
+        "3. Investigating OSPF Route Installation": [
+            "🔹 Use `show ospf rib` to see which OSPF routes are installed in the routing table.",
+            "🔹 If an expected route is missing, check `show ospf database` to confirm if LSAs exist.",
+            "🔹 Example:",
+            "   1️⃣ Run: show ospf rib (Ensure expected routes are installed in the RIB)",
+            "   2️⃣ If a route is missing, check: show ospf database (Verify LSA presence)",
+            "   3️⃣ If the LSA exists but isn’t in the RIB, check: show ospf statistics (Look for SPF issues)",
+        ],
+        "4. Diagnosing OSPF Database Issues": [
+            "🔹 Use `show ospf database` to review all LSAs, including Router, Network, and External LSAs.",
+            "🔹 Use `show ospf border-routers` to check for ABRs/ASBRs handling inter-area/external routes.",
+            "🔹 Example:",
+            "   1️⃣ Run: show ospf database (Confirm LSAs are present and valid)",
+            "   2️⃣ Run: show ospf border-routers (Check ABRs/ASBRs distributing routes)",
+        ],
+        "5. Monitoring OSPF SPF & Traffic": [
+            "🔹 Use `show ospf statistics` to review SPF calculations, LSA updates, and neighbor changes.",
+            "🔹 Use `show ospf traffic` to analyze packet exchange counts (Hello, LSU, LSR, LSAck).",
+            "🔹 Example:",
+            "   1️⃣ Run: show ospf statistics (Check for excessive SPF recalculations)",
+            "   2️⃣ If SPF recalculations are frequent, check: show ospf traffic (Look for LSA flooding)",
+        ],
+        "6. Ensuring OSPF NSF (Non-Stop Forwarding) Functionality": [
+            "🔹 Use `show ospf nsf` to confirm if NSF is enabled and whether it’s operating correctly.",
+            "🔹 Example:",
+            "   1️⃣ Run: show ospf nsf (Verify NSF capability and last recovery status)",
+        ],
+    }
 
-    2. **show ospf all**  
-       - Displays all OSPF-related information on the router.  
-       - This command provides a comprehensive view of OSPF details such as routing information, neighbors, and interface configurations.
+    print("\n" + "=" * 80)
+    print("📘 OSPF Help: Understanding Command Relationships 📘".center(80))
+    print("=" * 80)
 
-    3. **show ospf border-routers**  
-       - Displays the OSPF border routers.  
-       - Useful for identifying OSPF routers that are configured as border routers between different OSPF areas or between OSPF and other routing protocols.
+    for section, lines in help_sections.items():
+        print(f"\n🟢 {section}")
+        for line in lines:
+            print(f"   {line}")
 
-    4. **show ospf database**  
-       - Displays the OSPF link-state database.  
-       - This database contains all the link-state advertisements (LSAs) in OSPF, which describe the network topology and are used for calculating the best path.
-
-    5. **show ospf events**  
-       - Displays the OSPF event log.  
-       - This log provides detailed information about OSPF events such as state changes, neighbor transitions, and OSPF process behavior.
-
-    6. **show ospf interface**  
-       - Displays OSPF-specific information about the router's interfaces.  
-       - This command shows details about OSPF-enabled interfaces, including their state, IP addresses, and the OSPF settings applied to them.
-
-    7. **show ospf neighbor**  
-       - Displays information about OSPF neighbors.  
-       - Shows the status of OSPF neighbor relationships, including the neighbor's IP address, interface, and the state of the OSPF adjacency.
-
-    8. **show ospf nsf**  
-       - Displays information about OSPF Non-Stop Forwarding (NSF) status.  
-       - NSF helps OSPF maintain routing without interruption during a router failure, and this command provides the current status of NSF on the router.
-
-    9. **show ospf rib**  
-       - Displays the OSPF Routing Information Base (RIB).  
-       - This command shows the routes learned through OSPF, helping administrators verify the routes and check OSPF's decision-making process.
-
-    10. **show ospf statistics**  
-        - Displays OSPF statistics.  
-        - Provides information about OSPF process statistics, including the number of LSAs processed, OSPF packets sent and received, and other OSPF-related counters.
-
-    11. **show ospf traffic**  
-        - Displays OSPF traffic details.  
-        - Helps analyze the OSPF traffic, including the volume of OSPF packets sent and received, allowing for troubleshooting of OSPF-related performance issues.
-
-    How These Commands Relate
-    =========================
-
-    - The **show running-config all router ospf** command provides a high-level overview of the OSPF configuration on the router.
-
-    - The **show ospf all**, **show ospf database**, and **show ospf rib** commands provide insight into the router's OSPF routing information, including databases and routes.
-
-    - The **show ospf interface**, **show ospf neighbor**, and **show ospf border-routers** commands provide details about the OSPF-enabled interfaces and the status of OSPF relationships with other routers.
-
-    - The **show ospf events** and **show ospf statistics** commands help monitor OSPF behavior and performance, while the **show ospf nsf** command provides details about the Non-Stop Forwarding functionality for OSPF.
-
-    - The **show ospf traffic** command helps with troubleshooting performance issues related to OSPF traffic and packet exchanges.
-    """
-    print(help_text)
+    print("\n" + "=" * 80)
+    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '4?' for OSPF Database).")
+    print("=" * 80)
