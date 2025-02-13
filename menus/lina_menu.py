@@ -17,9 +17,9 @@ def lina_menu():
     menu_options = {
         "1": ("System Version", show_version),
         "2": ("NAT (Network Address Translation) Menu", nat_menu),
-        "3": ("Connectivity and Traffic Menu", connectivity_and_traffic_menu),
-        "4": ("Routing Menu", routing_menu),
-        "5": ("VPN Menu", vpn_menu),
+        "3": ("Routing Menu", routing_menu),
+        "4": ("VPN Menu", vpn_menu),
+        "5": ("Connectivity and Traffic Menu", connectivity_and_traffic_menu),
         "6": ("High Availability (HA) / Failover Menu", failover_menu),
         "7": ("Logging and Monitoring Menu", logging_and_monitoring_menu),
         "8": ("Clustering Menu", cluster_menu),
