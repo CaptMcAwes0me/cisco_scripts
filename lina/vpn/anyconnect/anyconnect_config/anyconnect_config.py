@@ -30,18 +30,20 @@ def anyconnect_config(tunnel_group):
             local_user_output = get_and_parse_cli_output("show running-config username")
             print_section("Local User Configuration", local_user_output)
 
+    split_tunnel_enabled = []
     for policy_type in ["split-tunnel-policy", "ipv6-split-tunnel-policy"]:
         if re.search(rf"(?<!ipv6-){policy_type} tunnelspecified", group_policy_output):
-            print(f"*** {policy_type.upper()} *** [ENABLED]")
-            print("-" * 80)
+            split_tunnel_enabled.append(f"- {policy_type.replace('-', ' ').title()} Enabled")
             acl_match = re.search(rf"{policy_type.replace('policy', 'network-list value')} (\S+)", group_policy_output)
             if acl_match:
                 acl_name = acl_match.group(1)
                 acl_output = get_and_parse_cli_output(f"show access-list {acl_name}")
-                print_section(f"Access List Configuration ({acl_name})", acl_output)
+                print_section(f"Split-Tunnel ACL Configuration ({acl_name})", acl_output)
         elif re.search(rf"(?<!ipv6-){policy_type} tunnelall", group_policy_output):
-            print(f"*** {policy_type.upper()} *** [DISABLED]")
-            print("-" * 80 + "\n")
+            split_tunnel_enabled.append(f"- {policy_type.replace('-', ' ').title()} Disabled")
+
+    if split_tunnel_enabled:
+        print_section("Split-Tunnel Policy Overview", "\n".join(split_tunnel_enabled))
 
     vpn_filter_match = re.search(r"vpn-filter value (\S+)", group_policy_output)
     if vpn_filter_match:
