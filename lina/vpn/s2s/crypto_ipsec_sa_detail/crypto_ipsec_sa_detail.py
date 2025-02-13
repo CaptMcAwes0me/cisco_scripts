@@ -11,7 +11,8 @@ def crypto_ipsec_sa_detail(selected_peers):
             command = f"show crypto ipsec sa peer {ip_address} detail"
             output = get_and_parse_cli_output(command)
 
-            print(f"\n{command} Output for {ip_address}:")
+            print(f"Crypto IPSec SA Detail Output for {ip_address}:".center(80))
+            print(f"Command: {command}".center(80))
             print("-" * 80)
             print(output)
             print("-" * 80)

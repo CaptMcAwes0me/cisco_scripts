@@ -150,3 +150,16 @@ def display_formatted_menu(title, options):
     for key, description in options.items():
         print(f"{key}) {description}")
     print("=" * 80)
+
+
+def print_section(title, content):
+    separator = "-" * 80
+    title_line = f"| {title.center(76)} |"
+    print(separator)
+    print(title_line)
+    print(separator)
+    print(content)
+    print(separator + "\n")
+
+def ip_sort_key(ip):
+    return tuple(map(int, ip.split('.')))

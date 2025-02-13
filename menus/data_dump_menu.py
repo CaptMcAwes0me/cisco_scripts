@@ -17,16 +17,16 @@ from core.utils import display_formatted_menu
 
 def data_dump_menu():
     menu_options = {
-        "1": ("System Version", show_version),
-        "2": ("NAT (Network Address Translation) Data Retrieval", dump_all_nat_data),
-        "3": ("Connectivity and Traffic Data Retrieval", dump_all_conn_and_traffic_data),
-        "4": ("Routing Data Retrieval", routing_dump_menu),
-        "5": ("VPN Data Retrieval", vpn_dump_menu),
-        "6": ("High Availability (HA) / Failover Data Retrieval", dump_all_failover_data),
-        "7": ("Logging and Monitoring Data Retrieval", logging_and_monitoring_dump_menu),
-        "8": ("Clustering Data Retrieval", dump_all_cluster_data),
-        "9": ("Block Memory Data Retrieval", dump_all_blocks_data),
-        "10": ("Data Retrieval Menu", data_dump_help),
+        "1": ("Show Tech - System Version", show_version),
+        "2": ("Show Tech - NAT (Network Address Translation)", dump_all_nat_data),
+        "3": ("Show Tech - Routing", routing_dump_menu),
+        "4": ("Show Tech - VPN", vpn_dump_menu),
+        "5": ("Show Tech - Connectivity and Traffic", dump_all_conn_and_traffic_data),
+        "6": ("Show Tech - High Availability (HA) / Failover", dump_all_failover_data),
+        "7": ("Show Tech - Logging and Monitoring", logging_and_monitoring_dump_menu),
+        "8": ("Show Tech - Clustering", dump_all_cluster_data),
+        "9": ("Show Tech - Block Memory", dump_all_blocks_data),
+        "10": ("Show Tech - Help Menu", data_dump_help),
         "0": ("Exit", None),
     }
 

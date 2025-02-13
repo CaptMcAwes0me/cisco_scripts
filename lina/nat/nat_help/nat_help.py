@@ -1,49 +1,44 @@
 def nat_help():
-    help_text = """
-    Lina "NAT" Commands Help
-    =======================
+    """Displays how different NAT commands relate to each other with practical examples."""
 
-    1. **show running-config all nat**  
-       - Displays the complete running configuration related to NAT (Network Address Translation).  
-       - Useful for reviewing and verifying the entire NAT setup on the system, ensuring the correct mappings between 
-       private and public IP addresses.
+    help_sections = {
+        "1. Viewing NAT Configuration": [
+            "🔹 Use `show running-config all nat` to verify all NAT rules, including object NAT and manual NAT.",
+            "🔹 Use `show nat detail` to see detailed NAT rules and their translation hit counts.",
+            "🔹 Example:",
+            "   1️⃣ Run: show running-config all nat (Check NAT configuration)",
+            "   2️⃣ Run: show nat detail (Confirm NAT rules and hit statistics)",
+        ],
+        "2. Checking NAT Translations (XLATE)": [
+            "🔹 Use `show xlate count` to check the total number of active NAT translations.",
+            "🔹 Use `show xlate detail` to inspect individual NAT translations, including source/destination addresses and idle time.",
+            "🔹 Example:",
+            "   1️⃣ Run: show xlate count (See total number of active NAT translations)",
+            "   2️⃣ Run: show xlate detail (Review detailed NAT translations for troubleshooting)",
+        ],
+        "3. Monitoring NAT Pools": [
+            "🔹 Use `show nat pool` to see NAT pools, including available and allocated addresses.",
+            "🔹 This is useful for determining whether NAT exhaustion is occurring.",
+            "🔹 Example:",
+            "   1️⃣ Run: show nat pool (Check NAT pool availability and utilization)",
+        ],
+        "4. Verifying Proxy ARP": [
+            "🔹 Use `show nat proxy-arp` to determine if the ASA is responding to ARP requests for NAT addresses.",
+            "🔹 Example:",
+            "   1️⃣ Run: show nat proxy-arp (Check Proxy ARP behavior for NAT mappings)",
+            "   2️⃣ If issues arise, verify NAT rule configurations and routing settings.",
+        ],
+    }
 
-    2. **show nat detail**  
-       - Provides detailed information about the NAT configuration.  
-       - Shows how individual NAT rules are set up, including translations and address pools in use, helping to 
-       troubleshoot or optimize NAT behavior.
+    print("\n" + "=" * 80)
+    print("📘 NAT Help: Understanding Command Relationships 📘".center(80))
+    print("=" * 80)
 
-    3. **show nat proxy-arp**  
-       - Displays the proxy ARP (Address Resolution Protocol) configuration for NAT.  
-       - Helps in diagnosing issues related to NAT when proxy ARP is used, allowing devices on the network to respond to
-        ARP requests on behalf of other devices.
+    for section, lines in help_sections.items():
+        print(f"\n🟢 {section}")
+        for line in lines:
+            print(f"   {line}")
 
-    4. **show nat pool**  
-       - Displays the NAT pools configured on the system.  
-       - Shows the range of IP addresses available for NAT translation, which is essential for ensuring enough IP 
-       addresses are available for outbound connections.
-
-    5. **show xlate count**  
-       - Displays the count of active NAT translations.  
-       - Helps in monitoring the number of translations currently in use, which can be useful for troubleshooting 
-       overload or resource limitations.
-
-    6. **show xlate detail**  
-       - Displays detailed information about NAT translations.  
-       - Provides in-depth data on each active translation, including source and destination addresses, ports, and the 
-       current status of the translation.
-
-    How These Commands Relate
-    =========================
-
-    - The **show running-config all nat** command provides the full NAT configuration, while the **show nat detail** 
-    command offers a closer look at individual NAT rules and translations.
-
-    - The **show nat proxy-arp** command is used specifically for scenarios where proxy ARP is involved, while the 
-    **show nat pool** command helps verify the available address pools for NAT.
-
-    - The **show xlate count** and **show xlate detail** commands are particularly useful for monitoring and 
-    troubleshooting active NAT translations, helping to track the current state of connections and identify any 
-    potential issues with translation resources.
-    """
-    print(help_text)
+    print("\n" + "=" * 80)
+    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '2?' for Show NAT Detail).")
+    print("=" * 80)

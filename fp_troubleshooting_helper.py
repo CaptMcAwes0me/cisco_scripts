@@ -9,7 +9,7 @@ from menus.main_menu_help.main_menu_help import main_menu_help
 def main_menu():
     menu_options = {
         "1": ("Troubleshooting Menu", troubleshoot_menu),
-        "2": ("Lina Data Retrieval Menu", data_dump_menu),
+        "2": ("Show Tech - Menu", data_dump_menu),
         "3": ("Main Menu Help", main_menu_help),
         "0": ("Exit", None),
     }

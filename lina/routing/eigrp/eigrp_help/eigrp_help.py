@@ -1,45 +1,53 @@
 def eigrp_help():
-    help_text = """
-    Lina "EIGRP" Commands Help
-    ==========================
+    """Displays how different EIGRP commands relate to each other with practical examples."""
 
-    1. **show running-config all router eigrp**  
-       - Displays the complete running configuration for EIGRP (Enhanced Interior Gateway Routing Protocol).  
-       - Useful for reviewing the full EIGRP configuration, including the router settings, network advertisements, and neighbor relationships.
+    help_sections = {
+        "1. Checking EIGRP Configuration & Neighbor Relationships": [
+            "🔹 Use `show run all router eigrp` to verify the active EIGRP configuration.",
+            "🔹 Use `show eigrp neighbors` to check adjacency status with neighbors.",
+            "🔹 Example:",
+            "   1️⃣ Run: show run all router eigrp (Verify correct AS number and network statements)",
+            "   2️⃣ Run: show eigrp neighbors (Ensure neighbors are forming correctly)",
+            "   3️⃣ If a neighbor is missing, check: show eigrp interfaces (Confirm interfaces are enabled for EIGRP)",
+        ],
+        "2. Analyzing the EIGRP Topology & Feasible Successors": [
+            "🔹 Use `show eigrp topology` to view all learned routes and feasible successors.",
+            "🔹 Example:",
+            "   1️⃣ Run: show eigrp topology (Verify feasible successor paths for redundancy)",
+            "   2️⃣ Check the successor’s next hop and feasibility condition.",
+        ],
+        "3. Diagnosing Routing Issues in EIGRP": [
+            "🔹 Use `show route all eigrp` to check the routes installed in the routing table.",
+            "🔹 If a route is missing, check the topology table: `show eigrp topology`.",
+            "🔹 Example:",
+            "   1️⃣ Run: show route all eigrp (Ensure the expected routes are present)",
+            "   2️⃣ If missing, check: show eigrp topology (Confirm if the route exists in EIGRP)",
+            "   3️⃣ If the route is in topology but not in the RIB, verify: show eigrp rib-failure",
+        ],
+        "4. Monitoring EIGRP Traffic & Events": [
+            "🔹 Use `show eigrp traffic` to analyze packet exchanges such as Hello, Update, and Queries.",
+            "🔹 Use `show eigrp events` to check recent significant changes in the EIGRP process.",
+            "🔹 Example:",
+            "   1️⃣ Run: show eigrp traffic (Check for excessive Query or Update messages)",
+            "   2️⃣ Run: show eigrp events (Identify recent topology changes and neighbor issues)",
+        ],
+        "5. Verifying EIGRP Interface Participation": [
+            "🔹 Use `show eigrp interfaces` to check which interfaces are running EIGRP.",
+            "🔹 Example:",
+            "   1️⃣ Run: show eigrp interfaces (Ensure the correct interfaces are enabled)",
+            "   2️⃣ If an interface is missing, verify: show run all router eigrp (Check network statements)",
+        ]
+    }
 
-    2. **show eigrp events**  
-       - Displays the events related to the EIGRP protocol.  
-       - Helps track EIGRP-related events such as route updates, route changes, and state transitions, aiding in troubleshooting and performance monitoring.
+    print("\n" + "=" * 80)
+    print("📘 EIGRP Help: Understanding Command Relationships 📘".center(80))
+    print("=" * 80)
 
-    3. **show eigrp interfaces**  
-       - Displays information about EIGRP interfaces.  
-       - Provides details of the interfaces participating in EIGRP, such as the interface status, IP addresses, and EIGRP metrics, which helps verify and troubleshoot EIGRP operations.
+    for section, lines in help_sections.items():
+        print(f"\n🟢 {section}")
+        for line in lines:
+            print(f"   {line}")
 
-    4. **show eigrp neighbors**  
-       - Displays information about EIGRP neighbors.  
-       - Shows the status of EIGRP peering, including the neighbors' IP addresses, AS numbers, and the state of the EIGRP adjacency.
-
-    5. **show eigrp topology**  
-       - Displays the EIGRP topology table.  
-       - Provides information about the best paths and backup routes EIGRP has learned, including route metrics and feasible distances, helping to analyze the routing table and path selection.
-
-    6. **show eigrp traffic**  
-       - Displays statistics related to EIGRP traffic.  
-       - Provides insights into EIGRP-related traffic, such as the number of packets sent/received, which can be helpful in diagnosing performance issues or unusual traffic patterns.
-
-    7. **show route all eigrp**  
-       - Displays all EIGRP routes in the routing table.  
-       - Useful for viewing all the routes that have been learned via EIGRP and analyzing the routing table for EIGRP-specific paths.
-
-    How These Commands Relate
-    =========================
-
-    - The **show running-config all router eigrp** command shows the full configuration of EIGRP, while the other commands provide detailed insights into the operational status, route learning, and neighbor relationships.
-
-    - The **show eigrp events**, **show eigrp interfaces**, and **show eigrp neighbors** commands help monitor EIGRP events, interface participation, and neighbor status, providing a more comprehensive view of the protocol's health.
-
-    - The **show eigrp topology** and **show route all eigrp** commands provide detailed routing information, such as the EIGRP topology and the routes learned by EIGRP.
-
-    - The **show eigrp traffic** command is helpful for analyzing the amount of EIGRP-related traffic being transmitted and received, assisting in identifying potential performance issues.
-    """
-    print(help_text)
+    print("\n" + "=" * 80)
+    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '4?' for EIGRP Neighbors).")
+    print("=" * 80)

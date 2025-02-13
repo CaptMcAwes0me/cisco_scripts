@@ -1,49 +1,60 @@
 def isis_help():
-    help_text = """
-    Lina "ISIS" Commands Help
-    =========================
+    """Displays how different ISIS commands relate to each other with practical examples."""
 
-    1. **show running-config all router isis**  
-       - Displays the complete running configuration for ISIS (Intermediate System to Intermediate System).  
-       - This command provides an overview of the ISIS configuration, including router settings, network advertisements, and IS-IS process information.
+    help_sections = {
+        "1. Verifying ISIS Configuration & Process": [
+            "🔹 Use `show running-config all router isis` to verify ISIS process settings, NETs, and interfaces.",
+            "🔹 Use `show isis topology` to get an overview of ISIS network structure and adjacencies.",
+            "🔹 Example:",
+            "   1️⃣ Run: show running-config all router isis (Confirm NETs, levels, and interface settings)",
+            "   2️⃣ Run: show isis topology (Verify ISIS neighbors, levels, and metric paths)",
+        ],
+        "2. Checking ISIS Neighbor Adjacencies": [
+            "🔹 Use `show isis neighbors` to check if ISIS neighbors have formed adjacencies.",
+            "🔹 If an expected neighbor is missing, check interface status using `show isis topology`.",
+            "🔹 Example:",
+            "   1️⃣ Run: show isis neighbors (Confirm if neighbors are UP or stuck in INIT/DOWN)",
+            "   2️⃣ If neighbors are missing, check: show isis topology (Verify ISIS links and interfaces)",
+            "   3️⃣ If adjacencies fail, check: show running-config all router isis (Confirm level and authentication)",
+        ],
+        "3. Investigating ISIS Route Installation": [
+            "🔹 Use `show isis rib` to see which ISIS routes are installed in the routing table.",
+            "🔹 If an expected route is missing, check `show isis database` to confirm if LSPs exist.",
+            "🔹 Example:",
+            "   1️⃣ Run: show isis rib (Ensure expected routes are installed in the RIB)",
+            "   2️⃣ If a route is missing, check: show isis database (Verify LSP presence and sequence numbers)",
+            "   3️⃣ If an LSP exists but isn’t in the RIB, check: show isis spf-log (Look for SPF calculation issues)",
+        ],
+        "4. Diagnosing ISIS Database Issues": [
+            "🔹 Use `show isis database` to review ISIS LSPs, including sequence numbers and hold times.",
+            "🔹 Use `show isis lsp-log` to check if LSPs are being frequently updated or purged.",
+            "🔹 Example:",
+            "   1️⃣ Run: show isis database (Confirm LSPs are present and valid)",
+            "   2️⃣ Run: show isis lsp-log (Check for frequent LSP flooding or stale LSPs)",
+        ],
+        "5. Monitoring ISIS SPF & Convergence": [
+            "🔹 Use `show isis spf-log` to review SPF calculations and changes in the network topology.",
+            "🔹 Use `show isis traffic` (if applicable) to analyze ISIS message exchange counts.",
+            "🔹 Example:",
+            "   1️⃣ Run: show isis spf-log (Check for excessive SPF recalculations)",
+            "   2️⃣ If SPF recalculations are frequent, check: show isis lsp-log (Look for frequent LSP updates)",
+        ],
+        "6. Mapping System IDs to Hostnames": [
+            "🔹 Use `show isis hostname` to map ISIS system IDs to human-readable hostnames.",
+            "🔹 Example:",
+            "   1️⃣ Run: show isis hostname (Resolve system IDs to router names for better readability)",
+        ],
+    }
 
-    2. **show isis database**  
-       - Displays the ISIS link-state database.  
-       - Useful for viewing the IS-IS database, which contains the link-state information for the network, including the network topology, and helps troubleshoot issues with routing decisions.
+    print("\n" + "=" * 80)
+    print("📘 ISIS Help: Understanding Command Relationships 📘".center(80))
+    print("=" * 80)
 
-    3. **show isis hostname**  
-       - Displays the ISIS router hostname information.  
-       - Helps verify the hostname of the ISIS router, which is crucial for identifying the router within the ISIS network.
+    for section, lines in help_sections.items():
+        print(f"\n🟢 {section}")
+        for line in lines:
+            print(f"   {line}")
 
-    4. **show isis lsp-log**  
-       - Displays the IS-IS Link State Protocol (LSP) log.  
-       - Provides detailed logs related to ISIS LSPs, which describe network topology changes. This log can help diagnose issues related to IS-IS routing and convergence.
-
-    5. **show isis neighbors**  
-       - Displays information about ISIS neighbors.  
-       - Shows the status of ISIS adjacency, including the neighbor's IP address, interface, and the state of the ISIS relationship, which is important for troubleshooting ISIS neighbor issues.
-
-    6. **show isis rib**  
-       - Displays the ISIS Routing Information Base (RIB).  
-       - Provides a view of the routes that are available via ISIS, helping to analyze the routing table and verify correct routing information.
-
-    7. **show isis spf-log**  
-       - Displays the Shortest Path First (SPF) log for ISIS.  
-       - This log provides insights into the SPF calculations that ISIS performs to determine the best paths, which is useful for debugging routing issues.
-
-    8. **show isis topology**  
-       - Displays the ISIS network topology.  
-       - Helps visualize the current topology of the ISIS network, showing the structure and relationships between routers, and is useful for troubleshooting network connectivity.
-
-    How These Commands Relate
-    =========================
-
-    - The **show running-config all router isis** command gives the full configuration of the ISIS process, while the other commands provide detailed operational information about ISIS and its components.
-
-    - The **show isis database**, **show isis rib**, and **show isis topology** commands help to understand the network's topology, available routes, and ISIS database contents.
-
-    - The **show isis neighbors** and **show isis lsp-log** commands help diagnose and troubleshoot ISIS neighbor relationships and link-state updates.
-
-    - The **show isis spf-log** provides logs related to the SPF calculation process, helping administrators debug and understand ISIS's route selection mechanism.
-    """
-    print(help_text)
+    print("\n" + "=" * 80)
+    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '4?' for ISIS Database).")
+    print("=" * 80)

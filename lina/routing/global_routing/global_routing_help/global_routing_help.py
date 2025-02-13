@@ -1,33 +1,46 @@
 def global_routing_help():
-    help_text = """
-    Lina "Global Routing" Commands Help
-    ===================================
+    """Displays how different Global Routing commands relate to each other with practical examples."""
 
-    1. **show running-config all route**  
-       - Displays the complete running configuration related to routing.  
-       - This command provides a full view of the routing-related configuration, such as static routes, route maps, and routing protocol configurations.
+    help_sections = {
+        "1. Verifying Routing Configuration": [
+            "🔹 Use `show running-config all route` to verify static routes and dynamic protocol configurations.",
+            "🔹 Use `show running-config all router` to confirm routing protocol settings (OSPF, BGP, EIGRP, ISIS).",
+            "🔹 Example:",
+            "   1️⃣ Run: show running-config all route (Check for static routes and redistribution settings)",
+            "   2️⃣ Run: show running-config all router (Confirm OSPF, BGP, or EIGRP configurations)",
+        ],
+        "2. Viewing the Routing Table": [
+            "🔹 Use `show route all` to display all installed routes from different protocols (OSPF, BGP, EIGRP, etc.).",
+            "🔹 If an expected route is missing, check `show asp table routing all` for hidden internal routes.",
+            "🔹 Example:",
+            "   1️⃣ Run: show route all (Verify if the route is installed and active)",
+            "   2️⃣ If missing, check: show asp table routing all (Confirm ASP processing of the route)",
+        ],
+        "3. Diagnosing Route Processing (ASP Table)": [
+            "🔹 Use `show asp table routing all` to review how the ASA processes routes internally.",
+            "🔹 This table contains identity routes, policy-based routes, and VPN-related routes.",
+            "🔹 If a route appears in `show asp table routing all` but not in `show route all`, it may be a VPN or special policy route.",
+            "🔹 Example:",
+            "   1️⃣ Run: show asp table routing all (Check if a route is internally processed)",
+            "   2️⃣ If the route is missing from `show route all`, check if it's tied to VPNs or NAT rules.",
+        ],
+        "4. Troubleshooting Missing Routes": [
+            "🔹 If a route is expected but missing from `show route all`, follow these steps:",
+            "   1️⃣ Run: show running-config all route (Ensure the route is configured)",
+            "   2️⃣ Run: show asp table routing all (Confirm the route is recognized internally)",
+            "   3️⃣ If dynamic, check: show running-config all router (Verify protocol settings)",
+        ],
+    }
 
-    2. **show running-config all router**  
-       - Displays the running configuration for all routing protocols (e.g., EIGRP, OSPF, BGP).  
-       - Useful for reviewing the global router settings, including the configuration of individual routing protocols.
+    print("\n" + "=" * 80)
+    print("📘 Global Routing Help: Understanding Command Relationships 📘".center(80))
+    print("=" * 80)
 
-    3. **show route all**  
-       - Displays all routes in the routing table.  
-       - Provides a comprehensive view of the routes known to the router, regardless of their source (static, dynamic, etc.), allowing administrators to verify routing table contents.
+    for section, lines in help_sections.items():
+        print(f"\n🟢 {section}")
+        for line in lines:
+            print(f"   {line}")
 
-    4. **show asp table routing all**  
-       - Displays the routing table of the Adaptive Security Path (ASP).  
-       - Helps administrators view the state of the routing paths within the ASP, including both secure and non-secure routes, and can be used to diagnose routing-related issues in a secure environment.
-
-    How These Commands Relate
-    =========================
-
-    - The **show running-config all route** and **show running-config all router** commands provide details on the router's overall configuration, including routing settings and protocols.
-
-    - The **show route all** command helps view all routes in the routing table, enabling a broad understanding of how traffic will be forwarded.
-
-    - The **show asp table routing all** command is particularly useful for viewing the routing state in an adaptive security environment, which can differ from the standard routing table due to security features.
-
-    Together, these commands allow administrators to configure, view, and troubleshoot routing configurations and routing table states across different routing protocols and security paths.
-    """
-    print(help_text)
+    print("\n" + "=" * 80)
+    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '3?' for Show Route All).")
+    print("=" * 80)

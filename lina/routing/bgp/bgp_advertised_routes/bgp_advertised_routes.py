@@ -2,8 +2,39 @@ from core.utils import get_and_parse_cli_output
 import re
 
 
-def bgp_advertised_routes(suppress_output=False):
-    """Retrieves and optionally displays advertised routes for each BGP neighbor."""
+def bgp_advertised_routes(suppress_output=False, help_requested=False):
+    """Retrieves and optionally displays advertised routes for each BGP neighbor.
+       If help_requested=True, it prints the help information instead.
+    """
+
+    bgp_advertised_routes_help = {
+        'command': 'show bgp neighbor <neighbor> advertised-routes',
+        'description': (
+            "Displays all routes that have been advertised to a specified BGP neighbor. "
+            "This is useful for verifying which routes your router is advertising to its BGP peers."
+        ),
+        'example_output': """
+BGP table version is 7, local router ID is 203.0.113.1
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+              r RIB-failure, S Stale, m multipath
+Origin codes: i - IGP, e - EGP, ? - incomplete
+
+   Network          Next Hop            Metric LocPrf Weight Path
+*> 10.10.10.0/24    203.0.113.2              0             0 200 i
+*> 10.180.10.0/24   203.0.113.2              0             0 200 i
+*> 172.16.30.0/24   203.0.113.2              0             0 200 i
+        """
+    }
+
+    # If help is requested, print help content and exit the function
+    if help_requested:
+        print("\n" + "-" * 80)
+        print(f"Help for: {bgp_advertised_routes_help['command']}".center(80))
+        print("-" * 80)
+        print(f"\n{bgp_advertised_routes_help['description']}\n")
+        print("Example Output:")
+        print(bgp_advertised_routes_help['example_output'])
+        return None  # No actual command execution
 
     try:
         # Get the BGP summary output
