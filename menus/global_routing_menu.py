@@ -1,4 +1,4 @@
-# Description: This script contains the Global menu and its associated functions.
+# Description: This script contains the Global Routing menu and its associated functions.
 
 from core.utils import display_formatted_menu
 from lina.routing.global_routing.show_route_all.show_route_all import show_route_all
@@ -9,8 +9,12 @@ from lina.routing.global_routing.running_config_all.running_config_all import ru
 
 def global_routing_menu():
     menu_options = {
-        "1": ("Route Running Configuration", lambda: running_config_all(suppress_output=False, config_type="route")),
-        "2": ("Router Running Configuration", lambda: running_config_all(suppress_output=False, config_type="router")),
+        "1": ("Route Running Configuration",
+              lambda help_requested=False: running_config_all(suppress_output=False, config_type="route",
+                                                              help_requested=help_requested)),
+        "2": ("Router Running Configuration",
+              lambda help_requested=False: running_config_all(suppress_output=False, config_type="router",
+                                                              help_requested=help_requested)),
         "3": ("Show Route All", show_route_all),
         "4": ("ASP Table Routing All", asp_table_routing_all),
         "5": ("Global Routing Help", global_routing_help),
@@ -18,21 +22,36 @@ def global_routing_menu():
     }
 
     while True:
-        # Prepare the menu options for display
+        # Prepare the menu options for display (excluding hidden help shortcuts)
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu("Global Routing Menu", options_display)
 
-        choice = input("Select an option (0-5): ").strip()
+        choice = input("Select an option (0-5): ").strip().lower()
 
-        if choice in menu_options:
+        # Check if the user entered a valid option with "?" appended (e.g., "3?")
+        if choice.endswith("?"):
+            base_choice = choice[:-1]  # Remove "?" from input
+            if base_choice in menu_options:
+                description, function = menu_options[base_choice]
+                if function:
+                    print("\n" + "-" * 80)
+                    print(f"Help for: {description}".center(80))
+                    print("-" * 80)
+                    function(help_requested=True)  # Call function in help mode
+                else:
+                    print("\n[!] Help not available for this option.")
+            else:
+                print("\n[!] Invalid choice. Please enter a valid number from the menu.")
+
+        elif choice in menu_options:
             description, function = menu_options[choice]
-            if function:  # If a function is assigned
+            if function:
                 print("\n" + "-" * 80)
                 print(f"Accessing {description}...".center(80))
                 print("-" * 80)
-                function()
+                function()  # Normal function execution
             else:  # Exit condition
                 print("\nExiting to previous menu...")
                 break
         else:
-            print("\n[!] Invalid choice. Please enter a number between 0 and 5.")
+            print("\n[!] Invalid choice. Please enter a valid number from the menu.")
