@@ -1,26 +1,60 @@
 def routing_help():
-    help_text = """
-    === Routing Menu Help ===
+    """Displays how different routing protocols and commands relate to each other with practical examples."""
 
-    The Routing Menu provides options for troubleshooting and viewing routing information on the system. 
-    It includes different routing protocols and global routing details.
+    help_sections = {
+        "1. Viewing Global Routing Information": [
+            "🔹 Use `show route all` to view all installed routes from all routing protocols.",
+            "🔹 Use `show running-config all route` to verify static and dynamic route configurations.",
+            "🔹 Example:",
+            "   1️⃣ Run: show route all (Check all routing table entries)",
+            "   2️⃣ Run: show running-config all route (Verify configured static and dynamic routes)",
+        ],
+        "2. Working with EIGRP": [
+            "🔹 Use `show eigrp neighbors` to check EIGRP neighbor relationships.",
+            "🔹 Use `show eigrp topology` to examine feasible successors and route paths.",
+            "🔹 Example:",
+            "   1️⃣ Run: show eigrp neighbors (Verify EIGRP adjacencies)",
+            "   2️⃣ Run: show eigrp topology (Check alternate paths and feasible successors)",
+        ],
+        "3. Working with OSPF": [
+            "🔹 Use `show ospf neighbor` to confirm OSPF adjacency formation.",
+            "🔹 Use `show ospf database` to inspect link-state advertisements (LSAs).",
+            "🔹 Example:",
+            "   1️⃣ Run: show ospf neighbor (Verify adjacency state for each OSPF router)",
+            "   2️⃣ Run: show ospf database (Check LSAs for troubleshooting OSPF issues)",
+        ],
+        "4. Working with BGP": [
+            "🔹 Use `show bgp summary` to see BGP neighbor relationships and route advertisements.",
+            "🔹 Use `show bgp neighbors` to inspect detailed peer information and routing policies.",
+            "🔹 Example:",
+            "   1️⃣ Run: show bgp summary (View overall BGP status and peer states)",
+            "   2️⃣ Run: show bgp neighbors (Analyze BGP peer attributes and policies)",
+        ],
+        "5. Working with ISIS": [
+            "🔹 Use `show isis neighbors` to check ISIS adjacency status.",
+            "🔹 Use `show isis database` to view ISIS link-state database entries.",
+            "🔹 Example:",
+            "   1️⃣ Run: show isis neighbors (Verify ISIS neighbor establishment)",
+            "   2️⃣ Run: show isis database (Check link-state entries for route propagation issues)",
+        ],
+        "6. Managing VRFs and Route Isolation": [
+            "🔹 Use `show vrf detail` to check VRF configuration and associated interfaces.",
+            "🔹 Use `show vrf tableid` to verify internal table IDs assigned to VRFs.",
+            "🔹 Example:",
+            "   1️⃣ Run: show vrf detail (Review VRF route import/export policies)",
+            "   2️⃣ Run: show vrf tableid (Identify VRF-specific route lookup tables)",
+        ],
+    }
 
-    **Menu Options:**
-    1) Global Routing - View and troubleshoot system-wide routing settings.
-    2) EIGRP - Check EIGRP (Enhanced Interior Gateway Routing Protocol) configuration and neighbor relationships.
-    3) OSPF - View OSPF (Open Shortest Path First) routing details, including neighbors and database information.
-    4) BGP - Display BGP (Border Gateway Protocol) settings, peer relationships, and advertised routes.
-    5) ISIS - Analyze ISIS (Intermediate System to Intermediate System) routing details.
-    6) VRF - View Virtual Routing and Forwarding (VRF) configurations.
+    print("\n" + "=" * 80)
+    print("📘 Routing Help: Understanding Command Relationships 📘".center(80))
+    print("=" * 80)
 
-    **How to Use the Menu:**
-    - Enter the corresponding number to access routing details for a specific protocol.
+    for section, lines in help_sections.items():
+        print(f"\n🟢 {section}")
+        for line in lines:
+            print(f"   {line}")
 
-    **Additional Notes:**
-    - Understanding routing protocols helps identify connectivity issues.
-    - Use protocol-specific commands (e.g., 'show route', 'show eigrp neighbors') for deeper insights.
-    - Ensure proper neighbor relationships and route advertisements are in place.
-
-    ============================================
-    """
-    print(help_text)
+    print("\n" + "=" * 80)
+    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '2?' for EIGRP).")
+    print("=" * 80)
