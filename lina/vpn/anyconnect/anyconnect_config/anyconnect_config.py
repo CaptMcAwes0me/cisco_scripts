@@ -22,7 +22,7 @@ def anyconnect_config(tunnel_group):
 
         for policy_type in ["split-tunnel-policy", "ipv6-split-tunnel-policy"]:
             if re.search(rf"(?<!ipv6-){policy_type} tunnelspecified", group_policy_output):
-                print(f"{policy_type.upper()} ENABLED")
+                print(f"*** {policy_type.upper()} *** [ENABLED]")
                 print("-" * 80)
                 acl_match = re.search(rf"{policy_type.replace('policy', 'network-list value')} (\S+)",
                                       group_policy_output)
@@ -31,7 +31,7 @@ def anyconnect_config(tunnel_group):
                     acl_output = get_and_parse_cli_output(f"show access-list {acl_name}")
                     print_section(f"Access List Configuration ({acl_name})", acl_output)
             elif re.search(rf"(?<!ipv6-){policy_type} tunnelall", group_policy_output):
-                print(f"{policy_type.upper()} DISABLED")
+                print(f"*** {policy_type.upper()} *** [DISABLED]")
                 print("-" * 80 + "\n")
 
         vpn_filter_match = re.search(r"vpn-filter value (\S+)", group_policy_output)
@@ -40,7 +40,7 @@ def anyconnect_config(tunnel_group):
             acl_output = get_and_parse_cli_output(f"show access-list {acl_name}")
             print_section(f"VPN-FILTER Configuration (ACL: {acl_name})", acl_output)
         else:
-            print("VPN-FILTER DISABLED")
+            print("*** VPN-FILTER *** [DISABLED]")
             print("-" * 80 + "\n")
 
     if address_pool:
