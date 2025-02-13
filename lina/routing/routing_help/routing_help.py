@@ -1,53 +1,58 @@
 def routing_help():
-    """Displays how different routing protocols and commands relate to each other with practical examples."""
+    """Displays technical details for each routing protocol, including metrics, administrative distance, and protocol specifics."""
 
     help_sections = {
-        "1. Viewing Global Routing Information": [
-            "🔹 Use `show route all` to view all installed routes from all routing protocols.",
-            "🔹 Use `show running-config all route` to verify static and dynamic route configurations.",
-            "🔹 Example:",
-            "   1️⃣ Run: show route all (Check all routing table entries)",
-            "   2️⃣ Run: show running-config all route (Verify configured static and dynamic routes)",
+        "1. Global Routing Overview": [
+            "🔹 Routing is the process of selecting a path for traffic in a network.",
+            "🔹 The ASA supports both static and dynamic routing protocols.",
+            "🔹 The routing table is built based on the best available paths.",
+            "🔹 Administrative Distance (AD) is used to prioritize routes when multiple sources provide the same destination.",
         ],
-        "2. Working with EIGRP": [
-            "🔹 Use `show eigrp neighbors` to check EIGRP neighbor relationships.",
-            "🔹 Use `show eigrp topology` to examine feasible successors and route paths.",
-            "🔹 Example:",
-            "   1️⃣ Run: show eigrp neighbors (Verify EIGRP adjacencies)",
-            "   2️⃣ Run: show eigrp topology (Check alternate paths and feasible successors)",
+        "2. EIGRP (Enhanced Interior Gateway Routing Protocol)": [
+            "🔹 Type: Dynamic, Distance-Vector Protocol (Cisco Proprietary)",
+            "🔹 Administrative Distance: 90 (internal), 170 (external)",
+            "🔹 Metric: Uses a composite metric (Bandwidth, Delay, Reliability, Load, MTU).",
+            "🔹 Protocol: Uses RTP (Reliable Transport Protocol) over IP protocol 88.",
+            "🔹 Best for: Enterprise networks with Cisco devices, supports unequal cost load balancing.",
         ],
-        "3. Working with OSPF": [
-            "🔹 Use `show ospf neighbor` to confirm OSPF adjacency formation.",
-            "🔹 Use `show ospf database` to inspect link-state advertisements (LSAs).",
-            "🔹 Example:",
-            "   1️⃣ Run: show ospf neighbor (Verify adjacency state for each OSPF router)",
-            "   2️⃣ Run: show ospf database (Check LSAs for troubleshooting OSPF issues)",
+        "3. OSPF (Open Shortest Path First)": [
+            "🔹 Type: Dynamic, Link-State Protocol (Open Standard)",
+            "🔹 Administrative Distance: 110",
+            "🔹 Metric: Cost (Based on cumulative interface bandwidth)",
+            "🔹 Protocol: Uses IP protocol 89 for communication.",
+            "🔹 Areas: Uses hierarchical design with Areas (Backbone: Area 0).",
+            "🔹 Best for: Large networks needing fast convergence and hierarchical design.",
         ],
-        "4. Working with BGP": [
-            "🔹 Use `show bgp summary` to see BGP neighbor relationships and route advertisements.",
-            "🔹 Use `show bgp neighbors` to inspect detailed peer information and routing policies.",
-            "🔹 Example:",
-            "   1️⃣ Run: show bgp summary (View overall BGP status and peer states)",
-            "   2️⃣ Run: show bgp neighbors (Analyze BGP peer attributes and policies)",
+        "4. BGP (Border Gateway Protocol)": [
+            "🔹 Type: Dynamic, Path-Vector Protocol (Used for Internet Routing)",
+            "🔹 Administrative Distance: 20 (External BGP), 200 (Internal BGP)",
+            "🔹 Metric: Uses AS-Path, Weight, Local Preference, MED.",
+            "🔹 Protocol: Uses TCP port 179.",
+            "🔹 Best for: Internet routing, interconnecting ISPs and large enterprises.",
         ],
-        "5. Working with ISIS": [
-            "🔹 Use `show isis neighbors` to check ISIS adjacency status.",
-            "🔹 Use `show isis database` to view ISIS link-state database entries.",
-            "🔹 Example:",
-            "   1️⃣ Run: show isis neighbors (Verify ISIS neighbor establishment)",
-            "   2️⃣ Run: show isis database (Check link-state entries for route propagation issues)",
+        "5. ISIS (Intermediate System to Intermediate System)": [
+            "🔹 Type: Dynamic, Link-State Protocol (Used in ISP Networks)",
+            "🔹 Administrative Distance: 115",
+            "🔹 Metric: Uses a wide metric based on cost (default = 10).",
+            "🔹 Protocol: Uses CLNP (Connectionless Network Protocol), encapsulated in Layer 2.",
+            "🔹 Best for: Large-scale service provider networks and MPLS backbone routing.",
         ],
-        "6. Managing VRFs and Route Isolation": [
-            "🔹 Use `show vrf detail` to check VRF configuration and associated interfaces.",
-            "🔹 Use `show vrf tableid` to verify internal table IDs assigned to VRFs.",
-            "🔹 Example:",
-            "   1️⃣ Run: show vrf detail (Review VRF route import/export policies)",
-            "   2️⃣ Run: show vrf tableid (Identify VRF-specific route lookup tables)",
+        "6. VRF (Virtual Routing and Forwarding)": [
+            "🔹 Type: Used for network segmentation and multi-tenant routing.",
+            "🔹 Purpose: Allows multiple routing tables on a single device.",
+            "🔹 Common Commands: `show vrf detail`, `show vrf tableid`.",
+            "🔹 Best for: Isolating routing domains, MPLS VPNs, and network segmentation.",
+        ],
+        "7. Static Routing": [
+            "🔹 Type: Manually configured routes, used when no dynamic protocol is needed.",
+            "🔹 Administrative Distance: 1 (Higher priority than dynamic routes).",
+            "🔹 Best for: Simple networks, default routes (`0.0.0.0/0`), and stub networks.",
+            "🔹 Example: `route outside 0.0.0.0 0.0.0.0 192.168.1.1` (Sets default gateway).",
         ],
     }
 
     print("\n" + "=" * 80)
-    print("📘 Routing Help: Understanding Command Relationships 📘".center(80))
+    print("📘 Routing Help: Protocol-Specific Information 📘".center(80))
     print("=" * 80)
 
     for section, lines in help_sections.items():
