@@ -4,7 +4,7 @@ def routing_help():
     help_sections = {
         "1. Global Routing Overview": [
             "🔹 Routing is the process of selecting a path for traffic in a network.",
-            "🔹 The ASA supports both static and dynamic routing protocols.",
+            "🔹 The FTD supports both static and dynamic routing protocols.",
             "🔹 The routing table is built based on the best available paths.",
             "🔹 Administrative Distance (AD) is used to prioritize routes when multiple sources provide the same destination.",
         ],
