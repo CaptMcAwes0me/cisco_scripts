@@ -7,7 +7,7 @@ from lina.logging_and_monitoring.syslog.logging_dynamic_rate_limit.logging_dynam
 from lina.logging_and_monitoring.syslog.logging_unified_client.logging_unified_client import logging_unified_client
 from lina.logging_and_monitoring.syslog.logging_unified_client_stats.logging_unified_client_stats import logging_unified_client_stats
 from lina.logging_and_monitoring.syslog.logging_buffered_output.logging_buffered_output import logging_buffered_output
-from lina.logging_and_monitoring.syslog.syslog_help import syslog_help
+from lina.logging_and_monitoring.syslog.syslog_help.syslog_help import syslog_help
 
 
 def syslog_menu(help_requested=False):
