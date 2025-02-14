@@ -12,12 +12,12 @@ from core.utils import display_formatted_menu
 
 def routing_menu():
     menu_options = {
-        "1": ("Global Routing Menu", global_routing_menu),
-        "2": ("EIGRP Menu", eigrp_menu),
-        "3": ("OSPF Menu", ospf_menu),
-        "4": ("BGP Menu", bgp_menu),
-        "5": ("ISIS Menu", isis_menu),
-        "6": ("VRF Menu", vrf_menu),
+        "1": ("Global Routing - Menu", global_routing_menu),
+        "2": ("EIGRP - Menu", eigrp_menu),
+        "3": ("OSPF - Menu", ospf_menu),
+        "4": ("BGP - Menu", bgp_menu),
+        "5": ("ISIS - Menu", isis_menu),
+        "6": ("VRF - Menu", vrf_menu),
         "7": ("Routing Menu Help", routing_help),
         "0": ("Exit", None),
     }

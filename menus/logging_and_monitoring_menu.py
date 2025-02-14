@@ -5,8 +5,8 @@ from menus.snmp_menu import snmp_menu
 
 def logging_and_monitoring_menu():
     menu_options = {
-        "1": ("Syslog Menu", syslog_menu),
-        "2": ("SNMP Menu", snmp_menu),
+        "1": ("Syslog - Menu", syslog_menu),
+        "2": ("SNMP - Menu", snmp_menu),
         "0": ("Exit", None),
     }
 

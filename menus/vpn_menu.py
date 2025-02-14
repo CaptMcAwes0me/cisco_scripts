@@ -6,8 +6,8 @@ from menus.vpn_menu_help.vpn_menu_help import vpn_menu_help
 
 def vpn_menu():
     menu_options = {
-        "1": ("AnyConnect (Secure Client) Menu", anyconnect_tunnel_groups),
-        "2": ("Site-to-Site VPN Menu", s2s_tunnel_groups),
+        "1": ("AnyConnect (Secure Client) - Menu", anyconnect_tunnel_groups),
+        "2": ("Site-to-Site VPN - Menu", s2s_tunnel_groups),
         "3": ("VPN Menu Help", vpn_menu_help),
         "0": ("Exit", None),
     }
