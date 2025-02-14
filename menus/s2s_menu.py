@@ -17,7 +17,7 @@ def s2s_menu(selected_peers):
     Allows '?' suffix for inline help on any option.
     """
     menu_options = {
-        "1": ("Site-to-Site Configuration", None),
+        "1": ("Site-to-Site Configuration", None),  # Dynamically determines function
         "2": ("Crypto ISAKMP SA Detail", crypto_isakmp_sa_detail),
         "3": ("Crypto IPSec SA Detail", crypto_ipsec_sa_detail),
         "4": ("Crypto Accelerator Data", s2s_crypto_accelerator_data),
@@ -26,7 +26,7 @@ def s2s_menu(selected_peers):
     }
 
     while True:
-        # Prepare the menu options for display (excluding hidden help shortcuts)
+        # Prepare the menu options for display
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu("Site-to-Site VPN Menu", options_display)
 
@@ -37,11 +37,33 @@ def s2s_menu(selected_peers):
             base_choice = choice[:-1]  # Remove "?" from input
             if base_choice in menu_options:
                 description, function = menu_options[base_choice]
-                if function:
-                    print("\n" + "-" * 80)
+
+                # Special handling for Site-to-Site Configuration (option 1)
+                if base_choice == "1":
+                    print("\n" + "=" * 80)
+                    print("📖 Site-to-Site Configuration Help".center(80))
+                    print("=" * 80)
+
+                    for peer in selected_peers:
+                        ip_address, ike_version, vpn_type = peer  # Unpack peer details
+
+                        print(f"\n🔍 Help for peer: {ip_address} (IKEv{ike_version.upper()} - {vpn_type.upper()})")
+
+                        if ike_version == "ikev1" and vpn_type == "vti":
+                            s2s_ikev1_vti_config(ip_address, help_requested=True)
+                        elif ike_version == "ikev1" and vpn_type == "policy":
+                            s2s_ikev1_policy_based_config(ip_address, help_requested=True)
+                        elif ike_version == "ikev2" and vpn_type == "vti":
+                            s2s_ikev2_vti_config(ip_address, help_requested=True)
+                        elif ike_version == "ikev2" and vpn_type == "policy":
+                            s2s_ikev2_policy_based_config(ip_address, help_requested=True)
+
+                elif function:
+                    print("\n" + "=" * 80)
                     print(f"📖 Help for: {description}".center(80))
-                    print("-" * 80)
+                    print("=" * 80)
                     function(help_requested=True)  # Call function with help_requested=True
+
                 else:
                     print("\n[!] Help not available for this option.")
             else:
