@@ -103,8 +103,14 @@ def s2s_menu(selected_peers):
 
                 if function == crypto_ipsec_sa_detail:
                     function(selected_peers, help_requested=True)
-                else:
+
+                # Pass help only to options crypto_isakmp_sa_detail and s2s_crypto_accelerator_data
+                elif function in (crypto_isakmp_sa_detail, s2s_crypto_accelerator_data):
                     function(help_requested=False)  # Normal function execution
+
+                # Pass nothing to s2s_help
+                else:
+                    function()
 
             # Exit condition
             else:
