@@ -15,9 +15,10 @@ def s2s_menu(selected_peers):
     """
     Displays a menu for Site-to-Site VPN-related tasks.
     Allows '?' suffix for inline help on any option.
+    Allows 'Enter' to select all tunnel groups.
     """
     menu_options = {
-        "1": ("Site-to-Site Configuration", None),  # Dynamically determines function
+        "1": ("Site-to-Site Configuration", None),
         "2": ("Crypto ISAKMP SA Detail", crypto_isakmp_sa_detail),
         "3": ("Crypto IPSec SA Detail", crypto_ipsec_sa_detail),
         "4": ("Crypto Accelerator Data", s2s_crypto_accelerator_data),
@@ -30,15 +31,36 @@ def s2s_menu(selected_peers):
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu("Site-to-Site VPN Menu", options_display)
 
-        choice = input("Select an option (0-5) or enter '?' for help (e.g., '2?'): ").strip().lower()
+        choice = input("Select an option (0 to exit, Enter for All): ").strip().lower()
+
+        # Handle 'Enter' for All Tunnel Groups
+        if choice == "":
+            print("\n" + "=" * 80)
+            print("🔹 Running Site-to-Site Configuration for ALL Selected Peers".center(80))
+            print("=" * 80)
+
+            for peer in selected_peers:
+                ip_address, ike_version, vpn_type = peer  # Unpack peer details
+
+                print(f"\n🔍 Configuring peer: {ip_address} (IKEv{ike_version.upper()} - {vpn_type.upper()})")
+
+                if ike_version == "ikev1" and vpn_type == "vti":
+                    s2s_ikev1_vti_config(ip_address)
+                elif ike_version == "ikev1" and vpn_type == "policy":
+                    s2s_ikev1_policy_based_config(ip_address)
+                elif ike_version == "ikev2" and vpn_type == "vti":
+                    s2s_ikev2_vti_config(ip_address)
+                elif ike_version == "ikev2" and vpn_type == "policy":
+                    s2s_ikev2_policy_based_config(ip_address)
+
+            print("\n✅ Configuration Complete.")
 
         # Check if the user entered a valid option with "?" appended (e.g., "3?")
-        if choice.endswith("?"):
+        elif choice.endswith("?"):
             base_choice = choice[:-1]  # Remove "?" from input
             if base_choice in menu_options:
                 description, function = menu_options[base_choice]
 
-                # Special handling for Site-to-Site Configuration (option 1)
                 if base_choice == "1":
                     print("\n" + "=" * 80)
                     print("📖 Site-to-Site Configuration Help".center(80))
@@ -63,13 +85,15 @@ def s2s_menu(selected_peers):
                     print(f"📖 Help for: {description}".center(80))
                     print("=" * 80)
 
-                    # Special case: `crypto_ipsec_sa_detail` needs `selected_peers` and s2s_help needs no arguments
-                    if function == s2s_help:
-                        function()
-                    elif function == crypto_ipsec_sa_detail:
+                    # Special case: `crypto_ipsec_sa_detail` needs `selected_peers`
+                    if function == crypto_ipsec_sa_detail:
                         function(selected_peers, help_requested=True)
+                    # `s2s_help()` does not take `help_requested`
+                    elif function == s2s_help:
+                        function()
+                    # Default help execution
                     else:
-                        function(help_requested=True)  # Call function with help_requested=True
+                        function(help_requested=True)
 
                 else:
                     print("\n[!] Help not available for this option.")
