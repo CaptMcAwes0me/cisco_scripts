@@ -67,16 +67,24 @@ Crypto accelerator usage detail:
         }
     }
 
-    # If help is requested, display command help instead of executing them
+    # ✅ Fix: If help is requested, iterate over all commands
     if help_requested:
-        print("\n" + "-" * 80)
-        print(f"Help for: {crypto_accelerator_help['command']}".center(80))
-        print("-" * 80)
-        print(f"\n{crypto_accelerator_help['description']}\n")
-        print("Example Output:")
-        print(crypto_accelerator_help['example_output'])
-        return None
+        print("\n" + "=" * 80)
+        print(f"📖 Crypto Accelerator Data Help".center(80))
+        print("=" * 80)
 
+        for command, description in crypto_accelerator_help['commands'].items():
+            print(f"\n🔹 Command: {command}")
+            print(f"   {description}")
+
+            example_output = crypto_accelerator_help['example_output'].get(command, "No example available.")
+            print("\nExample Output:")
+            print(example_output)
+            print("-" * 80)
+
+        return None  # Prevent actual execution
+
+    # ✅ Normal Execution (Not Help Mode)
     commands = {
         "Crypto Accelerator Load-balance IPSec": "show crypto accelerator load-balance ipsec",
         "Crypto Accelerator Load-balance Detail": "show crypto accelerator load-balance detail",
