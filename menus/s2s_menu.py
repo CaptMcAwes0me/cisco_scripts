@@ -100,7 +100,11 @@ def s2s_menu(selected_peers):
                 print("\n" + "=" * 80)
                 print(f"🔹 Accessing {description}".center(80))
                 print("=" * 80)
-                function(selected_peers, help_requested=False)  # Normal function execution
+
+                if function == crypto_ipsec_sa_detail:
+                    function(selected_peers, help_requested=True)
+                else:
+                    function(help_requested=False)  # Normal function execution
 
             # Exit condition
             else:
