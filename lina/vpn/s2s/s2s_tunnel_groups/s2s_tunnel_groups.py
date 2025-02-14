@@ -7,7 +7,37 @@ def ip_sort_key(ip):
     return tuple(map(int, ip.split('.')))
 
 
-def s2s_tunnel_groups():
+def s2s_tunnel_groups(help_requested=False):
+
+    s2s_menu_help_info = {
+        'command': 'Site-to-Site VPN Menu',
+        'description': (
+            "The Site-to-Site VPN Menu provides options for viewing and troubleshooting "
+            "various aspects of site-to-site IPSec VPNs, including tunnel configurations, "
+            "ISAKMP/IPSec SA details, and crypto accelerator statistics. Use this menu to "
+            "inspect tunnel statuses, troubleshoot connectivity issues, and analyze VPN-related "
+            "crypto hardware acceleration."
+        ),
+        'example_output': """
+    ============================= Site-to-Site VPN Menu =============================
+    1) Site-to-Site Configuration
+    2) Crypto ISAKMP SA Detail
+    3) Crypto IPSec SA Detail
+    4) Crypto Accelerator Data
+    5) Site-to-Site Help
+    0) Exit
+    ================================================================================
+            """
+    }
+    if help_requested:
+        print("\n" + "=" * 80)
+        print(f"📖 Help for: {s2s_menu_help_info['command']}".center(80))
+        print("=" * 80)
+        print(f"\n{s2s_menu_help_info['description']}\n")
+        print("Example Output:")
+        print(s2s_menu_help_info['example_output'])
+        return None
+
     command = "show running-config tunnel-group | include type ipsec-l2l"
     cli_output = get_and_parse_cli_output(command)
 
