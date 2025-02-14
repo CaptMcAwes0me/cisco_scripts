@@ -11,7 +11,9 @@ from core.utils import display_formatted_menu
 
 
 def failover_menu():
-    """Displays a menu for selecting failover-related commands and executes the corresponding function."""
+    """Displays a menu for selecting failover-related commands and executes the corresponding function.
+       Supports 'X?' functionality to display help for each menu option.
+    """
 
     menu_options = {
         "1": ("Failover Running Config", failover_running_config),
@@ -27,21 +29,37 @@ def failover_menu():
     }
 
     while True:
-        # Prepare the menu options for display
+        # Prepare menu display
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu("Failover Menu", options_display)
 
-        choice = input("Select an option (0-9): ").strip()
+        choice = input("Select an option (0-9) or enter '?' for help (e.g., '3?'): ").strip()
 
-        if choice in menu_options:
+        # Check if the user entered a valid option with "?" appended (e.g., "4?")
+        if choice.endswith("?"):
+            base_choice = choice[:-1]  # Remove "?" from input
+            if base_choice in menu_options:
+                description, function = menu_options[base_choice]
+                if function:
+                    print("\n" + "=" * 80)
+                    print(f"📖 Help for: {description}".center(80))
+                    print("=" * 80)
+                    function(help_requested=True)  # Call function in help mode
+                else:
+                    print("\n[!] Help not available for this option.")
+            else:
+                print("\n[!] Invalid choice. Please enter a valid number followed by '?' (e.g., '4?').")
+
+        elif choice in menu_options:
             description, function = menu_options[choice]
-            if function:  # If a function is assigned
+            if function:
                 print("\n" + "-" * 80)
                 print(f"Accessing {description}...".center(80))
                 print("-" * 80)
-                function()
-            else:  # Exit condition
+                function()  # Normal function execution
+            else:
                 print("\nReturning to the previous menu...")
                 break
+
         else:
             print("\n[!] Invalid choice. Please enter a number between 0 and 9.")
