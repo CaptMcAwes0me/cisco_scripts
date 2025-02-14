@@ -76,6 +76,7 @@ def s2s_tunnel_groups():
             return None
         elif choice == "":
             print("\nSelected All Tunnel Groups")
+            s2s_menu(selected_peers)  # ✅ This ensures the menu is displayed
             return selected_peers
         elif choice in selection_mapping:
             selected_peers = [selection_mapping[choice]]
