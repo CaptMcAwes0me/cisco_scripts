@@ -17,7 +17,6 @@ def s2s_menu(selected_peers):
     Allows '?' suffix for inline help on any option.
     Allows 'Enter' to select all tunnel groups.
     """
-    print(selected_peers)
     menu_options = {
         "1": ("Site-to-Site Configuration", None),
         "2": ("Crypto ISAKMP SA Detail", crypto_isakmp_sa_detail),
@@ -27,8 +26,6 @@ def s2s_menu(selected_peers):
         "0": ("Exit", None),
     }
 
-    all_selected = False  # Flag to track if "All" is selected
-
     while True:
         # Prepare the menu options for display
         options_display = {key: description for key, (description, _) in menu_options.items()}
@@ -36,11 +33,27 @@ def s2s_menu(selected_peers):
 
         choice = input("Select an option (0 to exit, Enter for All): ").strip().lower()
 
-        # Handle 'Enter' for All Tunnel Groups (just select them, don't execute)
+        # Handle 'Enter' for All Tunnel Groups
         if choice == "":
-            all_selected = True
-            print("\n✅ All peers have been selected. Choose an option to execute.\n")
-            continue  # Redisplay menu instead of executing anything now
+            print("\n" + "=" * 80)
+            print("🔹 Running Site-to-Site Configuration for ALL Selected Peers".center(80))
+            print("=" * 80)
+
+            for peer in selected_peers:
+                ip_address, ike_version, vpn_type = peer  # Unpack peer details
+
+                print(f"\n🔍 Configuring peer: {ip_address} (IKEv{ike_version.upper()} - {vpn_type.upper()})")
+
+                if ike_version == "ikev1" and vpn_type == "vti":
+                    s2s_ikev1_vti_config(ip_address)
+                elif ike_version == "ikev1" and vpn_type == "policy":
+                    s2s_ikev1_policy_based_config(ip_address)
+                elif ike_version == "ikev2" and vpn_type == "vti":
+                    s2s_ikev2_vti_config(ip_address)
+                elif ike_version == "ikev2" and vpn_type == "policy":
+                    s2s_ikev2_policy_based_config(ip_address)
+
+            print("\n✅ Configuration Complete.")
 
         # Check if the user entered a valid option with "?" appended (e.g., "3?")
         elif choice.endswith("?"):
@@ -53,9 +66,7 @@ def s2s_menu(selected_peers):
                     print("📖 Site-to-Site Configuration Help".center(80))
                     print("=" * 80)
 
-                    peers_to_process = selected_peers if all_selected else [selected_peers[0]]
-
-                    for peer in peers_to_process:
+                    for peer in selected_peers:
                         ip_address, ike_version, vpn_type = peer  # Unpack peer details
 
                         print(f"\n🔍 Help for peer: {ip_address} (IKEv{ike_version.upper()} - {vpn_type.upper()})")
@@ -74,10 +85,13 @@ def s2s_menu(selected_peers):
                     print(f"📖 Help for: {description}".center(80))
                     print("=" * 80)
 
+                    # Special case: `crypto_ipsec_sa_detail` needs `selected_peers`
                     if function == crypto_ipsec_sa_detail:
                         function(selected_peers, help_requested=True)
+                    # `s2s_help()` does not take `help_requested`
                     elif function == s2s_help:
                         function()
+                    # Default help execution
                     else:
                         function(help_requested=True)
 
@@ -96,9 +110,7 @@ def s2s_menu(selected_peers):
                 print("🔹 Running Site-to-Site Configuration for Selected Peers".center(80))
                 print("=" * 80)
 
-                peers_to_process = selected_peers if all_selected else [selected_peers[0]]
-
-                for peer in peers_to_process:
+                for peer in selected_peers:
                     ip_address, ike_version, vpn_type = peer  # Unpack peer details
 
                     print(f"\n🔍 Configuring peer: {ip_address} (IKEv{ike_version.upper()} - {vpn_type.upper()})")
@@ -120,10 +132,15 @@ def s2s_menu(selected_peers):
                 print(f"🔹 Accessing {description}".center(80))
                 print("=" * 80)
 
+                # Special case: `crypto_ipsec_sa_detail` needs `selected_peers`
                 if function == crypto_ipsec_sa_detail:
                     function(selected_peers, help_requested=False)
+
+                # Special case: `crypto_isakmp_sa_detail` and `s2s_crypto_accelerator_data` do **not** need `selected_peers`
                 elif function in (crypto_isakmp_sa_detail, s2s_crypto_accelerator_data):
                     function(help_requested=False)
+
+                # Default execution for other functions
                 else:
                     function()
 
