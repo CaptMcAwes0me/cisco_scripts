@@ -32,18 +32,20 @@ dst             src             state          conn-id status
         print(f"\n{crypto_isakmp_sa_detail_help['description']}\n")
         print("Example Output:")
         print(crypto_isakmp_sa_detail_help['example_output'])
-        return None  # No actual command execution
+        return None
 
-    # Execute the Crypto ISAKMP SA Detail command
     command = "show crypto isakmp sa detail"
+
     try:
         output = get_and_parse_cli_output(command)
+
         if not suppress_output:
-            print("\nCrypto ISAKMP SA Detail Output:".center(80))
-            print(f"Command: {command}".center(80))
-            print("-" * 80)
+            print("\n" + "=" * 80)
+            print("🔹 Crypto ISAKMP SA Detail Output".center(80))
+            print("=" * 80)
             print(output)
             print("-" * 80)
+
         return output
 
     except Exception as e:

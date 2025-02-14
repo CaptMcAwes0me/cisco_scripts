@@ -70,17 +70,13 @@ Crypto accelerator usage detail:
     # If help is requested, display command help instead of executing them
     if help_requested:
         print("\n" + "-" * 80)
-        print("📖 Crypto Accelerator Data Help".center(80))
+        print(f"Help for: {crypto_accelerator_help['command']}".center(80))
         print("-" * 80)
-        for command, description in crypto_accelerator_help['commands'].items():
-            print(f"\n🔹 Command: {command}")
-            print(f"   {description}\n")
-            print("   Example Output:")
-            print(crypto_accelerator_help['example_output'][command])
-            print("-" * 80)
-        return None  # Skip actual command execution
+        print(f"\n{crypto_accelerator_help['description']}\n")
+        print("Example Output:")
+        print(crypto_accelerator_help['example_output'])
+        return None
 
-    # Commands to retrieve crypto accelerator data
     commands = {
         "Crypto Accelerator Load-balance IPSec": "show crypto accelerator load-balance ipsec",
         "Crypto Accelerator Load-balance Detail": "show crypto accelerator load-balance detail",
@@ -99,10 +95,11 @@ Crypto accelerator usage detail:
             if not suppress_output:
                 print("\n" + "=" * 80)
                 print(f"🔹 {label} Output".center(80))
+                print("=" * 80)
                 print(f"Command: {command}".center(80))
-                print("=" * 80)
+                print("-" * 80)
                 print(output)
-                print("=" * 80)
+                print("-" * 80)
 
         except Exception as e:
             error_message = f"[!] Error retrieving {label}: {e}"
