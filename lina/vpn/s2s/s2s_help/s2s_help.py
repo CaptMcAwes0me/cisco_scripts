@@ -1,41 +1,67 @@
 def s2s_help():
-    help_text = """
-    Lina "Site-to-Site (S2S)" Commands Help
-    =====================================
+    """Provides guidance on Site-to-Site VPN commands and their practical applications."""
 
-    1. **show running-config all crypto**  
-       - Displays the complete running configuration related to cryptographic settings.  
-       - This command shows settings such as ISAKMP policies, IPsec settings, and other encryption-related configurations that are essential for secure communication between devices.
+    help_sections = {
+        "1. Verifying Site-to-Site VPN Configuration": [
+            "🔹 Use `show run crypto map` to display the crypto map configurations, including peer IPs and access lists.",
+            "🔹 Use `show run tunnel-group` to view tunnel group configurations, including authentication methods.",
+            "🔹 Example:",
+            "   1️⃣ Run: show run crypto map",
+            "      - Confirm the correct peer IP addresses and access lists are applied.",
+            "   2️⃣ Run: show run tunnel-group",
+            "      - Verify the tunnel group settings, such as IPsec attributes and pre-shared keys.",
+        ],
+        "2. Monitoring VPN Tunnel Status": [
+            "🔹 Use `show vpn-sessiondb l2l` to view active LAN-to-LAN VPN sessions.",
+            "🔹 Use `show crypto isakmp sa` to check the status of IKE Phase 1 Security Associations.",
+            "🔹 Use `show crypto ipsec sa` to examine the status of IPsec Phase 2 Security Associations.",
+            "🔹 Example:",
+            "   1️⃣ Run: show vpn-sessiondb l2l",
+            "      - Confirm the presence of active VPN sessions and their details.",
+            "   2️⃣ Run: show crypto isakmp sa",
+            "      - Check for 'MM_ACTIVE' state indicating successful Phase 1 negotiation.",
+            "   3️⃣ Run: show crypto ipsec sa",
+            "      - Verify the encryption and decryption statistics for the IPsec tunnel.",
+        ],
+        "3. Troubleshooting VPN Connectivity Issues": [
+            "🔹 Use `debug crypto isakmp 7` to enable detailed debugging for IKE Phase 1.",
+            "🔹 Use `debug crypto ipsec 7` to enable detailed debugging for IPsec Phase 2.",
+            "🔹 Use `show logging` to review system logs for VPN-related messages.",
+            "🔹 Example:",
+            "   1️⃣ Enable debugging:",
+            "      - debug crypto isakmp 7",
+            "      - debug crypto ipsec 7",
+            "   2️⃣ Initiate traffic to bring up the VPN tunnel.",
+            "   3️⃣ Run: show logging",
+            "      - Analyze logs for errors or messages indicating negotiation failures.",
+            "   4️⃣ Disable debugging after analysis:",
+            "      - no debug all",
+        ],
+        "4. Validating VPN Traffic Flow": [
+            "🔹 Use `packet-tracer input [interface] [protocol] [source IP] [destination IP]` to simulate traffic and identify at which stage it might be failing.",
+            "🔹 Example:",
+            "   1️⃣ Run: packet-tracer input inside tcp 192.168.1.10 80 192.168.2.10 80",
+            "      - Simulate a TCP connection from the inside network to a remote host through the VPN.",
+            "      - Analyze the output to determine if the packet is correctly encrypted and forwarded.",
+        ],
+        "5. Reviewing VPN Configuration Details": [
+            "🔹 Use `more system:running-config` to view the complete running configuration, including encrypted keys.",
+            "🔹 Example:",
+            "   1️⃣ Run: more system:running-config",
+            "      - Review the full configuration for any discrepancies or misconfigurations.",
+            "      - Pay special attention to crypto maps, tunnel groups, and NAT settings.",
+        ],
+    }
 
-    2. **show running-config all tunnel-group**  
-       - Displays the complete running configuration for all tunnel groups.  
-       - Tunnel groups define the settings for VPN connections, including IPsec and IKE (Internet Key Exchange) settings for site-to-site VPNs.
+    print("\n" + "=" * 80)
+    print("📘 Site-to-Site VPN Help: Command Usage and Practical Examples 📘".center(80))
+    print("=" * 80)
 
-    3. **show running-config all group-policy**  
-       - Displays the complete running configuration for all group policies.  
-       - Group policies define various settings, such as split tunneling and encryption, for VPN connections, including those used for site-to-site VPNs.
+    for section, lines in help_sections.items():
+        print(f"\n🟢 {section}")
+        for line in lines:
+            print(f"   {line}")
 
-    4. **show running-config all interface | begin Tunnel**  
-       - Displays the configuration for all interfaces that are part of VPN tunnel configurations.  
-       - This command helps identify the interface settings used in the site-to-site tunnels, allowing administrators to verify if the interfaces are correctly configured for VPN communication.
-
-    5. **show crypto isakmp sa detail**  
-       - Displays detailed information about ISAKMP (Internet Security Association and Key Management Protocol) Security Associations (SAs).  
-       - This command helps troubleshoot IKE negotiations, providing details about the status and configuration of the security associations, which are critical for establishing VPN tunnels.
-
-    6. **show crypto ipsec sa detail**  
-       - Displays detailed information about IPsec Security Associations (SAs).  
-       - This command helps in troubleshooting the IPsec encryption and encapsulation process, providing insights into active security associations, including traffic stats and encryption methods.
-
-    How These Commands Relate
-    =========================
-
-    - The **show running-config all crypto**, **show running-config all tunnel-group**, and **show running-config all group-policy** commands are essential for configuring and verifying the cryptographic settings, tunnel configurations, and VPN policies used in a site-to-site VPN.
-
-    - The **show running-config all interface | begin Tunnel** command helps verify the interfaces used for VPN tunnels, ensuring that the correct interfaces are participating in the tunnel setup.
-
-    - The **show crypto isakmp sa detail** and **show crypto ipsec sa detail** commands provide critical information on the status of the ISAKMP and IPsec security associations, respectively, which are key components in the establishment and maintenance of secure VPN tunnels.
-
-    Together, these commands help administrators configure, monitor, and troubleshoot site-to-site VPN connections, ensuring secure and reliable communication between remote sites.
-    """
-    print(help_text)
+    print("\n" + "=" * 80)
+    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '2?' for Monitoring VPN Tunnel Status).")
+    print("=" * 80)
