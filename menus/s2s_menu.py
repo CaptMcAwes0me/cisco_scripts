@@ -61,14 +61,11 @@ def s2s_menu(selected_peers):
             if base_choice in menu_options:
                 description, function = menu_options[base_choice]
 
-                # Special case: `s2s_help` runs directly
-                if function == s2s_help:
-                    function()
-                if base_choice == "1":
-                    print("\n" + "=" * 80)
-                    print("📖 Site-to-Site Configuration Help".center(80))
-                    print("=" * 80)
+                print("\n" + "=" * 80)
+                print(f"📖 Help for: {description}".center(80))
+                print("=" * 80)
 
+                if base_choice == "1":
                     for peer in selected_peers:
                         ip_address, ike_version, vpn_type = peer  # Unpack peer details
 
@@ -83,19 +80,13 @@ def s2s_menu(selected_peers):
                         elif ike_version == "ikev2" and vpn_type == "policy":
                             s2s_ikev2_policy_based_config(ip_address, help_requested=True)
 
-                elif function:
-                    print("\n" + "=" * 80)
-                    print(f"📖 Help for: {description}".center(80))
-                    print("=" * 80)
-
-                    # Special case: `crypto_ipsec_sa_detail` needs `selected_peers`
-                    if function == crypto_ipsec_sa_detail:
-                        function(selected_peers, help_requested=True)
-                    else:
-                        function(help_requested=True)
-
+                elif function == s2s_help:
+                    function()
+                elif function == crypto_ipsec_sa_detail:
+                    function(selected_peers, help_requested=True)
                 else:
-                    print("\n[!] Help not available for this option.")
+                    function(help_requested=True)
+
             else:
                 print("\n[!] Invalid choice. Please enter a valid number followed by '?' (e.g., '3?').")
 
@@ -131,15 +122,10 @@ def s2s_menu(selected_peers):
                 print(f"🔹 Accessing {description}".center(80))
                 print("=" * 80)
 
-                # Special case: `crypto_ipsec_sa_detail` needs `selected_peers`
                 if function == crypto_ipsec_sa_detail:
                     function(selected_peers, help_requested=False)
-
-                # Special case: `crypto_isakmp_sa_detail` and `s2s_crypto_accelerator_data` do **not** need `selected_peers`
                 elif function in (crypto_isakmp_sa_detail, s2s_crypto_accelerator_data):
                     function(help_requested=False)
-
-                # Default execution for other functions
                 else:
                     function()
 
