@@ -63,8 +63,10 @@ def s2s_menu(selected_peers):
                     print(f"📖 Help for: {description}".center(80))
                     print("=" * 80)
 
-                    # Special case: `crypto_ipsec_sa_detail` needs `selected_peers`
-                    if function == crypto_ipsec_sa_detail:
+                    # Special case: `crypto_ipsec_sa_detail` needs `selected_peers` and s2s_help needs no arguments
+                    if function == s2s_help:
+                        function()
+                    elif function == crypto_ipsec_sa_detail:
                         function(selected_peers, help_requested=True)
                     else:
                         function(help_requested=True)  # Call function with help_requested=True
