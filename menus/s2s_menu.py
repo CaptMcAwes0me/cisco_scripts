@@ -62,7 +62,12 @@ def s2s_menu(selected_peers):
                     print("\n" + "=" * 80)
                     print(f"📖 Help for: {description}".center(80))
                     print("=" * 80)
-                    function(help_requested=True)  # Call function with help_requested=True
+
+                    # Special case: `crypto_ipsec_sa_detail` needs `selected_peers`
+                    if function == crypto_ipsec_sa_detail:
+                        function(selected_peers, help_requested=True)
+                    else:
+                        function(help_requested=True)  # Call function with help_requested=True
 
                 else:
                     print("\n[!] Help not available for this option.")
@@ -101,14 +106,15 @@ def s2s_menu(selected_peers):
                 print(f"🔹 Accessing {description}".center(80))
                 print("=" * 80)
 
+                # Special case: `crypto_ipsec_sa_detail` needs `selected_peers`
                 if function == crypto_ipsec_sa_detail:
-                    function(selected_peers, help_requested=True)
+                    function(selected_peers, help_requested=False)
 
-                # Pass help only to options crypto_isakmp_sa_detail and s2s_crypto_accelerator_data
+                # Special case: `crypto_isakmp_sa_detail` and `s2s_crypto_accelerator_data` do **not** need `selected_peers`
                 elif function in (crypto_isakmp_sa_detail, s2s_crypto_accelerator_data):
-                    function(help_requested=False)  # Normal function execution
+                    function(help_requested=False)
 
-                # Pass nothing to s2s_help
+                # Default execution for other functions
                 else:
                     function()
 
