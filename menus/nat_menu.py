@@ -34,6 +34,10 @@ def nat_menu():
             base_choice = choice[:-1]  # Remove "?" from input
             if base_choice in menu_options:
                 description, function = menu_options[base_choice]
+
+                # Special case: `nat_help` runs directly
+                if function == nat_help:
+                    function()
                 if function:
                     print("\n" + "-" * 80)
                     print(f"Help for: {description}".center(80))

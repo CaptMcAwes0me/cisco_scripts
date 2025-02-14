@@ -61,6 +61,9 @@ def s2s_menu(selected_peers):
             if base_choice in menu_options:
                 description, function = menu_options[base_choice]
 
+                # Special case: `s2s_help` runs directly
+                if function == s2s_help:
+                    function()
                 if base_choice == "1":
                     print("\n" + "=" * 80)
                     print("📖 Site-to-Site Configuration Help".center(80))
@@ -88,10 +91,6 @@ def s2s_menu(selected_peers):
                     # Special case: `crypto_ipsec_sa_detail` needs `selected_peers`
                     if function == crypto_ipsec_sa_detail:
                         function(selected_peers, help_requested=True)
-                    # `s2s_help()` does not take `help_requested`
-                    elif function == s2s_help:
-                        function()
-                    # Default help execution
                     else:
                         function(help_requested=True)
 

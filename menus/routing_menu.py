@@ -31,10 +31,17 @@ def routing_menu():
 
         if choice in menu_options:
             description, function = menu_options[choice]
+
+            # Special case: `routing_help` runs directly
+            if function == routing_help:
+                function()
             if function:  # If a function is assigned
                 print("\n" + "-" * 80)
                 print(f"Accessing {description}...".center(80))
                 print("-" * 80)
+
+                if function == routing_help():
+                    function()
                 function()  # Call the corresponding function
             else:  # Exit condition
                 print("\nExiting to previous menu...")
