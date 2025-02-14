@@ -17,6 +17,7 @@ def s2s_menu(selected_peers):
     Allows '?' suffix for inline help on any option.
     Allows 'Enter' to select all tunnel groups.
     """
+    print(selected_peers)
     menu_options = {
         "1": ("Site-to-Site Configuration", None),
         "2": ("Crypto ISAKMP SA Detail", crypto_isakmp_sa_detail),
