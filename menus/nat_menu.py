@@ -36,8 +36,8 @@ def nat_menu():
                 description, function = menu_options[base_choice]
 
                 # Special case: `nat_help` runs directly
-                # if function == nat_help:
-                 #   function(help_requested=True)
+                if function == nat_help:
+                    function()
                 if function:
                     print("\n" + "-" * 80)
                     print(f"Help for: {description}".center(80))
