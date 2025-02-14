@@ -35,14 +35,16 @@ def nat_menu():
             if base_choice in menu_options:
                 description, function = menu_options[base_choice]
 
-                # Special case: `nat_help` runs directly
-                if function == nat_help:
-                    function()
                 if function:
                     print("\n" + "-" * 80)
                     print(f"Help for: {description}".center(80))
                     print("-" * 80)
-                    function(help_requested=True)  # Call function in help mode
+
+                    # Special case: `nat_help` runs directly
+                    if function == nat_help:
+                        function()
+                    else:
+                        function(help_requested=True)  # Call function in help mode
                 else:
                     print("\n[!] Help not available for this option.")
             else:
