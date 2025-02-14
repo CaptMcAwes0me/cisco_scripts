@@ -1,63 +1,62 @@
 def anyconnect_help():
-    help_text = """
-    Lina "AnyConnect" Commands Help
-    ==============================
+    """Displays how different AnyConnect commands relate to each other with practical examples."""
 
-    1. **show running-config all tunnel-group**  
-       - Displays the complete running configuration for all tunnel groups.  
-       - Tunnel groups define the settings for VPN connections, including authentication methods and policies.
+    help_sections = {
+        "1. Verifying AnyConnect Configuration & Tunnel Groups": [
+            "🔹 Use `show running-config all tunnel-group <group>` to check the full configuration of an AnyConnect tunnel-group.",
+            "🔹 Use `show running-config all group-policy <policy>` to verify group policy settings.",
+            "🔹 Example:",
+            "   1️⃣ Run: show running-config all tunnel-group <group> (Confirm authentication, address pools, and policies).",
+            "   2️⃣ Run: show running-config all group-policy <policy> (Check split tunneling, ACLs, and DNS settings).",
+        ],
+        "2. Checking AnyConnect Session Details": [
+            "🔹 Use `show vpn-sessiondb anyconnect` to view active AnyConnect sessions.",
+            "🔹 Use `show vpn-sessiondb anyconnect filter tunnel-group <group>` to narrow results to a specific tunnel-group.",
+            "🔹 Example:",
+            "   1️⃣ Run: show vpn-sessiondb anyconnect (Check active sessions, assigned IPs, and session time).",
+            "   2️⃣ If filtering by group, run: show vpn-sessiondb anyconnect filter tunnel-group <group>.",
+        ],
+        "3. Analyzing SSL & DTLS Data": [
+            "🔹 Use `show ssl information` to check SSL settings, session details, and supported cipher suites.",
+            "🔹 Use `show ssl errors` to see any SSL-related errors affecting connectivity.",
+            "🔹 Example:",
+            "   1️⃣ Run: show ssl information (Verify SSL version, session details, and ciphers in use).",
+            "   2️⃣ Run: show ssl errors (Look for handshake failures, invalid certificates, or cipher mismatches).",
+        ],
+        "4. Investigating Crypto & Certificate Issues": [
+            "🔹 Use `show crypto ca trustpoint` to list configured trustpoints for certificate-based authentication.",
+            "🔹 Use `show crypto ca certificates` to view installed certificates and their validity.",
+            "🔹 Use `show crypto ca crls` to check for revoked certificates.",
+            "🔹 Example:",
+            "   1️⃣ Run: show crypto ca trustpoint (Confirm which trustpoints are in use).",
+            "   2️⃣ Run: show crypto ca certificates (Ensure certificates are valid and not expired).",
+            "   3️⃣ Run: show crypto ca crls (Check for any revoked certificates that might block access).",
+        ],
+        "5. Debugging AnyConnect Performance & Crypto Acceleration": [
+            "🔹 Use `show crypto accelerator status` to confirm if hardware crypto acceleration is enabled.",
+            "🔹 Use `show crypto accelerator statistics` to analyze encryption/decryption performance.",
+            "🔹 Example:",
+            "   1️⃣ Run: show crypto accelerator status (Ensure hardware offload is functioning).",
+            "   2️⃣ Run: show crypto accelerator statistics (Check for excessive CPU load on encrypted sessions).",
+        ],
+        "6. Monitoring System-Wide VPN Usage": [
+            "🔹 Use `show running-config ip local pool` to see assigned AnyConnect IP address pools.",
+            "🔹 Use `show running-config all sysopt | include vpn` to check VPN-specific system optimizations.",
+            "🔹 Example:",
+            "   1️⃣ Run: show running-config ip local pool (Confirm IP pool size and available addresses).",
+            "   2️⃣ Run: show running-config all sysopt | include vpn (Check VPN optimization settings).",
+        ],
+    }
 
-    2. **show running-config all group-policy**  
-       - Displays the complete running configuration for all group policies.  
-       - Group policies define various settings, such as split tunneling, DNS, and security parameters for users or groups.
+    print("\n" + "=" * 80)
+    print("📘 AnyConnect Help: Understanding Command Relationships 📘".center(80))
+    print("=" * 80)
 
-    3. **show running-config all webvpn**  
-       - Displays the configuration for WebVPN settings.  
-       - WebVPN allows users to access internal resources via a web browser, and this command shows the settings related to that access.
+    for section, lines in help_sections.items():
+        print(f"\n🟢 {section}")
+        for line in lines:
+            print(f"   {line}")
 
-    4. **show running-config all crypto ca trustpoint**  
-       - Displays the configuration of the crypto CA (Certificate Authority) trustpoints.  
-       - Trustpoints are used to configure the device's interactions with CA certificates, verifying their authenticity and establishing trust.
-
-    5. **show vpnsession-db anyconnect**  
-       - Displays the current session details for AnyConnect VPN clients.  
-       - This command provides information about the active AnyConnect VPN sessions, including client IP addresses and session states.
-
-    6. **show crypto ca certificates**  
-       - Displays the certificates installed on the device.  
-       - This command shows the certificates associated with various services, such as VPN, and their current status.
-
-    7. **show crypto ca trustpoints**  
-       - Displays the trustpoints configured on the device.  
-       - Trustpoints represent the Certificate Authorities trusted by the device, and this command lists all the trustpoints and their status.
-
-    8. **show crypto ca trustpool**  
-       - Displays the trust pool, which is a collection of Certificate Authorities used for certificate validation.  
-       - This command shows the pool of trusted CAs for certificate validation purposes.
-
-    9. **show crypto ca crls**  
-       - Displays the Certificate Revocation Lists (CRLs).  
-       - CRLs are used to track revoked certificates, and this command allows the administrator to view and manage them.
-
-    10. **show ssl ciphers**  
-        - Displays the available SSL ciphers.  
-        - This command shows the list of cryptographic ciphers available for SSL connections, allowing the administrator to ensure secure communication.
-
-    11. **show ssl errors**  
-        - Displays SSL-related errors.  
-        - This command helps in troubleshooting SSL connection issues, providing details on any errors encountered during SSL negotiation.
-
-    How These Commands Relate
-    =========================
-
-    - The **show running-config all tunnel-group**, **show running-config all group-policy**, and **show running-config all webvpn** commands are essential for configuring and monitoring VPN and WebVPN settings, ensuring secure remote access.
-
-    - The **show running-config all crypto ca trustpoint** and related commands (**show crypto ca certificates**, **show crypto ca trustpoints**, **show crypto ca trustpool**, **show crypto ca crls**) deal with certificate management, ensuring that the device uses trusted certificates for authentication and communication.
-
-    - The **show vpnsession-db anyconnect** command allows monitoring of active AnyConnect sessions, providing insights into connected users and their session states.
-
-    - The **show ssl ciphers** and **show ssl errors** commands focus on SSL-related settings, ensuring secure SSL connections and helping troubleshoot any issues.
-
-    These commands collectively ensure that AnyConnect and WebVPN configurations are properly set up, trusted certificates are managed, and secure SSL connections are maintained.
-    """
-    print(help_text)
+    print("\n" + "=" * 80)
+    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '3?' for SSL Data).")
+    print("=" * 80)
