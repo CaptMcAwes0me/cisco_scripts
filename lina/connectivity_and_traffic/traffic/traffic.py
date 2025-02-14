@@ -12,12 +12,12 @@ def traffic(suppress_output=False, help_requested=False):
     traffic_help_info = {
         'command': 'show traffic',
         'description': (
-            "The 'show traffic' command provides real-time traffic statistics for all interfaces on the ASA, "
+            "The 'show traffic' command provides real-time traffic statistics for all interfaces on the FTD, "
             "including input/output rates, packet counts, and protocol-level breakdowns. This is useful for "
             "monitoring network utilization and identifying potential congestion points."
         ),
         'example_output': """
-ciscoasa# show traffic
+firepower# show traffic
 Interface outside:
   Received:  500000 packets, 400000000 bytes
   Transmitted:  750000 packets, 600000000 bytes
@@ -40,7 +40,7 @@ Interface inside:
         'related_commands': [
             {'command': 'show conn count', 'description': 'Displays the number of active connections.'},
             {'command': 'show xlate', 'description': 'Shows NAT translations and statistics.'},
-            {'command': 'show interface', 'description': 'Provides detailed statistics on ASA interfaces, including errors.'},
+            {'command': 'show interface', 'description': 'Provides detailed statistics on FTD interfaces, including errors.'},
             {'command': 'show service-policy', 'description': 'Displays how traffic is affected by service policies.'},
         ]
     }

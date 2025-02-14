@@ -13,7 +13,7 @@ def conn_detail(suppress_output=False, help_requested=False):
     conn_help_info = {
         'command': 'show conn detail',
         'description': (
-            "The 'show conn detail' command displays detailed information about all active connections through the ASA. "
+            "The 'show conn detail' command displays detailed information about all active connections through the FTD. "
             "This includes protocol types, source and destination IP addresses and ports, idle times, data transfer statistics, "
             "and connection flags that indicate the state and characteristics of each connection."
         ),
@@ -83,7 +83,7 @@ def conn_detail_dump(suppress_output=False, help_requested=False):
     conn_help_info = {
         'command': 'show conn detail',
         'description': (
-            "The 'show conn detail' command displays detailed information about all active connections through the ASA. "
+            "The 'show conn detail' command displays detailed information about all active connections through the FTDgarrett-branch/lina/routing/global_routing/global_routing_help/global_routing_help.py. "
             "This includes protocol types, source and destination IP addresses and ports, idle times, data transfer statistics, "
             "and connection flags that indicate the state and characteristics of each connection."
         ),

@@ -16,28 +16,41 @@ def failover_details(suppress_output=False, help_requested=False):
         'example_output': """
 FTDv# show failover details
 
+
 Failover On
 Failover unit Primary
-Failover LAN Interface: failover GigabitEthernet0/2 (up)
+Failover LAN Interface: fover GigabitEthernet0/7 (up)
+Reconnect timeout 0:00:00
 Unit Poll frequency 1 seconds, holdtime 15 seconds
 Interface Poll frequency 5 seconds, holdtime 25 seconds
-Monitored Interfaces 3 of 3 total, 1 failed
-   Outside (192.168.1.1): Normal
-   Inside (192.168.2.1): Normal
-   DMZ (192.168.3.1): FAILED (Waiting)
-This host: Primary - Active
-   Active time: 1h 10m 15s
-   slot 0: ASA5516 up, mate ASA5516 up
-   Last Failover at: 17:21:43 UTC Feb 14 2025
-   Last Failover Reason: Interface Failure
-   Stateful Failover Logical Update Statistics
-      Link: failover GigabitEthernet0/2 (up)
-      Stateful Obj xmit xerr rcv rerr
-         TCP 1500 0 1500 0
-         UDP 750 0 750 0
-         ICMP 100 0 100 0
-Other host: Secondary - Standby Ready
-   Active time: 0 (sec)
+Interface Policy 1
+Monitored Interfaces 3 of 1285 maximum
+MAC Address Move Notification Interval not set
+failover replication http
+Version: Ours 9.18(4)47, Mate 9.18(4)47
+Serial Number: Ours SN, Mate SN
+Last Failover at: 14:15:10 UTC Feb 14 2025
+	This host: Primary - Active
+		Active time: 19114 (sec)
+		slot 0: FTD hw/sw rev (/9.18(4)47) status (Up Sys)
+		  Interface outside (192.168.0.1): Normal (Waiting)
+		  Interface inside (192.168.1.1): Normal (Waiting)
+		  Interface diagnostic (0.0.0.0): Normal (Waiting)
+		slot 1: snort rev (1.0)  status (up)
+		snort poll success:18962 miss:0
+		slot 2: diskstatus rev (1.0)  status (up)
+
+		disk poll success:18962 miss:0
+	Other host: Secondary - App Sync
+		Active time: 0 (sec)
+		  Interface outside (0.0.0.0): Unknown (Waiting)
+		  Interface inside (0.0.0.0): Unknown (Waiting)
+		  Interface diagnostic (0.0.0.0): Unknown (Waiting)
+		slot 1: snort rev (1.0)  status (up)
+		peer snort poll success:18962 miss:0
+		slot 2: diskstatus rev (1.0)  status (up)
+
+		peer disk poll success:18962 miss:0
         """
     }
 

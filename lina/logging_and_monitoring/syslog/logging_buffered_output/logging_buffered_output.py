@@ -20,10 +20,10 @@ def logging_buffered_output(suppress_output=False, help_requested=False):
         'example_output': """
 FTDv# show log
 
-Feb 14 15:05:18 2025: %ASA-4-106023: Deny udp src outside:14.38.117.1/443 dst inside:192.168.1.10/53124
-Feb 14 15:05:19 2025: %ASA-6-302015: Built outbound TCP connection 12345678 for outside:14.38.117.10/443 to inside:192.168.1.20/53125
-Feb 14 15:05:20 2025: %ASA-3-402117: IPSEC: Received an ESP packet (SPI=0x1234ABCD) from 14.38.117.30 to 192.168.2.1, but no associated SA was found
-Feb 14 15:05:21 2025: %ASA-7-609001: Built inbound ICMP connection for fover:1.1.1.2
+Feb 14 15:05:18 2025: %FTD-4-106023: Deny udp src outside:14.38.117.1/443 dst inside:192.168.1.10/53124
+Feb 14 15:05:19 2025: %FTD-6-302015: Built outbound TCP connection 12345678 for outside:14.38.117.10/443 to inside:192.168.1.20/53125
+Feb 14 15:05:20 2025: %FTD-3-402117: IPSEC: Received an ESP packet (SPI=0x1234ABCD) from 14.38.117.30 to 192.168.2.1, but no associated SA was found
+Feb 14 15:05:21 2025: %FTD-7-609001: Built inbound ICMP connection for fover:1.1.1.2
         """
     }
 

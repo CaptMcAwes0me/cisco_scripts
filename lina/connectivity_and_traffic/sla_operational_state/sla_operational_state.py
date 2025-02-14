@@ -12,12 +12,12 @@ def sla_operational_state(suppress_output=False, help_requested=False):
         'command': 'show sla monitor operational-state',
         'description': (
             "The 'show sla monitor operational-state' command displays the current operational statistics of "
-            "configured IP Service Level Agreements (SLAs) on the ASA. This includes details such as the number "
+            "configured IP Service Level Agreements (SLAs) on the FTD. This includes details such as the number "
             "of operations attempted, success and failure counts, round-trip time (RTT) statistics, and the overall "
             "operational state of each SLA monitor."
         ),
         'example_output': """
-ciscoasa# show sla monitor operational-state
+firepower# show sla monitor operational-state
 Entry number: 1
 Modification time: 15:49:47.686 UTC Sat Jun 1 2013
 Number of Octets Used by this Entry: 1480

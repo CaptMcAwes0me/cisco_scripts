@@ -9,7 +9,7 @@ def snmp_group(suppress_output=False, help_requested=False):
     snmp_group_help = {
         'command': 'show snmp-server group',
         'description': (
-            "This command displays **SNMP groups** configured on the ASA.\n\n"
+            "This command displays **SNMP groups** configured on the FTD.\n\n"
             "**Usage Notes & Troubleshooting:**\n"
             "- SNMP groups define **access control and security models** (v1, v2c, v3).\n"
             "- If SNMP access fails, check that the **correct group and security level** are assigned.\n"

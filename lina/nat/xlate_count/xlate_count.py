@@ -9,9 +9,9 @@ def xlate_count(suppress_output=False, help_requested=False):
     xlate_count_help = {
         'command': 'show xlate count',
         'description': (
-            "Displays the current and maximum number of NAT translations (xlates) through the ASA. "
+            "Displays the current and maximum number of NAT translations (xlates) through the FTD. "
             "A translation is a mapping of an internal address to an external address and can be a one-to-one mapping (NAT) or a many-to-one mapping (PAT). "
-            "This command is useful for monitoring the number of active translations and assessing the load on the ASA."
+            "This command is useful for monitoring the number of active translations and assessing the load on the FTD."
         ),
         'example_output': """
 84 in use, 218 most used

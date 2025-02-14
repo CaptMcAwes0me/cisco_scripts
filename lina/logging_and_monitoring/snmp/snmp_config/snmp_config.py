@@ -9,9 +9,9 @@ def snmp_config(suppress_output=False, help_requested=False):
     snmp_config_help = {
         'command': 'show run all snmp-server',
         'description': (
-            "This command displays the current **SNMP configuration** on the ASA.\n\n"
+            "This command displays the current **SNMP configuration** on the FTD.\n\n"
             "**Usage Notes & Troubleshooting:**\n"
-            "- SNMP is used for **remote monitoring and management** of ASA devices.\n"
+            "- SNMP is used for **remote monitoring and management** of FTD devices.\n"
             "- If SNMP is not working, ensure **SNMP communities, users, and traps are configured**.\n"
             "- Use `show snmp engineID` to verify the SNMP Engine ID.\n"
             "- Use `show snmp stats` to check for SNMP message processing errors.\n"

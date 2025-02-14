@@ -9,9 +9,9 @@ def asp_table_routing_all(suppress_output=False, help_requested=False):
     asp_table_routing_all_help = {
         'command': 'show asp table routing all',
         'description': (
-            "Displays the Adaptive Security Processing (ASP) routing table used internally by the ASA. "
+            "Displays the Accelerated Security Path (ASP) routing table used internally by the FTD. "
             "This table includes identity routes, static routes, dynamic routes, and routes associated "
-            "with VPN tunnels. It is useful for diagnosing how traffic is processed and routed within the ASA."
+            "with VPN tunnels. It is useful for diagnosing how traffic is processed and routed within the FTD."
         ),
         'example_output': """
 Route Table Timestamp: 136

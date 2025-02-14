@@ -23,7 +23,7 @@ def nat_help():
             "   1️⃣ Run: show nat pool (Check NAT pool availability and utilization)",
         ],
         "4. Verifying Proxy ARP": [
-            "🔹 Use `show nat proxy-arp` to determine if the ASA is responding to ARP requests for NAT addresses.",
+            "🔹 Use `show nat proxy-arp` to determine if the FTD is responding to ARP requests for NAT addresses.",
             "🔹 Example:",
             "   1️⃣ Run: show nat proxy-arp (Check Proxy ARP behavior for NAT mappings)",
             "   2️⃣ If issues arise, verify NAT rule configurations and routing settings.",
