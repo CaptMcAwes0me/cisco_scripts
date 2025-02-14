@@ -63,13 +63,13 @@ def s2s_menu(selected_peers):
                     print(f"\n🔍 Configuring peer: {ip_address} (IKEv{ike_version.upper()} - {vpn_type.upper()})")
 
                     if ike_version == "ikev1" and vpn_type == "vti":
-                        s2s_ikev1_vti_config(ip_address)
+                        s2s_ikev1_vti_config(ip_address, help_requested=False)
                     elif ike_version == "ikev1" and vpn_type == "policy":
-                        s2s_ikev1_policy_based_config(ip_address)
+                        s2s_ikev1_policy_based_config(ip_address, help_requested=False)
                     elif ike_version == "ikev2" and vpn_type == "vti":
-                        s2s_ikev2_vti_config(ip_address)
+                        s2s_ikev2_vti_config(ip_address, help_requested=False)
                     elif ike_version == "ikev2" and vpn_type == "policy":
-                        s2s_ikev2_policy_based_config(ip_address)
+                        s2s_ikev2_policy_based_config(ip_address, help_requested=False)
 
                 print("\n✅ Configuration Complete.")
 
