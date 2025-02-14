@@ -40,7 +40,11 @@ def failover_menu():
             base_choice = choice[:-1]  # Remove "?" from input
             if base_choice in menu_options:
                 description, function = menu_options[base_choice]
-                if function:
+
+                # Special case: `failover_help` should just execute without `help_requested`
+                if function == failover_help:
+                    function()
+                elif function:
                     print("\n" + "=" * 80)
                     print(f"📖 Help for: {description}".center(80))
                     print("=" * 80)
