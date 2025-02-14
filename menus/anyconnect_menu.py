@@ -8,7 +8,7 @@ from lina.vpn.anyconnect.anyconnect_crypto_accelerator_data.anyconnect_crypto_ac
 
 
 def anyconnect_menu(selected_group, tunnel_groups=[]):
-    """Displays a menu for AnyConnect-related tasks, including inline help."""
+    """Displays a menu for AnyConnect-related tasks."""
 
     if not tunnel_groups:
         tunnel_groups = [selected_group]
@@ -29,7 +29,7 @@ def anyconnect_menu(selected_group, tunnel_groups=[]):
 
         choice = input("Select an option (0-6) or enter '?' for help (e.g., '2?'): ").strip()
 
-        # Handle help request (e.g., "3?")
+        # Handle help requests (X?)
         if choice.endswith("?"):
             base_choice = choice[:-1]  # Remove "?" from input
             if base_choice in menu_options:
@@ -39,20 +39,22 @@ def anyconnect_menu(selected_group, tunnel_groups=[]):
                 print(f"📖 Help for: {description}".center(80))
                 print("=" * 80)
 
-                if function:
-                    # Special case: Directly call `anyconnect_help()` without `help_requested`
-                    if function == anyconnect_help:
-                        function()
-                    else:
-                        function(help_requested=True)  # Call function in help mode
+                # Special case: `anyconnect_help` does not need parameters
+                if function == anyconnect_help:
+                    function()
+                # Special case: `anyconnect_config` and `vpn_sessiondb_anyconnect` require tunnel_group
+                elif function in [anyconnect_config, vpn_sessiondb_anyconnect]:
+                    function(selected_group, help_requested=True)
+                # Default behavior for other functions
                 else:
-                    print("\n[!] Help not available for this option.")
+                    function(help_requested=True)
+
             else:
                 print("\n[!] Invalid choice. Please enter a valid number followed by '?' (e.g., '3?').")
 
-        # Process standard menu selections
         elif choice in menu_options:
             description, function = menu_options[choice]
+
             if function:
                 print("\n" + "-" * 80)
                 print(f"Accessing {description}...".center(80))
@@ -65,9 +67,8 @@ def anyconnect_menu(selected_group, tunnel_groups=[]):
                 else:
                     function()
 
-            else:  # Exit condition
+            else:
                 print("\nExiting to previous menu...")
                 break
-
         else:
             print("\n[!] Invalid choice. Please enter a number between 0 and 6.")
