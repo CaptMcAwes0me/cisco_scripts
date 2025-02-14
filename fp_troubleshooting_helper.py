@@ -17,7 +17,7 @@ def main_menu():
     while True:
         # Prepare the menu options for display
         options_display = {key: description for key, (description, _) in menu_options.items()}
-        display_formatted_menu("Main Menu", options_display)
+        display_formatted_menu("FP Troubleshooting Helper (FPTH) Menu", options_display)
 
         choice = input("Select an option (0-3): ").strip()
 
