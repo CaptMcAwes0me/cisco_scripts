@@ -1,7 +1,7 @@
 from core.utils import display_formatted_menu
 from menus.syslog_menu import syslog_menu
 from menus.snmp_menu import snmp_menu
-from menus.logging_and_monitoring_help import logging_and_monitoring_help  # Import help function
+from lina.logging_and_monitoring.logging_and_monitoring_help import logging_and_monitoring_help  # Import help function
 
 
 def logging_and_monitoring_menu():
