@@ -78,7 +78,7 @@ def s2s_menu(selected_peers):
                 print("\n" + "=" * 80)
                 print(f"🔹 Accessing {description}".center(80))
                 print("=" * 80)
-                function(help_requested=False)  # Normal function execution
+                function(selected_peers, help_requested=False)  # Normal function execution
 
             # Exit condition
             else:
