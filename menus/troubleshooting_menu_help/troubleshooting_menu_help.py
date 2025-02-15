@@ -1,21 +1,28 @@
 def troubleshooting_menu_help():
-    help_text = """
-    === Troubleshooting Menu Help ===
+    """Provides an overview of the troubleshooting menu and its available options."""
 
-    The Troubleshooting Menu provides tools for diagnosing system and network issues across Firepower and Lina.
+    help_sections = {
+        "Troubleshooting Menu Overview": [
+            "🔹 **Device Information** - Displays system details, hardware inventory, and configuration settings.",
+            "🔹 **Firepower Troubleshooting** - Diagnoses issues related to policies, FMC registration, and traffic flow.",
+            "🔹 **Lina Troubleshooting** - Focuses on ASA-based troubleshooting for NAT, ACLs, and packet analysis.",
+            "🔹 **Troubleshooting Menu Help** - Provides guidance on available troubleshooting tools and their use cases.",
+            "🔹 Example:",
+            "   1️⃣ Select `Device Information` to retrieve software version, hardware details, and configuration.",
+            "   2️⃣ Choose `Firepower Troubleshooting` for deeper analysis of Firepower policy enforcement and connectivity.",
+            "   3️⃣ Navigate to `Lina Troubleshooting` to inspect packet flow, NAT translations, and ACL behavior.",
+        ],
+    }
 
-    **Menu Options:**
-    1) Device Information - Gather essential details about the system’s hardware and software.
-    2) Firepower Troubleshooting - Access diagnostic tools specific to Firepower devices.
-    3) Lina Troubleshooting - Access troubleshooting commands for Lina-based devices.
-    0) Exit - Return to the Main Menu.
+    print("\n" + "=" * 80)
+    print("📘 Troubleshooting Menu Help 📘".center(80))
+    print("=" * 80)
 
-    **Usage Notes:**
-    - Start with Device Information to collect system details before troubleshooting.
-    - Firepower Troubleshooting provides in-depth analysis for Firepower-specific issues.
-    - Lina Troubleshooting covers connectivity, routing, NAT, VPN, and clustering problems.
+    for section, lines in help_sections.items():
+        print(f"\n🟢 {section}")
+        for line in lines:
+            print(f"   {line}")
 
-    ============================================
-    """
-    print(help_text)
-
+    print("\n" + "=" * 80)
+    print("🔍 Tip: Use 'X?' to see help for a specific option (e.g., '2?' for Firepower Troubleshooting).")
+    print("=" * 80)
