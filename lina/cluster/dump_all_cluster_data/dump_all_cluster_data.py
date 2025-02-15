@@ -9,6 +9,7 @@ from lina.cluster.cluster_conn_count.cluster_conn_count import cluster_conn_coun
 from lina.cluster.cluster_xlate_count.cluster_xlate_count import cluster_xlate_count
 from lina.cluster.cluster_traffic.cluster_traffic import cluster_traffic
 from lina.cluster.cluster_cpu.cluster_cpu import cluster_cpu
+from lina.cluster.cluster_nat_pool.cluster_exec_nat_pool_detail import cluster_exec_nat_pool_detail
 
 
 def dump_all_cluster_data():
@@ -36,6 +37,7 @@ def dump_all_cluster_data():
             ("Cluster Running Config", cluster_running_config(suppress_output=True)),
             ("Cluster Member Limit", cluster_member_limit(suppress_output=True)),
             ("Cluster NAT Pool", cluster_nat_pool(suppress_output=True)),
+            ("Cluster NAT Pool Detail (Cluster Exec)", cluster_exec_nat_pool_detail(suppress_output=True)),
             ("Cluster Resource Usage", cluster_resource_usage(suppress_output=True)),
             ("Cluster MTU", cluster_mtu(suppress_output=True)),
             ("Cluster Conn Count", cluster_conn_count(suppress_output=True)),
