@@ -54,8 +54,8 @@ Cluster asa_cluster1: On
             print(f"Cluster Member Limit: {cluster_member_limit}")
             print("-" * 80)
             print(
-                "\033[1;33m[NOTE]\033[0m: The Cluster Member Limit should be configured to match the number of cluster "
-                "members to ensure stable cluster communication and performance regarding NAT pool exhaustion.\n")
+                "⚠️ The Cluster Member Limit should be configured to match the number of cluster "
+                "members to ensure stable cluster communication and performance regarding NAT pool exhaustion. ⚠️ \n")
 
         return cluster_member_limit
 
