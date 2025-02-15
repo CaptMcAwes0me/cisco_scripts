@@ -4,7 +4,7 @@ from core.utils import display_formatted_menu
 from lina.cluster.cluster_running_config.cluster_running_config import cluster_running_config
 from lina.cluster.cluster_member_limit.cluster_member_limit import cluster_member_limit
 from lina.cluster.cluster_nat_pool.cluster_nat_pool import cluster_nat_pool
-from lina.cluster.cluster_nat_pool.cluster_exec_nat_pool import cluster_exec_nat_pool_detail
+from lina.cluster.cluster_nat_pool.cluster_exec_nat_pool import cluster_exec_nat_pool
 from lina.cluster.cluster_resource_usage.cluster_resource_usage import cluster_resource_usage
 from lina.cluster.cluster_mtu.cluster_mtu import cluster_mtu
 from lina.cluster.cluster_conn_count.cluster_conn_count import cluster_conn_count
@@ -23,7 +23,7 @@ def cluster_menu():
         "1": ("Cluster Running Configuration", cluster_running_config),
         "2": ("Cluster Member Limit", cluster_member_limit),
         "3": ("Cluster NAT Pool", cluster_nat_pool),
-        "4": ("Cluster NAT Pool (Cluster Exec)", cluster_exec_nat_pool_detail),
+        "4": ("Cluster NAT Pool (Cluster Exec)", cluster_exec_nat_pool),
         "5": ("Cluster Resource Usage", cluster_resource_usage),
         "6": ("Cluster MTU", cluster_mtu),
         "7": ("Cluster Conn Count", cluster_conn_count),
