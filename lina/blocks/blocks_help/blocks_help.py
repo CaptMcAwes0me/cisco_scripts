@@ -1,39 +1,53 @@
 def blocks_help():
-    help_text = (
-        "Lina 'show blocks' Commands Help\n"
-        "===============================\n\n"
-        "1. **show blocks**\n"
-        "   - Provides a summary of the block-related statistics on the Lina.\n"
-        "   - Details which blocks are currently in use and their statuses.\n"
-        "   - Helps identify performance or resource issues.\n\n"
-        "2. **show blocks exhaustion history**\n"
-        "   - Displays the historical records of exhaustion events for blocks.\n"
-        "   - Tracks if and when the Lina experienced resource shortages or block exhaustion.\n"
-        "   - Indicates potential resource allocation or scaling issues over time.\n\n"
-        "3. **show blocks exhaustion snapshot**\n"
-        "   - Provides a snapshot of the current state of block exhaustion.\n"
-        "   - Helps troubleshoot by providing real-time information about exhaustion events.\n"
-        "   - Allows administrators to identify if resources are currently strained.\n\n"
-        "4. **show blocks queue history core-local**\n"
-        "   - Displays the history of the block queue in the core-local memory area.\n"
-        "   - Tracks queue length and delays in processing blocks, impacting system performance.\n\n"
-        "5. **show blocks queue history detail**\n"
-        "   - Provides a detailed history of the block queue.\n"
-        "   - Offers deeper insights into queue length and block processing impact over time.\n\n"
-        "6. **show blocks old**\n"
-        "   - Displays older block information that may still be in the system but isn't actively processed.\n"
-        "   - Useful for tracking past resource allocation issues or reviewing long-term trends.\n\n"
-        "7. **show blocks old dump**\n"
-        "   - Dumps all available information about old blocks.\n"
-        "   - Provides a comprehensive view of block processing, including details about old blocks that may still affect the system.\n\n"
-        "How These Commands Relate\n"
-        "=========================\n\n"
-        "- The **show blocks** command provides a snapshot of the current block status, while the **show blocks "
-        "exhaustion history** and **show blocks exhaustion snapshot** commands help monitor both past and "
-        "present block exhaustion events.\n\n"
-        "- The **show blocks queue history core-local** and **show blocks queue history detail** commands focus on the "
-        "handling of blocks in the queue, particularly with regard to delays and resource management.\n\n"
-        "- The **show blocks old** and **show blocks old dump** commands allow access to information about older blocks "
-        "that are no longer part of active processing but might still be valuable for analysis or historical reference."
-    )
-    print(help_text)
+    """Displays help information for Blocks-related commands and their troubleshooting applications."""
+
+    blocks_help_info = {
+        'command': 'Blocks Menu',
+        'description': (
+            "The Blocks Menu provides commands for monitoring memory block allocation and usage. "
+            "These commands are useful for diagnosing memory fragmentation, block exhaustion, "
+            "queue history, and debugging memory-related performance issues in the system."
+        ),
+        'help_sections': {
+            "1. Monitoring Block Usage": [
+                "🔹 Use `show blocks` to display current memory block allocation across different sizes.",
+                "🔹 If block exhaustion is suspected, check `show blocks exhaustion history` for past exhaustion events.",
+                "🔹 Example:",
+                "   1️⃣ Run: show blocks (Check current memory block allocation)",
+                "   2️⃣ Run: show blocks exhaustion history (Review past block exhaustion trends)"
+            ],
+            "2. Investigating Block Exhaustion": [
+                "🔹 Use `show blocks exhaustion snapshot` to capture a real-time view of block allocation states.",
+                "🔹 Example:",
+                "   1️⃣ Run: show blocks exhaustion snapshot (Get a snapshot of block allocation at the moment of execution)"
+            ],
+            "3. Analyzing Queue History": [
+                "🔹 Use `show blocks history core-local` to review memory usage within the core processor.",
+                "🔹 Use `show blocks queue history detail` to track detailed queue-level allocation statistics.",
+                "🔹 Example:",
+                "   1️⃣ Run: show blocks history core-local (Analyze block allocation in the core)",
+                "   2️⃣ Run: show blocks queue history detail (Check memory usage trends over time)"
+            ],
+            "4. Debugging Old Block Allocations": [
+                "🔹 Use `show blocks old` to display the list of old memory blocks still in use.",
+                "🔹 Use `show blocks old dump` to view detailed hex dumps of memory blocks for debugging.",
+                "🔹 Example:",
+                "   1️⃣ Run: show blocks old (Check for long-lived blocks that may indicate memory retention issues)",
+                "   2️⃣ Run: show blocks old dump (Analyze memory contents of retained blocks)"
+            ]
+        }
+    }
+
+    print("\n" + "=" * 80)
+    print(f"📖 Help for: {blocks_help_info['command']}".center(80))
+    print("=" * 80)
+    print(f"\n{blocks_help_info['description']}\n")
+
+    for section, steps in blocks_help_info['help_sections'].items():
+        print(f"\n🟢 {section}")
+        for step in steps:
+            print(f"   {step}")
+
+    print("\n" + "=" * 80)
+    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '3?' for Blocks Exhaustion Snapshot).")
+    print("=" * 80)
