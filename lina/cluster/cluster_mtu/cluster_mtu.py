@@ -34,7 +34,7 @@ mtu Cluster-Interface 1600
         return None  # No actual command execution
 
     # Execute command to retrieve MTU settings
-    command = "show running-config | include mtu"
+    command = "show running-config mtu"
 
     try:
         output = get_and_parse_cli_output(command)
