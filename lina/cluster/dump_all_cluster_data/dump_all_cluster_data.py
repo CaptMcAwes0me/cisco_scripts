@@ -9,7 +9,7 @@ from lina.cluster.cluster_conn_count.cluster_conn_count import cluster_conn_coun
 from lina.cluster.cluster_xlate_count.cluster_xlate_count import cluster_xlate_count
 from lina.cluster.cluster_traffic.cluster_traffic import cluster_traffic
 from lina.cluster.cluster_cpu.cluster_cpu import cluster_cpu
-from lina.cluster.cluster_nat_pool.cluster_exec_nat_pool_detail import cluster_exec_nat_pool_detail
+from lina.cluster.cluster_nat_pool.cluster_exec_nat_pool import cluster_exec_nat_pool_detail
 
 
 def dump_all_cluster_data():

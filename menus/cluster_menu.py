@@ -4,7 +4,7 @@ from core.utils import display_formatted_menu
 from lina.cluster.cluster_running_config.cluster_running_config import cluster_running_config
 from lina.cluster.cluster_member_limit.cluster_member_limit import cluster_member_limit
 from lina.cluster.cluster_nat_pool.cluster_nat_pool import cluster_nat_pool
-from lina.cluster.cluster_nat_pool.cluster_exec_nat_pool_detail import cluster_exec_nat_pool_detail
+from lina.cluster.cluster_nat_pool.cluster_exec_nat_pool import cluster_exec_nat_pool_detail
 from lina.cluster.cluster_resource_usage.cluster_resource_usage import cluster_resource_usage
 from lina.cluster.cluster_mtu.cluster_mtu import cluster_mtu
 from lina.cluster.cluster_conn_count.cluster_conn_count import cluster_conn_count
