@@ -20,7 +20,7 @@ def troubleshoot_menu():
     while True:
         # Prepare the menu options for display
         options_display = {key: description for key, (description, _) in menu_options.items()}
-        display_formatted_menu("Main Menu", options_display)
+        display_formatted_menu("Troubleshooting Menu", options_display)
 
         choice = input("Select an option (0-4): ").strip()
 
@@ -32,7 +32,7 @@ def troubleshoot_menu():
                 print("-" * 80)
                 function()
             else:  # Exit condition
-                print("\nExiting the script. Goodbye!")
+                print("\nExiting to FPTH menu...")
                 break
         else:
             print("\n[!] Invalid choice. Please enter a number between 0 and 4.")

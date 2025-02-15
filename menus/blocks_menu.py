@@ -1,4 +1,4 @@
-# Description: This script contains the Cluster menu and its associated functions.
+# Description: This script contains the Blocks menu and its associated functions.
 
 from core.utils import display_formatted_menu
 from lina.blocks.blocks.blocks import blocks
@@ -12,6 +12,10 @@ from lina.blocks.blocks_help.blocks_help import blocks_help
 
 
 def blocks_menu():
+    """Displays a menu for Blocks-related tasks.
+       Supports 'X?' functionality to display help for each menu option.
+    """
+
     menu_options = {
         "1": ("Blocks", blocks),
         "2": ("Blocks Exhaustion History", blocks_exhaustion_history),
@@ -29,17 +33,37 @@ def blocks_menu():
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu("Blocks Menu", options_display)
 
-        choice = input("Select an option (0-8): ").strip()
+        choice = input("Select an option (0-8) or enter '?' for help (e.g., '3?'): ").strip()
 
-        if choice in menu_options:
+        # Handle 'X?' help functionality
+        if choice.endswith("?"):
+            base_choice = choice[:-1]  # Remove "?" from input
+            if base_choice in menu_options:
+                description, function = menu_options[base_choice]
+
+                # Special case: `blocks_help` runs directly
+                if function == blocks_help:
+                    function()
+                elif function:
+                    print("\n" + "=" * 80)
+                    print(f"Help for: {description}".center(80))
+                    print("=" * 80)
+                    function(help_requested=True)  # Call function in help mode
+                else:
+                    print("\n[!] Help not available for this option.")
+            else:
+                print("\n[!] Invalid choice. Please enter a valid number followed by '?' (e.g., '2?').")
+
+        elif choice in menu_options:
             description, function = menu_options[choice]
-            if function:  # If a function is assigned
+            if function:
                 print("\n" + "-" * 80)
                 print(f"Accessing {description}...".center(80))
                 print("-" * 80)
-                function()
-            else:  # Exit condition
+                function()  # Normal function execution
+            else:
                 print("\nExiting to previous menu...")
                 break
+
         else:
             print("\n[!] Invalid choice. Please enter a number between 0 and 8.")

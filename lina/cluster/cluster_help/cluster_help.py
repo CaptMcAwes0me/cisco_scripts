@@ -1,67 +1,58 @@
 def cluster_help():
-    help_text = """
-    Lina "show cluster" Commands Help
-    ================================
+    """Displays guidance on troubleshooting and managing clustering in Cisco Firepower devices."""
 
-    1. **show running-config all cluster**  
-       - Displays the complete running configuration for the cluster.  
-       - Useful for reviewing cluster-wide settings and verifying configurations.
+    help_sections = {
+        "1. Verifying Cluster Configuration": [
+            "🔹 Use `Cluster Running Configuration` to verify cluster-specific settings, "
+            "including cluster group settings, health checks, and priorities.",
+            "🔹 Example:",
+            "   1️⃣ Run: show run all cluster (Review cluster-specific configurations)",
+            "   2️⃣ Check for correct cluster-interface configuration and unit priorities."
+        ],
+        "2. Checking Cluster Member Limits": [
+            "🔹 Use `Cluster Member Limit` to review the configured limit for cluster members.",
+            "🔹 Verify that the limit matches the intended number of cluster members to prevent NAT pool exhaustion.",
+            "🔹 Example:",
+            "   1️⃣ Run: show cluster info (Verify Cluster Member Limit)",
+            "   2️⃣ Ensure that the number of active members does not exceed the limit."
+        ],
+        "3. Diagnosing NAT Pool Issues": [
+            "🔹 Use `Cluster NAT Pool` to view NAT pool configuration for the cluster.",
+            "🔹 Example:",
+            "   1️⃣ Run: show nat pool cluster (Inspect NAT pool details)",
+            "   2️⃣ Check for available IP addresses in the NAT pool."
+        ],
+        "4. Analyzing Cluster Resource Usage": [
+            "🔹 Use `Cluster Resource Usage` to view usage statistics for memory, storage, connections, and VPN sessions.",
+            "🔹 Example:",
+            "   1️⃣ Run: show cluster resource usage (Review current usage for CPU, memory, and other resources)",
+            "   2️⃣ Monitor for any resource bottlenecks."
+        ],
+        "5. Monitoring Cluster Traffic and CPU": [
+            "🔹 Use `Cluster Traffic` to monitor the distribution of traffic among cluster members.",
+            "🔹 Use `Cluster CPU` to view CPU utilization for the cluster and individual units.",
+            "🔹 Example:",
+            "   1️⃣ Run: show cluster traffic (Check for imbalanced traffic distribution)",
+            "   2️⃣ Run: show cluster cpu (Monitor CPU usage for high utilization)"
+        ],
+        "6. Investigating Connection Issues": [
+            "🔹 Use `Cluster Conn Count` to check the number of connections distributed among cluster members.",
+            "🔹 Use `Cluster Xlate Count` to view the translation count for each member.",
+            "🔹 Example:",
+            "   1️⃣ Run: show cluster conn count (Inspect connection distribution)",
+            "   2️⃣ Run: show cluster xlate count (Check translation counts for each unit)"
+        ],
+    }
 
-    2. **show cluster info**  
-       - Shows detailed information about the cluster.  
-       - Indicates the cluster member limit and provides a note: the cluster should be configured to match the number of
-        units in the cluster.  
-       - Helps ensure that the cluster is properly scaled and aligned with the configuration limits.
+    print("\n" + "=" * 80)
+    print("📘 Cluster Help: Troubleshooting and Managing Clustering 📘".center(80))
+    print("=" * 80)
 
-    3. **show nat pool cluster**  
-       - Displays the NAT pool configuration for the cluster.  
-       - Allows administrators to review the configured NAT pools and ensure proper address translation is in place for 
-       cluster members.
+    for section, lines in help_sections.items():
+        print(f"\n🟢 {section}")
+        for line in lines:
+            print(f"   {line}")
 
-    4. **show cluster resource usage**  
-       - Shows the current resource usage within the cluster.  
-       - Helps track resource consumption (CPU, memory, etc.) to ensure the cluster is operating within capacity and to 
-       identify potential bottlenecks.
-
-    5. **show mtu**  
-       - Displays the Maximum Transmission Unit (MTU) settings.  
-       - Important note: the cluster CCL (Cluster Control Link) should be configured to be at least 100 bytes larger 
-       than the data interface MTU to avoid fragmentation and ensure proper communication between cluster members.
-
-    6. **show cluster conn count**  
-       - Displays the connection count for the cluster.  
-       - Helps track the number of connections currently being handled by the cluster, which is useful for monitoring 
-       cluster load and performance.
-
-    7. **show cluster xlate count**  
-       - Displays the count of NAT translations in the cluster.  
-       - Helps track the number of active translations being handled, useful for identifying scaling issues or unusually
-        high translation loads.
-
-    8. **show cluster traffic**  
-       - Displays the traffic statistics for the cluster.  
-       - Provides insights into the cluster's throughput, including data transfer rates and any traffic-related 
-       performance issues.
-
-    9. **show cluster cpu**  
-       - Displays CPU usage statistics for the cluster.  
-       - Useful for monitoring the performance of cluster members and identifying any CPU-intensive processes or 
-       imbalances within the cluster.
-
-    How These Commands Relate
-    =========================
-
-    - The **show running-config all cluster** and **show cluster info** commands provide key configuration and 
-    operational details about the cluster, ensuring it's properly configured and scaled.
-
-    - The **show nat pool cluster** and **show cluster resource usage** commands are useful for monitoring NAT resources
-     and tracking cluster resource consumption, respectively.
-
-    - The **show mtu** command ensures that the cluster's control link is properly sized in relation to the data 
-    interface MTU, preventing potential fragmentation issues.
-
-    - The **show cluster conn count**, **show cluster xlate count**, **show cluster traffic**, and **show cluster cpu** 
-    commands help monitor the overall load and performance of the cluster, focusing on connections, translations, 
-    traffic, and CPU usage.
-    """
-    print(help_text)
+    print("\n" + "=" * 80)
+    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '3?' for Cluster NAT Pool).")
+    print("=" * 80)

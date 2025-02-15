@@ -19,7 +19,7 @@ def anyconnect_menu(selected_group, tunnel_groups=[]):
         "3": ("Crypto CA Data", crypto_ca_data),
         "4": ("SSL Data", ssl_data),
         "5": ("Crypto Accelerator Data", anyconnect_crypto_accelerator_data),
-        "6": ("Anyconnect Help", anyconnect_help),
+        "6": ("AnyConnect Help", anyconnect_help),
         "0": ("Exit", None),
     }
 
@@ -27,16 +27,40 @@ def anyconnect_menu(selected_group, tunnel_groups=[]):
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu(f"AnyConnect Menu - Selected Group: {selected_group}", options_display)
 
-        choice = input("Select an option (0-6): ").strip()
+        choice = input("Select an option (0-6) or enter '?' for help (e.g., '2?'): ").strip()
 
-        if choice in menu_options:
+        # Handle help requests (X?)
+        if choice.endswith("?"):
+            base_choice = choice[:-1]  # Remove "?" from input
+            if base_choice in menu_options:
+                description, function = menu_options[base_choice]
+
+                print("\n" + "=" * 80)
+                print(f"📖 Help for: {description}".center(80))
+                print("=" * 80)
+
+                # Special case: `anyconnect_help` does not need parameters
+                if function == anyconnect_help:
+                    function()
+                # Special case: `anyconnect_config` and `vpn_sessiondb_anyconnect` require tunnel_group
+                elif function in [anyconnect_config, vpn_sessiondb_anyconnect]:
+                    function(selected_group, help_requested=True)
+                # Default behavior for other functions
+                else:
+                    function(help_requested=True)
+
+            else:
+                print("\n[!] Invalid choice. Please enter a valid number followed by '?' (e.g., '3?').")
+
+        elif choice in menu_options:
             description, function = menu_options[choice]
+
             if function:
                 print("\n" + "-" * 80)
                 print(f"Accessing {description}...".center(80))
                 print("-" * 80)
 
-                # Conditionally handle multiple tunnel groups
+                # Handle multiple tunnel groups for specific functions
                 if function in [anyconnect_config, vpn_sessiondb_anyconnect]:
                     for group in tunnel_groups:
                         function(group)

@@ -7,15 +7,15 @@ from core.utils import display_formatted_menu
 
 def logging_and_monitoring_dump_menu():
     menu_options = {
-        "1": ("Dump All Syslog Data", dump_all_syslog_data),
-        "2": ("Dump All SNMP Data", dump_all_snmp_data),
+        "1": ("Show Tech - Syslog", dump_all_syslog_data),
+        "2": ("Show Tech - SNMP", dump_all_snmp_data),
         "0": ("Exit", None),
     }
 
     while True:
         # Prepare the menu options for display
         options_display = {key: description for key, (description, _) in menu_options.items()}
-        display_formatted_menu("Logging and Monitoring Dump Menu", options_display)
+        display_formatted_menu("Show Tech - Logging and Monitoring Menu", options_display)
 
         choice = input("Select an option (0-2): ").strip()
 

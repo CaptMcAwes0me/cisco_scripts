@@ -17,7 +17,7 @@ def global_routing_help():
             "   2️⃣ If missing, check: show asp table routing all (Confirm ASP processing of the route)",
         ],
         "3. Diagnosing Route Processing (ASP Table)": [
-            "🔹 Use `show asp table routing all` to review how the ASA processes routes internally.",
+            "🔹 Use `show asp table routing all` to review how the FTD processes routes internally.",
             "🔹 This table contains identity routes, policy-based routes, and VPN-related routes.",
             "🔹 If a route appears in `show asp table routing all` but not in `show route all`, it may be a VPN or special policy route.",
             "🔹 Example:",

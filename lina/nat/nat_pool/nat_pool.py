@@ -1,5 +1,6 @@
 from core.utils import get_and_parse_cli_output
 
+
 def nat_pool(suppress_output=False, help_requested=False):
     """
     Retrieves and optionally displays the NAT pool using 'show nat pool'.
@@ -29,6 +30,9 @@ TCP inside, address 10.76.11.25, range 1024-65535, allocated 1
         print("Example Output:")
         print(nat_pool_help['example_output'])
         return None  # No actual command execution
+
+    # Define the command to execute
+    command = "show nat pool"
 
     # Execute the NAT Pool command
     try:

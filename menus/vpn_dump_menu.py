@@ -5,14 +5,14 @@ from core.utils import display_formatted_menu
 
 def vpn_dump_menu():
     menu_options = {
-        "1": ("AnyConnect (Secure Client) Dump", dump_all_anyconnect_data),
-        "2": ("Site-to-Site VPN Dump", dump_s2s_tunnel_groups),
+        "1": ("Show Tech - AnyConnect (Secure Client)", dump_all_anyconnect_data),
+        "2": ("Show Tech - Site-to-Site VPN", dump_s2s_tunnel_groups),
         "0": ("Exit", None),
     }
 
     while True:
         options_display = {key: description for key, (description, _) in menu_options.items()}
-        display_formatted_menu("VPN Menu", options_display)
+        display_formatted_menu("Show Tech - VPN Menu", options_display)
 
         choice = input("Select an option (0-2): ").strip()
 
@@ -32,5 +32,3 @@ def vpn_dump_menu():
 
         else:
             print("\n[!] Invalid choice. Please enter a number between 0 and 2.")
-
-

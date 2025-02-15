@@ -2,7 +2,36 @@ from core.utils import get_and_parse_cli_output, print_section
 import re
 
 
-def anyconnect_config(tunnel_group):
+def anyconnect_config(tunnel_group, help_requested=False):
+    """Retrieves and displays AnyConnect configuration details for a given tunnel group.
+       If help_requested=True, it prints the help information instead.
+    """
+
+    anyconnect_config_help = {
+        'command': 'show running-config all tunnel-group <group>',
+        'description': (
+            "Displays the complete configuration of a specified AnyConnect tunnel group, including associated "
+            "group policies, authentication settings, address pools, and split-tunneling configurations."
+        ),
+        'example_output': """
+tunnel-group AnyConnectGroup general-attributes
+ address-pool VPN_POOL
+ default-group-policy AC-GroupPolicy
+ authentication-server-group LDAP
+tunnel-group AnyConnectGroup webvpn-attributes
+ group-alias AC-VPN enable
+        """
+    }
+
+    if help_requested:
+        print("\n" + "-" * 80)
+        print(f"Help for: {anyconnect_config_help['command']}".center(80))
+        print("-" * 80)
+        print(f"\n{anyconnect_config_help['description']}\n")
+        print("Example Output:")
+        print(anyconnect_config_help['example_output'])
+        return None  # No actual execution
+
     print("\n")
     print("-" * 80)
     print(f"*** AnyConnect Configuration for {tunnel_group} ***".center(80))
@@ -69,7 +98,40 @@ def anyconnect_config(tunnel_group):
     print("and/or Hairpin NAT statements to ensure they are configured properly.\n")
 
 
-def anyconnect_config_dump(suppress_output=False):
+def anyconnect_config_dump(suppress_output=False, help_requested=False):
+    """Retrieves and optionally displays a full dump of AnyConnect-related configurations.
+       If help_requested=True, it prints the help information instead.
+    """
+
+    anyconnect_config_dump_help = {
+        'command': 'show running-config all (tunnel-group, group-policy, webvpn, etc.)',
+        'description': (
+            "Dumps a comprehensive set of configurations related to AnyConnect, including tunnel groups, "
+            "group policies, WebVPN settings, IP pools, sysopt settings, and SSL configurations."
+        ),
+        'example_output': """
+webvpn
+ enable outside
+ anyconnect enable
+ tunnel-group-list enable
+
+group-policy AC-GroupPolicy internal
+ group-policy AC-GroupPolicy attributes
+  wins-server none
+  dns-server value 8.8.8.8 8.8.4.4
+  vpn-session-timeout none
+        """
+    }
+
+    if help_requested:
+        print("\n" + "-" * 80)
+        print(f"Help for: {anyconnect_config_dump_help['command']}".center(80))
+        print("-" * 80)
+        print(f"\n{anyconnect_config_dump_help['description']}\n")
+        print("Example Output:")
+        print(anyconnect_config_dump_help['example_output'])
+        return None  # No actual execution
+
     commands = {
         "Tunnel Group": "show running-config all tunnel-group",
         "Group Policy": "show running-config all group-policy",

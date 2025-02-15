@@ -1,59 +1,53 @@
 def failover_help():
-    help_text = """
-    Lina "Failover" Commands Help
-    ============================
+    """Displays how different failover commands relate to each other with practical examples."""
 
-    1. **show running-config all failover**  
-       - Displays the complete running configuration for the failover settings.  
-       - Useful for reviewing and verifying the failover configuration across the system, ensuring proper redundancy and
-        fault tolerance.
+    help_sections = {
+        "1. Viewing Failover Configuration & Status": [
+            "🔹 Use `show failover` to verify the overall failover state and role of each unit.",
+            "🔹 Use `show failover running-config` to display the currently configured failover settings.",
+            "🔹 Example:",
+            "   1️⃣ Run: show failover (Check Active/Standby status, link state, and sync status)",
+            "   2️⃣ Run: show run all failover (Verify failover-related configuration)",
+        ],
+        "2. Checking Failover Synchronization": [
+            "🔹 Use `show failover config-sync status` to confirm if configuration sync is successful.",
+            "🔹 If a sync issue is detected, check `show failover app-sync stats` for application sync details.",
+            "🔹 Example:",
+            "   1️⃣ Run: show failover config-sync status (Ensure successful config sync)",
+            "   2️⃣ If issues exist, run: show failover app-sync stats (View application sync failures)",
+        ],
+        "3. Troubleshooting Failover State & Link Issues": [
+            "🔹 Use `show failover state` to examine the role of each device and recent failure reasons.",
+            "🔹 If failover communication is failing, check `show failover interface` for interface status.",
+            "🔹 Example:",
+            "   1️⃣ Run: show failover state (Verify active/standby roles and failure history)",
+            "   2️⃣ Run: show failover interface (Ensure failover interfaces are up and passing traffic)",
+        ],
+        "4. Analyzing Failover Failures & Communication": [
+            "🔹 Use `show failover details` to get a breakdown of failover link communication and timers.",
+            "🔹 If the secondary device is not taking over, check `show failover descriptor` for role info.",
+            "🔹 Example:",
+            "   1️⃣ Run: show failover details (Examine detailed failover statistics and communication status)",
+            "   2️⃣ Run: show failover descriptor (Check if failover role assignment is correct)",
+        ],
+        "5. Monitoring Failover Performance": [
+            "🔹 Use `show failover app-sync stats` to verify synchronization rates for applications.",
+            "🔹 Use `show failover config-sync status` to ensure config sync is working correctly.",
+            "🔹 Example:",
+            "   1️⃣ Run: show failover app-sync stats (Ensure application state sync is healthy)",
+            "   2️⃣ Run: show failover config-sync status (Verify config sync with peer device)",
+        ],
+    }
 
-    2. **show failover state**  
-       - Displays the current state of the failover system.  
-       - Shows whether the system is in an active or standby state, indicating which unit is currently processing 
-       traffic and which is on standby.
+    print("\n" + "=" * 80)
+    print("📘 Failover Help: Understanding Command Relationships 📘".center(80))
+    print("=" * 80)
 
-    3. **show failover**  
-       - Displays basic failover information.  
-       - Provides a quick overview of the failover status, including whether the failover process is currently 
-       functional and any relevant operational details.
+    for section, lines in help_sections.items():
+        print(f"\n🟢 {section}")
+        for line in lines:
+            print(f"   {line}")
 
-    4. **show failover details**  
-       - Displays detailed information about the failover system.  
-       - Provides deeper insights into failover events, configuration synchronization, and other failover-related metrics.
-
-    5. **show failover interface**  
-       - Displays the failover interfaces in the system.  
-       - Shows which interfaces are dedicated to failover communication and ensures they are properly configured for 
-       the failover process.
-
-    6. **show failover descriptor**  
-       - Displays the failover descriptor configuration.  
-       - Provides information on how the failover system is described and managed, including specific parameters that 
-       influence failover behavior.
-
-    7. **show failover config-sync status**  
-       - Displays the configuration synchronization status for failover.  
-       - Ensures that the failover units are synchronized in terms of configuration, which is critical for a smooth 
-       failover process in case of failure.
-
-    8. **show failover app-sync status**  
-       - Displays the application synchronization status for failover.  
-       - Shows whether the failover units are synchronized in terms of application states and data, ensuring that the 
-       standby unit can seamlessly take over in case of failure.
-
-    How These Commands Relate
-    =========================
-
-    - The **show running-config all failover**, **show failover state**, and **show failover** commands provide an 
-    overview of the failover system’s status and configuration, ensuring that redundancy is in place and operational.
-
-    - The **show failover details**, **show failover interface**, and **show failover descriptor** commands give more 
-    granular details, helping to troubleshoot and verify the failover process, including interface configuration and 
-    failover behavior.
-
-    - The **show failover config-sync status** and **show failover app-sync status** commands ensure that both 
-    configuration and application states are properly synchronized between the failover units, ensuring a smooth 
-    transition in case of failover events.
-    """
-    print(help_text)
+    print("\n" + "=" * 80)
+    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '4?' for Failover Details).")
+    print("=" * 80)

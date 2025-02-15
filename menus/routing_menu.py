@@ -12,12 +12,12 @@ from core.utils import display_formatted_menu
 
 def routing_menu():
     menu_options = {
-        "1": ("Global Routing Menu", global_routing_menu),
-        "2": ("EIGRP Menu", eigrp_menu),
-        "3": ("OSPF Menu", ospf_menu),
-        "4": ("BGP Menu", bgp_menu),
-        "5": ("ISIS Menu", isis_menu),
-        "6": ("VRF Menu", vrf_menu),
+        "1": ("Global Routing - Menu", global_routing_menu),
+        "2": ("EIGRP - Menu", eigrp_menu),
+        "3": ("OSPF - Menu", ospf_menu),
+        "4": ("BGP - Menu", bgp_menu),
+        "5": ("ISIS - Menu", isis_menu),
+        "6": ("VRF - Menu", vrf_menu),
         "7": ("Routing Menu Help", routing_help),
         "0": ("Exit", None),
     }
@@ -31,10 +31,17 @@ def routing_menu():
 
         if choice in menu_options:
             description, function = menu_options[choice]
+
+            # Special case: `routing_help` runs directly
+            if function == routing_help:
+                function()
             if function:  # If a function is assigned
                 print("\n" + "-" * 80)
                 print(f"Accessing {description}...".center(80))
                 print("-" * 80)
+
+                if function == routing_help():
+                    function()
                 function()  # Call the corresponding function
             else:  # Exit condition
                 print("\nExiting to previous menu...")

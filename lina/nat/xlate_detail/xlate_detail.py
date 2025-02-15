@@ -12,12 +12,12 @@ def xlate_detail(suppress_output=False, help_requested=False):
     xlate_detail_help = {
         'command': 'show xlate detail',
         'description': (
-            "Displays detailed information about current Network Address Translation (NAT) translations (xlates) on the ASA. "
+            "Displays detailed information about current Network Address Translation (NAT) translations (xlates) on the FTD. "
             "This includes protocol, source and destination addresses and ports, translation types, flags, idle times, and timeouts. "
             "This command is useful for monitoring and troubleshooting NAT operations, providing insights into how internal addresses are being translated."
         ),
         'example_output': """
-        ciscoasa# show xlate detail
+        firepower# show xlate detail
         3 in use, 8 most used
         Flags: D - DNS, e - extended, I - identity, i - dynamic, r - portmap,
                s - static, T - twice, N - net-to-net
@@ -64,12 +64,12 @@ def xlate_detail_interactive(suppress_output=False, help_requested=False):
     xlate_detail_help = {
         'command': 'show xlate detail',
         'description': (
-            "Displays detailed information about current Network Address Translation (NAT) translations (xlates) on the ASA. "
+            "Displays detailed information about current Network Address Translation (NAT) translations (xlates) on the FTD. "
             "This includes protocol, source and destination addresses and ports, translation types, flags, idle times, and timeouts. "
             "This command is useful for monitoring and troubleshooting NAT operations, providing insights into how internal addresses are being translated."
         ),
         'example_output': """
-        ciscoasa# show xlate detail
+        firepower# show xlate detail
         3 in use, 8 most used
         Flags: D - DNS, e - extended, I - identity, i - dynamic, r - portmap,
                s - static, T - twice, N - net-to-net

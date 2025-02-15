@@ -1,4 +1,4 @@
-# Description: This script changes the logging_and_monitoring level on the ASA and gathers logs for a specified duration.
+# Description: This script changes the logging_and_monitoring level on the FTD and gathers logs for a specified duration.
 
 import time
 import shutil
