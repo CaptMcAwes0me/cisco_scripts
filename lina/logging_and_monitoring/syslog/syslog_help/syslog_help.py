@@ -1,5 +1,5 @@
 def syslog_help():
-    """Displays Syslog troubleshooting steps and command relationships."""
+    """Displays Syslog troubleshooting steps, command relationships, troubleshooting techniques, and common caveats."""
 
     help_sections = {
         "1. Verifying Syslog Configuration": [
@@ -44,10 +44,32 @@ def syslog_help():
             "   1️⃣ Run: show log (Review locally buffered logs)",
             "   2️⃣ Run: show running-config all logging (Ensure external log destinations are correct)",
         ],
+        "7. Common Syslog Troubleshooting Commands": [
+            "🔹 `debug logging` - View real-time logging debug output.",
+            "🔹 `ping <syslog-server>` - Ensure connectivity to remote Syslog servers.",
+            "🔹 `ping tcp <syslog-server> 514` (if TCP) - Check if Syslog port is reachable from the device.",
+            "🔹 `capture <name> interface <intf> match ip host <src> host <dst>` - Verify if Syslog messages are sent to the correct destination.",
+        ],
+        "8. Syslog Troubleshooting Techniques": [
+            "🔹 **Confirm Syslog Levels** - Ensure logging level is set high enough to capture relevant messages.",
+            "🔹 **Check for Message Filtering** - Some messages might be explicitly disabled using 'no logging message <ID>'.",
+            "🔹 **Verify Connectivity to Remote Syslog Servers** - Use `ping` to confirm L3 reachability.",
+            "🔹 **Check If Messages Are Being Dropped** - Use `show logging queue` to see if messages are stuck.",
+            "🔹 **Use Packet Captures** - If logs are missing, verify Syslog packets are leaving the device.",
+        ],
+        "9. Common Syslog Caveats": [
+            "🔹 **Syslog Rate Limiting** - Too many logs can trigger rate-limiting. Check `show logging dynamic-rate-limit`.",
+            "🔹 **Buffer Overflows** - If logging buffer is too small, old logs may be lost. Increase the buffer if necessary.",
+            "🔹 **UDP vs TCP Logging** - UDP-based Syslog can lose messages during network congestion; consider using TCP logging.",
+            "🔹 **TCP Logging** - Ensure 'logging permit-hostdown' is enabled to prevent TCP connections from being dropped.",
+            "🔹 **Time Synchronization Issues** - Ensure the device has accurate NTP settings to prevent timestamp mismatches.",
+            "🔹 **Firewall Blocking Syslog Traffic** - If logs are missing, ensure no ACLs are blocking UDP/514 traffic.",
+            "🔹 **Syslog Message Parsing Issues** - If logs appear scrambled, verify encoding and ensure the Syslog server is properly configured.",
+        ],
     }
 
     print("\n" + "=" * 80)
-    print("📘 Syslog Help: Understanding Command Relationships 📘".center(80))
+    print("📘 Syslog Help: Command Relationships, Troubleshooting, and Caveats 📘".center(80))
     print("=" * 80)
 
     for section, lines in help_sections.items():
@@ -56,5 +78,5 @@ def syslog_help():
             print(f"   {line}")
 
     print("\n" + "=" * 80)
-    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '3?' for Syslog Queue).")
+    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '7?' for Syslog Troubleshooting Commands).")
     print("=" * 80)

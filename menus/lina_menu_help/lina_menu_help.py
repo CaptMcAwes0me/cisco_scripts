@@ -4,7 +4,6 @@ def lina_menu_help():
     help_sections = {
         "1. Verifying Lina System Information": [
             "🔹 Use `show version` to display the software and hardware details of the system.",
-            "🔹 Use `show inventory` to list hardware components and serial numbers.",
             "🔹 Example:",
             "   1️⃣ Run: show version",
             "      - Confirm the current software version and system uptime.",
@@ -21,12 +20,12 @@ def lina_menu_help():
         ],
         "3. Inspecting Routing Table and Protocols": [
             "🔹 Use `show route` to display the current routing table.",
-            "🔹 Use `show ip route ospf` to view OSPF-learned routes.",
+            "🔹 Use `show route ospf` to view OSPF-learned routes.",
             "🔹 Use `show bgp summary` to inspect BGP peer status and route counts.",
             "🔹 Example:",
             "   1️⃣ Run: show route",
             "      - Confirm learned routes and their sources.",
-            "   2️⃣ Run: show ip route ospf",
+            "   2️⃣ Run: show route ospf",
             "      - Check OSPF-advertised routes and network reachability.",
         ],
         "4. Monitoring VPN Tunnel Status": [
@@ -50,12 +49,9 @@ def lina_menu_help():
         ],
         "6. Logging and Monitoring System Events": [
             "🔹 Use `show logging` to display system logs.",
-            "🔹 Use `debug logging` to enable real-time debugging output.",
             "🔹 Example:",
             "   1️⃣ Run: show logging",
             "      - Review system events, errors, and warnings.",
-            "   2️⃣ Run: debug logging",
-            "      - Enable detailed logging for troubleshooting.",
         ],
         "7. Inspecting Cluster Status and Performance": [
             "🔹 Use `show cluster info` to review cluster membership and health status.",

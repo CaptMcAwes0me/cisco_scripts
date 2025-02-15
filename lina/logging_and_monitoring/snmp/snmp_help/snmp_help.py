@@ -1,5 +1,5 @@
 def snmp_help():
-    """Displays SNMP troubleshooting steps and command relationships."""
+    """Displays SNMP troubleshooting steps, command relationships, troubleshooting techniques, and common caveats."""
 
     help_sections = {
         "1. Verifying SNMP Configuration": [
@@ -37,10 +37,34 @@ def snmp_help():
             "   1️⃣ Run: show snmp-server statistics (Analyze SNMP request counts & errors)",
             "   2️⃣ If failures are high, check: show cpu detailed (Ensure CPU isn't overloaded)",
         ],
+        "6. Common SNMP Troubleshooting Commands": [
+            "🔹 `debug snmp packet` - Displays real-time SNMP packet flow.",
+            "🔹 `show snmp` - Shows basic SNMP configuration and status.",
+            "🔹 `ping <snmp-server>` - Ensures reachability to the SNMP server.",
+            "🔹 `telnet <snmp-server> 161` - Verifies SNMP UDP/161 is open.",
+            "🔹 `capture <name> interface <intf> match ip host <src> host <dst>` - Checks if SNMP requests and responses are flowing.",
+            "🔹 `clear snmp-server statistics` - Resets SNMP counters to help track fresh issues.",
+        ],
+        "7. SNMP Troubleshooting Techniques": [
+            "🔹 **Confirm SNMP Access Lists** - Ensure no ACLs are blocking SNMP traffic.",
+            "🔹 **Verify SNMP Community Strings** - If using SNMPv2, make sure the correct community string is used.",
+            "🔹 **Check SNMPv3 Authentication** - Ensure correct authentication and encryption settings for users.",
+            "🔹 **Monitor Polling Performance** - Use `show snmp-server statistics` to track response times.",
+            "🔹 **Capture and Analyze SNMP Traffic** - Use packet captures to confirm if SNMP requests are reaching the device.",
+            "🔹 **Use Debugging Cautiously** - `debug snmp packet` can be useful but may generate excessive output.",
+        ],
+        "8. Common SNMP Caveats": [
+            "🔹 **SNMP Traps vs Polling** - Ensure the device is configured to send traps, not just respond to polling.",
+            "🔹 **SNMPv3 Encryption Mismatches** - If SNMPv3 fails, check if authentication and encryption settings match.",
+            "🔹 **Firewalls Blocking SNMP Traffic** - Ensure UDP/161 (SNMP queries) and UDP/162 (SNMP traps) are open.",
+            "🔹 **Device CPU Load Issues** - Too many SNMP requests can overload the CPU; monitor using `show cpu detailed`.",
+            "🔹 **SNMP Timers & Timeouts** - If polling delays occur, verify timeout settings on both the SNMP agent and manager.",
+            "🔹 **OID Compatibility Issues** - Some SNMP managers may require specific OIDs to be enabled for proper polling.",
+        ],
     }
 
     print("\n" + "=" * 80)
-    print("📘 SNMP Help: Understanding Command Relationships 📘".center(80))
+    print("📘 SNMP Help: Command Relationships, Troubleshooting, and Caveats 📘".center(80))
     print("=" * 80)
 
     for section, lines in help_sections.items():
@@ -49,5 +73,5 @@ def snmp_help():
             print(f"   {line}")
 
     print("\n" + "=" * 80)
-    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '3?' for SNMP Group).")
+    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '6?' for SNMP Troubleshooting Commands).")
     print("=" * 80)

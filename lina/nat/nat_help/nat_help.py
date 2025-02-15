@@ -1,5 +1,6 @@
 def nat_help():
-    """Displays how different NAT commands relate to each other with practical examples."""
+    """Displays how different NAT commands relate to each other with practical examples,
+       troubleshooting techniques, and common NAT caveats."""
 
     help_sections = {
         "1. Viewing NAT Configuration": [
@@ -28,10 +29,31 @@ def nat_help():
             "   1️⃣ Run: show nat proxy-arp (Check Proxy ARP behavior for NAT mappings)",
             "   2️⃣ If issues arise, verify NAT rule configurations and routing settings.",
         ],
+        "5. Common NAT Troubleshooting Commands": [
+            "🔹 `show conn` - Verify active connections and NAT translations.",
+            "🔹 `debug nat` - View real-time NAT debugging output.",
+            "🔹 `capture <name> interface <intf> match ip host <src> host <dst>` - Verify if traffic is hitting NAT rules.",
+            "🔹 `packet-tracer input <intf> <protocol> <src> <dst> <port>` - Simulate traffic through NAT to identify translation behavior.",
+            "🔹 `clear xlate` - Reset NAT translations (use with caution in production environments).",
+        ],
+        "6. NAT Troubleshooting Techniques": [
+            "🔹 **Confirm NAT Rule Order** - Use `show nat detail` to check if rules are in the correct sequence (Auto NAT before Manual NAT).",
+            "🔹 **Check if NAT is being applied** - Run `packet-tracer` and inspect NAT sections.",
+            "🔹 **Monitor Connection State** - Use `show conn` to ensure translations are properly maintained.",
+            "🔹 **Check Routing Issues** - Ensure correct next-hop routing for NAT-translated addresses.",
+            "🔹 **Use Debugging Carefully** - `debug nat` and `debug ip packet` can help but may be resource-intensive.",
+        ],
+        "7. Common NAT Caveats": [
+            "🔹 **Twice NAT vs Auto NAT** - Manual NAT (Twice NAT) takes precedence over Auto NAT.",
+            "🔹 **Overlapping NAT Rules** - Ensure specific NAT rules are above general ones to avoid incorrect translations.",
+            "🔹 **Proxy ARP Issues** - If Proxy ARP is disabled, static NAT mappings may not work unless proper routing is in place.",
+            "🔹 **NAT Exemption Conflicts** - Ensure traffic that shouldn't be NATed is explicitly exempted (`no nat-control`).",
+            "🔹 **Asymmetric NAT** - If return traffic isn't NATed properly, check for missing rules on inbound interfaces.",
+        ],
     }
 
     print("\n" + "=" * 80)
-    print("📘 NAT Help: Understanding Command Relationships 📘".center(80))
+    print("📘 NAT Help: Understanding Command Relationships, Troubleshooting, and Caveats 📘".center(80))
     print("=" * 80)
 
     for section, lines in help_sections.items():
@@ -40,5 +62,5 @@ def nat_help():
             print(f"   {line}")
 
     print("\n" + "=" * 80)
-    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '2?' for Show NAT Detail).")
+    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '5?' for Common NAT Troubleshooting Commands).")
     print("=" * 80)
