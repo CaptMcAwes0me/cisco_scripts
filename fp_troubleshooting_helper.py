@@ -10,7 +10,7 @@ def main_menu():
     menu_options = {
         "1": ("Troubleshooting Menu", troubleshoot_menu),
         "2": ("Show Tech - Menu", data_dump_menu),
-        "3": ("Main Menu Help", main_menu_help),
+        "3": ("FPTH Menu Help", main_menu_help),
         "0": ("Exit", None),
     }
 

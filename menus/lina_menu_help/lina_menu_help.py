@@ -1,29 +1,91 @@
 def lina_menu_help():
-    help_text = """
-    === Lina Troubleshooting Help ===
+    """Provides guidance on Lina system commands and their practical applications."""
 
-    The Lina Menu provides network and system troubleshooting tools for devices running the Lina process.
+    help_sections = {
+        "1. Verifying Lina System Information": [
+            "🔹 Use `show version` to display the software and hardware details of the system.",
+            "🔹 Use `show inventory` to list hardware components and serial numbers.",
+            "🔹 Example:",
+            "   1️⃣ Run: show version",
+            "      - Confirm the current software version and system uptime.",
+        ],
+        "2. Monitoring Network Address Translation (NAT)": [
+            "🔹 Use `show running-config nat` to display all configured NAT rules.",
+            "🔹 Use `show nat detail` to view active NAT translations with hit counts.",
+            "🔹 Use `show xlate` to inspect real-time NAT translation entries.",
+            "🔹 Example:",
+            "   1️⃣ Run: show nat detail",
+            "      - Identify which NAT rules are actively being used.",
+            "   2️⃣ Run: show xlate",
+            "      - Review dynamic and static NAT entries currently in use.",
+        ],
+        "3. Inspecting Routing Table and Protocols": [
+            "🔹 Use `show route` to display the current routing table.",
+            "🔹 Use `show ip route ospf` to view OSPF-learned routes.",
+            "🔹 Use `show bgp summary` to inspect BGP peer status and route counts.",
+            "🔹 Example:",
+            "   1️⃣ Run: show route",
+            "      - Confirm learned routes and their sources.",
+            "   2️⃣ Run: show ip route ospf",
+            "      - Check OSPF-advertised routes and network reachability.",
+        ],
+        "4. Monitoring VPN Tunnel Status": [
+            "🔹 Use `show vpn-sessiondb anyconnect` to view active AnyConnect sessions.",
+            "🔹 Use `show crypto ipsec sa` to examine active IPSec tunnels.",
+            "🔹 Use `show crypto isakmp sa` to check IKE Phase 1 negotiations.",
+            "🔹 Example:",
+            "   1️⃣ Run: show vpn-sessiondb anyconnect",
+            "      - Validate AnyConnect users and tunnel statistics.",
+            "   2️⃣ Run: show crypto ipsec sa",
+            "      - Review encryption and authentication details for IPSec tunnels.",
+        ],
+        "5. Checking High Availability (Failover) Status": [
+            "🔹 Use `show failover` to check failover role, state, and sync status.",
+            "🔹 Use `show failover history` to display failover event logs.",
+            "🔹 Example:",
+            "   1️⃣ Run: show failover",
+            "      - Verify if the device is in Active or Standby state.",
+            "   2️⃣ Run: show failover history",
+            "      - Review any failover events and their timestamps.",
+        ],
+        "6. Logging and Monitoring System Events": [
+            "🔹 Use `show logging` to display system logs.",
+            "🔹 Use `debug logging` to enable real-time debugging output.",
+            "🔹 Example:",
+            "   1️⃣ Run: show logging",
+            "      - Review system events, errors, and warnings.",
+            "   2️⃣ Run: debug logging",
+            "      - Enable detailed logging for troubleshooting.",
+        ],
+        "7. Inspecting Cluster Status and Performance": [
+            "🔹 Use `show cluster info` to review cluster membership and health status.",
+            "🔹 Use `show cluster resource usage` to analyze CPU, memory, and connection usage across the cluster.",
+            "🔹 Example:",
+            "   1️⃣ Run: show cluster info",
+            "      - Verify the number of active cluster members and their states.",
+            "   2️⃣ Run: show cluster resource usage",
+            "      - Monitor resource utilization across all cluster nodes.",
+        ],
+        "8. Diagnosing Block Memory Utilization": [
+            "🔹 Use `show blocks` to inspect memory block allocation.",
+            "🔹 Use `show blocks exhaustion history` to review memory exhaustion trends.",
+            "🔹 Example:",
+            "   1️⃣ Run: show blocks",
+            "      - Identify memory blocks in use and available.",
+            "   2️⃣ Run: show blocks exhaustion history",
+            "      - Check if memory shortages have impacted system performance.",
+        ],
+    }
 
-    **Menu Options:**
-    1) Device Information - Retrieve details about system software, hardware, and uptime.
-    2) NAT (Network Address Translation) - View and troubleshoot NAT policies and translations.
-    3) Connectivity and Traffic - Check ARP, active connections, and network traffic statistics.
-    4) Routing - Analyze routing configurations including OSPF, BGP, EIGRP, and VRFs.
-    5) VPN - Inspect VPN status, tunnels, and encryption parameters.
-    6) High Availability (HA) / Failover - Check failover state, redundancy, and synchronization settings.
-    7) Logging and Monitoring - View system logs and monitor security events.
-    8) Clustering - Diagnose cluster-related issues, including resource usage and configuration.
-    9) Blocks - Monitor and troubleshoot system memory block allocation and exhaustion.
-    0) Exit - Return to the previous menu.
+    print("\n" + "=" * 80)
+    print("📘 Lina System Help: Command Usage and Practical Examples 📘".center(80))
+    print("=" * 80)
 
-    **Troubleshooting Notes:**
-    - Use Device Information to get an overview before deeper troubleshooting.
-    - Connectivity and Traffic help diagnose network-level issues.
-    - Routing and VPN sections provide insight into configuration and operational issues.
-    - HA/Failover ensures high availability and redundancy functionality.
-    - Logging and Monitoring assist in security event tracking and system behavior analysis.
+    for section, lines in help_sections.items():
+        print(f"\n🟢 {section}")
+        for line in lines:
+            print(f"   {line}")
 
-    ============================================
-    """
-    print(help_text)
-
+    print("\n" + "=" * 80)
+    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '2?' for NAT troubleshooting).")
+    print("=" * 80)

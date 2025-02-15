@@ -1,29 +1,27 @@
 def main_menu_help():
-    help_text = """
-    === Main Menu Help ===
+    """Provides an overview of the FP Troubleshooting Helper (FPTH) main menu and its available options."""
 
-    This script provides troubleshooting, data retrieval, and general information for Firepower and Lina devices.
+    help_sections = {
+        "FPTH Menu Overview": [
+            "🔹 **Troubleshooting Menu** - Accesses tools for diagnosing issues on Firepower and Lina.",
+            "🔹 **Show Tech - Menu** - Gathers detailed system information and logs.",
+            "🔹 **FPTH Menu Help** - Provides an overview of FPTH functionality and available options.",
+            "🔹 Example:",
+            "   1️⃣ Select `Troubleshooting Menu` to analyze Firepower configurations, traffic flow, and errors.",
+            "   2️⃣ Choose `Show Tech - Menu` to generate system dumps for further diagnostics.",
+            "   3️⃣ Use `FPTH Menu Help` to understand each section’s role and troubleshooting capabilities.",
+        ],
+    }
 
-    **Menu Options:**
-    1) Troubleshooting Menu - Access troubleshooting tools for Firepower and Lina systems.
-    2) Lina Data Retrieval Menu - Retrieve system logs, configurations, and diagnostic data.
-    3) Help and About - View documentation and details about this script.
-    0) Exit - Close the script safely.
+    print("\n" + "=" * 80)
+    print("📘 FP Troubleshooting Helper (FPTH) Menu Help 📘".center(80))
+    print("=" * 80)
 
-    **How to Use the Menu:**
-    - Enter the number corresponding to the desired option and press Enter.
+    for section, lines in help_sections.items():
+        print(f"\n🟢 {section}")
+        for line in lines:
+            print(f"   {line}")
 
-    **Additional Notes:**
-    - The Troubleshooting Menu allows access to more detailed Firepower and Lina troubleshooting tools.
-    - The Data Retrieval Menu provides options to collect system-related data for further analysis.
-    - Use the Help and About section for additional guidance.
-
-    **Reporting Issues:**
-    If you encounter an issue with the script:
-    - Copy the exception error message displayed on the screen.
-    - Email the error details to gmccollu@cisco.com with a brief description of what you were doing when the error occurred.
-    - This will help in identifying and resolving any script-related issues efficiently.
-
-    ============================================
-    """
-    print(help_text)
+    print("\n" + "=" * 80)
+    print("🔍 Tip: Use 'X?' to see help for a specific option (e.g., '1?' for Troubleshooting Menu).")
+    print("=" * 80)
