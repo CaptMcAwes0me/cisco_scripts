@@ -14,6 +14,10 @@ from lina.cluster.cluster_help.cluster_help import cluster_help
 
 
 def cluster_menu():
+    """Displays a menu for cluster-related tasks.
+       Supports 'X?' functionality to display help for each menu option.
+    """
+
     menu_options = {
         "1": ("Cluster Running Configuration", cluster_running_config),
         "2": ("Cluster Member Limit", cluster_member_limit),
@@ -29,21 +33,41 @@ def cluster_menu():
     }
 
     while True:
-        # Prepare the menu options for display
+        # Prepare menu display
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu("Cluster Menu", options_display)
 
-        choice = input("Select an option (0-10): ").strip()
+        choice = input("Select an option (0-10) or enter '?' for help (e.g., '3?'): ").strip()
 
-        if choice in menu_options:
+        # Handle 'X?' help functionality
+        if choice.endswith("?"):
+            base_choice = choice[:-1]  # Remove "?" from input
+            if base_choice in menu_options:
+                description, function = menu_options[base_choice]
+
+                # Special case: `cluster_help` runs directly
+                if function == cluster_help:
+                    function()
+                elif function:
+                    print("\n" + "=" * 80)
+                    print(f"📖 Help for: {description}".center(80))
+                    print("=" * 80)
+                    function(help_requested=True)  # Call function in help mode
+                else:
+                    print("\n[!] Help not available for this option.")
+            else:
+                print("\n[!] Invalid choice. Please enter a valid number followed by '?' (e.g., '2?').")
+
+        elif choice in menu_options:
             description, function = menu_options[choice]
-            if function:  # If a function is assigned
+            if function:
                 print("\n" + "-" * 80)
                 print(f"Accessing {description}...".center(80))
                 print("-" * 80)
-                function()
-            else:  # Exit condition
+                function()  # Normal function execution
+            else:
                 print("\nExiting to previous menu...")
                 break
+
         else:
             print("\n[!] Invalid choice. Please enter a number between 0 and 10.")
