@@ -4,6 +4,7 @@ from core.utils import display_formatted_menu
 from lina.cluster.cluster_running_config.cluster_running_config import cluster_running_config
 from lina.cluster.cluster_member_limit.cluster_member_limit import cluster_member_limit
 from lina.cluster.cluster_nat_pool.cluster_nat_pool import cluster_nat_pool
+from lina.cluster.cluster_nat_pool.cluster_exec_nat_pool_detail import cluster_exec_nat_pool_detail
 from lina.cluster.cluster_resource_usage.cluster_resource_usage import cluster_resource_usage
 from lina.cluster.cluster_mtu.cluster_mtu import cluster_mtu
 from lina.cluster.cluster_conn_count.cluster_conn_count import cluster_conn_count
@@ -22,13 +23,14 @@ def cluster_menu():
         "1": ("Cluster Running Configuration", cluster_running_config),
         "2": ("Cluster Member Limit", cluster_member_limit),
         "3": ("Cluster NAT Pool", cluster_nat_pool),
-        "4": ("Cluster Resource Usage", cluster_resource_usage),
-        "5": ("Cluster MTU", cluster_mtu),
-        "6": ("Cluster Conn Count", cluster_conn_count),
-        "7": ("Cluster Xlate Count", cluster_xlate_count),
-        "8": ("Cluster Traffic", cluster_traffic),
-        "9": ("Cluster CPU", cluster_cpu),
-        "10": ("Cluster Help", cluster_help),
+        "4": ("Cluster NAT Pool (Cluster Exec)", cluster_exec_nat_pool_detail),
+        "5": ("Cluster Resource Usage", cluster_resource_usage),
+        "6": ("Cluster MTU", cluster_mtu),
+        "7": ("Cluster Conn Count", cluster_conn_count),
+        "8": ("Cluster Xlate Count", cluster_xlate_count),
+        "9": ("Cluster Traffic", cluster_traffic),
+        "10": ("Cluster CPU", cluster_cpu),
+        "11": ("Cluster Help", cluster_help),
         "0": ("Exit", None),
     }
 
@@ -37,7 +39,7 @@ def cluster_menu():
         options_display = {key: description for key, (description, _) in menu_options.items()}
         display_formatted_menu("Cluster Menu", options_display)
 
-        choice = input("Select an option (0-10) or enter '?' for help (e.g., '3?'): ").strip()
+        choice = input("Select an option (0-11) or enter '?' for help (e.g., '3?'): ").strip()
 
         # Handle 'X?' help functionality
         if choice.endswith("?"):
@@ -70,4 +72,4 @@ def cluster_menu():
                 break
 
         else:
-            print("\n[!] Invalid choice. Please enter a number between 0 and 10.")
+            print("\n[!] Invalid choice. Please enter a number between 0 and 11.")
