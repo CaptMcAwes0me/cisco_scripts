@@ -42,7 +42,7 @@ IKEv1 in-negotiation 0      N/A   unlimited   0        System
     # If help is requested, print help content and exit the function
     if help_requested:
         print("\n" + "=" * 80)
-        print(f"📖 Help for: {cluster_resource_usage_help['command']}".center(80))
+        print(f"Help for: {cluster_resource_usage_help['command']}".center(80))
         print("=" * 80)
         print(f"\n{cluster_resource_usage_help['description']}\n")
         print("Example Output:")

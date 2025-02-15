@@ -28,7 +28,7 @@ Total connections: 625
     # If help is requested, print help content and exit the function
     if help_requested:
         print("\n" + "=" * 80)
-        print(f"📖 Help for: {', '.join(cluster_conn_count_help['commands'])}".center(80))
+        print(f"Help for: {', '.join(cluster_conn_count_help['commands'])}".center(80))
         print("=" * 80)
         print(f"\n{cluster_conn_count_help['description']}\n")
         print("Example Output:")

@@ -19,7 +19,7 @@ def cluster_traffic(suppress_output=False, help_requested=False):
     # If help is requested, print help content and exit the function
     if help_requested:
         print("\n" + "=" * 80)
-        print(f"📖 Help for: {cluster_traffic_help['command']}".center(80))
+        print(f"Help for: {cluster_traffic_help['command']}".center(80))
         print("=" * 80)
         print(f"\n{cluster_traffic_help['description']}\n")
         return None  # No actual command execution
@@ -29,7 +29,7 @@ def cluster_traffic(suppress_output=False, help_requested=False):
         output = get_and_parse_cli_output("show cluster traffic")
 
         if not suppress_output:
-            print("\n📊 Cluster Traffic Statistics:")
+            print("\nCluster Traffic Statistics:")
             print("=" * 80)
             print(output)
             print("=" * 80)

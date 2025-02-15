@@ -19,7 +19,7 @@ def cluster_xlate_count(suppress_output=False, help_requested=False):
     # If help is requested, print help content and exit the function
     if help_requested:
         print("\n" + "=" * 80)
-        print(f"📖 Help for: {cluster_xlate_count_help['command']}".center(80))
+        print(f"Help for: {cluster_xlate_count_help['command']}".center(80))
         print("=" * 80)
         print(f"\n{cluster_xlate_count_help['description']}\n")
         return None  # No actual command execution

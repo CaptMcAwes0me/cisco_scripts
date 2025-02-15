@@ -32,7 +32,7 @@ Cluster asa_cluster1: On
     # If help is requested, print help content and exit the function
     if help_requested:
         print("\n" + "=" * 80)
-        print(f"📖 Help for: {cluster_member_limit_help['command']}".center(80))
+        print(f"Help for: {cluster_member_limit_help['command']}".center(80))
         print("=" * 80)
         print(f"\n{cluster_member_limit_help['description']}\n")
         print("Example Output:")

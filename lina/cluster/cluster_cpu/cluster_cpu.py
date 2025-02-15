@@ -31,7 +31,7 @@ CPU Utilization for 5 seconds = 99%; 1 minute: 83% 5 minutes: 31%
     # If help is requested, print help content and exit the function
     if help_requested:
         print("\n" + "=" * 80)
-        print(f"📖 Help for: {cluster_cpu_help['command']}".center(80))
+        print(f"Help for: {cluster_cpu_help['command']}".center(80))
         print("=" * 80)
         print(f"\n{cluster_cpu_help['description']}\n")
         print("Example Output:")
@@ -43,7 +43,7 @@ CPU Utilization for 5 seconds = 99%; 1 minute: 83% 5 minutes: 31%
         output = get_and_parse_cli_output("show cluster cpu")
 
         if not suppress_output:
-            print("\n🖥️ Cluster CPU Utilization:")
+            print("\nCluster CPU Utilization:")
             print("=" * 80)
             print(output)
             print("=" * 80)
