@@ -59,5 +59,3 @@ def connectivity_and_traffic_help():
     print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '4?' for Analyzing Firewall Traffic).")
     print("=" * 80)
 
-# Call the function to display the help information
-connectivity_and_traffic_help()
