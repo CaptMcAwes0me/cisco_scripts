@@ -26,6 +26,7 @@ def traffic_calc(output):
     lines = output.splitlines()
     interface = None
     stop_processing = False
+    loop_warnings = []  # Store loop detection warnings to print them last
 
     for line in lines:
         line = line.strip()
@@ -62,20 +63,16 @@ def traffic_calc(output):
             if values:
                 output_rates_5m[interface] = [int(values[0][1]), int(values[0][0])]  # [bps, pps]
 
-    # Detect possible traffic loops
-    detect_traffic_loop(input_rates_1m, "input")
-    detect_traffic_loop(output_rates_1m, "output")
+    # Detect possible traffic loops (store warnings for later)
+    loop_warnings += detect_traffic_loop(input_rates_1m, "input")
+    loop_warnings += detect_traffic_loop(output_rates_1m, "output")
 
     # Calculate total traffic
-    total_input_1m = sum(v[0] for v in input_rates_1m.values())
-    total_input_5m = sum(v[0] for v in input_rates_5m.values())
-    total_output_1m = sum(v[0] for v in output_rates_1m.values())
-    total_output_5m = sum(v[0] for v in output_rates_5m.values())
+    total_input_1m, total_input_5m = sum(v[0] for v in input_rates_1m.values()), sum(v[0] for v in input_rates_5m.values())
+    total_output_1m, total_output_5m = sum(v[0] for v in output_rates_1m.values()), sum(v[0] for v in output_rates_5m.values())
 
-    total_input_pps_1m = sum(v[1] for v in input_rates_1m.values())
-    total_input_pps_5m = sum(v[1] for v in input_rates_5m.values())
-    total_output_pps_1m = sum(v[1] for v in output_rates_1m.values())
-    total_output_pps_5m = sum(v[1] for v in output_rates_5m.values())
+    total_input_pps_1m, total_input_pps_5m = sum(v[1] for v in input_rates_1m.values()), sum(v[1] for v in input_rates_5m.values())
+    total_output_pps_1m, total_output_pps_5m = sum(v[1] for v in output_rates_1m.values()), sum(v[1] for v in output_rates_5m.values())
 
     # Print tables
     print("\nINPUT TRAFFIC RATES:")
@@ -111,18 +108,27 @@ def traffic_calc(output):
                    ["Output", total_output_1m // total_output_pps_1m if total_output_pps_1m else 0,
                              total_output_5m // total_output_pps_5m if total_output_pps_5m else 0]])
 
+    print("\n**Packet Size Calculation**:")
+    print("  - Formula: (Total Bytes) / (Total Packets)")
+    print(f"  - Example: ( {total_input_1m} / {total_input_pps_1m} ) = {total_input_1m // total_input_pps_1m if total_input_pps_1m else 0} bytes")
+
+    # Print Loop Detection Warnings (LAST)
+    if loop_warnings:
+        print("\nTRAFFIC LOOP DETECTION WARNINGS:")
+        for warning in loop_warnings:
+            print(warning)
+
 
 def detect_traffic_loop(rates, direction):
     """Detects possible traffic loops if an interface has 2x the traffic of all others combined."""
+    warnings = []
     total_traffic = sum(v[0] for v in rates.values())
 
     for interface, (traffic, _) in rates.items():
         other_traffic = total_traffic - traffic
         if other_traffic > 0 and traffic >= 2 * other_traffic:
-            print(f"\n[⚠️ WARNING] Possible traffic loop detected on **{interface}** ({direction} traffic).")
-            print(f"  - {interface} is handling {traffic} Bps, which is ≥ 2x the traffic of all other interfaces ({other_traffic} Bps).")
-            print("-" * 80)
+            warnings.append(f"[⚠️ WARNING] Possible traffic loop detected on **{interface}** ({direction} traffic).")
+            warnings.append(f"  - {interface} is handling {traffic} Bps, which is ≥ 2x the traffic of all other interfaces ({other_traffic} Bps).")
+            warnings.append("-" * 80)
 
-# Run the script when called
-if __name__ == "__main__":
-    traffic()
+    return warnings  # Return warnings to be printed later
