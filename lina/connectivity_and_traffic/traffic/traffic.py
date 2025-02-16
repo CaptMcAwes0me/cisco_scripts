@@ -1,5 +1,5 @@
 import re
-from core.utils import get_and_parse_cli_output
+from core.utils import get_and_parse_cli_output, traffic_table, convert_bps_to_readable
 
 
 def traffic():
@@ -18,6 +18,7 @@ def traffic():
 def traffic_calc(output):
     """
     Parses the traffic output and calculates 1-minute and 5-minute input/output rates.
+    Detects possible traffic loops if any interface has 2x the traffic of all others combined.
     """
     input_rates_1m = {}
     input_rates_5m = {}
@@ -46,60 +47,37 @@ def traffic_calc(output):
         elif "1 minute input rate" in line and interface:
             values = re.findall(r'(\d+) pkts/sec, *(\d+) bytes/sec', line)
             if values:
-                input_rates_1m[interface] = (int(values[0][1]), int(values[0][0]))  # (bps, pps)
+                input_rates_1m[interface] = int(values[0][1])  # Bytes per second
 
         elif "1 minute output rate" in line and interface:
             values = re.findall(r'(\d+) pkts/sec, *(\d+) bytes/sec', line)
             if values:
-                output_rates_1m[interface] = (int(values[0][1]), int(values[0][0]))  # (bps, pps)
+                output_rates_1m[interface] = int(values[0][1])  # Bytes per second
 
         elif "5 minute input rate" in line and interface:
             values = re.findall(r'(\d+) pkts/sec, *(\d+) bytes/sec', line)
             if values:
-                input_rates_5m[interface] = (int(values[0][1]), int(values[0][0]))  # (bps, pps)
+                input_rates_5m[interface] = int(values[0][1])  # Bytes per second
 
         elif "5 minute output rate" in line and interface:
             values = re.findall(r'(\d+) pkts/sec, *(\d+) bytes/sec', line)
             if values:
-                output_rates_5m[interface] = (int(values[0][1]), int(values[0][0]))  # (bps, pps)
+                output_rates_5m[interface] = int(values[0][1])  # Bytes per second
 
-    # Accumulate totals
-    total_input_1m, total_input_5m, total_input_pps_1m, total_input_pps_5m = 0, 0, 0, 0
-    total_output_1m, total_output_5m, total_output_pps_1m, total_output_pps_5m = 0, 0, 0, 0
+    # Check for possible traffic loops
+    detect_traffic_loop(input_rates_1m, "input")
+    detect_traffic_loop(output_rates_1m, "output")
 
-    input_table_data = []
-    output_table_data = []
-
-    for interface in sorted(input_rates_1m.keys() | output_rates_1m.keys()):
-        in_1m_bps, in_1m_pps = input_rates_1m.get(interface, (0, 0))
-        in_5m_bps, in_5m_pps = input_rates_5m.get(interface, (0, 0))
-        out_1m_bps, out_1m_pps = output_rates_1m.get(interface, (0, 0))
-        out_5m_bps, out_5m_pps = output_rates_5m.get(interface, (0, 0))
-
-        total_input_1m += in_1m_bps
-        total_input_pps_1m += in_1m_pps
-        total_input_5m += in_5m_bps
-        total_input_pps_5m += in_5m_pps
-
-        total_output_1m += out_1m_bps
-        total_output_pps_1m += out_1m_pps
-        total_output_5m += out_5m_bps
-        total_output_pps_5m += out_5m_pps
-
-        input_table_data.append([interface, in_1m_bps, in_1m_pps, in_5m_bps, in_5m_pps])
-        output_table_data.append([interface, out_1m_bps, out_1m_pps, out_5m_bps, out_5m_pps])
-
-    # Print per-interface tables
-    print("\nINPUT TRAFFIC RATES:")
-    traffic_table(["Interface", "1-Min Input (Bps)", "1-Min Input (pps)", "5-Min Input (Bps)", "5-Min Input (pps)"], input_table_data)
-
-    print("\nOUTPUT TRAFFIC RATES:")
-    traffic_table(["Interface", "1-Min Output (Bps)", "1-Min Output (pps)", "5-Min Output (Bps)", "5-Min Output (pps)"], output_table_data)
+    # Calculate total traffic for all interfaces
+    total_input_1m = sum(input_rates_1m.values())
+    total_input_5m = sum(input_rates_5m.values())
+    total_output_1m = sum(output_rates_1m.values())
+    total_output_5m = sum(output_rates_5m.values())
 
     # Print Total Row Separately
     print("\nTOTAL TRAFFIC SUMMARY:")
-    traffic_table(["Traffic Type", "1-Min Total (Bps)", "1-Min Total (pps)", "5-Min Total (Bps)", "5-Min Total (pps)"], [
-        ["Total", total_input_1m, total_input_pps_1m, total_input_5m, total_input_pps_5m]
+    traffic_table(["Traffic Type", "1-Min Total (Bps)", "5-Min Total (Bps)"], [
+        ["Total", total_input_1m, total_input_5m]
     ])
 
     # Total bandwidth usage table
@@ -111,47 +89,37 @@ def traffic_calc(output):
 
     print("\n**Bandwidth Usage Calculation**:")
     print("  - Formula: (Total Bytes * 8) / 1024")
-    print("  - Example: (", total_input_1m, "* 8) / 1024 = ", convert_bps_to_readable(total_input_1m))
+    print(f"  - 1-Min Input: ({total_input_1m} * 8) / 1024 = {convert_bps_to_readable(total_input_1m)}")
+    print(f"  - 5-Min Input: ({total_input_5m} * 8) / 1024 = {convert_bps_to_readable(total_input_5m)}")
+    print(f"  - 1-Min Output: ({total_output_1m} * 8) / 1024 = {convert_bps_to_readable(total_output_1m)}")
+    print(f"  - 5-Min Output: ({total_output_5m} * 8) / 1024 = {convert_bps_to_readable(total_output_5m)}")
 
     # Print Average Packet Size Table
     print("\nAVERAGE PACKET SIZE:")
     traffic_table(["Traffic Type", "1-Min Avg Packet (bytes)", "5-Min Avg Packet (bytes)"], [
-        ["Input", total_input_1m // total_input_pps_1m if total_input_pps_1m else 0,
-                  total_input_5m // total_input_pps_5m if total_input_pps_5m else 0],
-        ["Output", total_output_1m // total_output_pps_1m if total_output_pps_1m else 0,
-                   total_output_5m // total_output_pps_5m if total_output_pps_5m else 0]
+        ["Input", total_input_1m // sum(input_rates_1m.values()) if sum(input_rates_1m.values()) else 0,
+                  total_input_5m // sum(input_rates_5m.values()) if sum(input_rates_5m.values()) else 0],
+        ["Output", total_output_1m // sum(output_rates_1m.values()) if sum(output_rates_1m.values()) else 0,
+                   total_output_5m // sum(output_rates_5m.values()) if sum(output_rates_5m.values()) else 0]
     ])
 
     print("\n**Packet Size Calculation**:")
     print("  - Formula: (Total Bytes) / (Total Packets)")
-    print("  - Example: (", total_input_1m, " / ", total_input_pps_1m, ") = ",
-          total_input_1m // total_input_pps_1m if total_input_pps_1m else 0, "bytes")
+    print(f"  - 1-Min Input: ({total_input_1m} / {sum(input_rates_1m.values())}) = {total_input_1m // sum(input_rates_1m.values()) if sum(input_rates_1m.values()) else 0} bytes")
+    print(f"  - 1-Min Output: ({total_output_1m} / {sum(output_rates_1m.values())}) = {total_output_1m // sum(output_rates_1m.values()) if sum(output_rates_1m.values()) else 0} bytes")
 
 
-def convert_bps_to_readable(bps):
-    """ Converts bytes per second (Bps) into human-readable format (KBps, MBps, GBps). """
-    units = ["Bps", "KBps", "MBps", "GBps"]
-    index = 0
-    while bps >= 1024 and index < len(units) - 1:
-        bps /= 1024
-        index += 1
-    return f"{bps:.2f} {units[index]}"
+def detect_traffic_loop(rates, direction):
+    """
+    Detects possible traffic loops in the given input/output rate dictionary.
+    If any interface has 2x the cumulative traffic of all others combined, issue a warning.
+    """
+    total_traffic = sum(rates.values())
 
-
-def traffic_table(headers, data):
-    """ Prints a well-formatted CLI table with consistent spacing. """
-    col_widths = [max(len(str(item)) for item in col) for col in zip(headers, *data)]
-    format_str = " | ".join(f"{{:<{w}}}" for w in col_widths)
-    border = "-+-".join("-" * w for w in col_widths)
-
-    print(border)
-    print(format_str.format(*headers))
-    print(border)
-    for row in data:
-        print(format_str.format(*row))
-    print(border)
-
-
-# Run the script when called
-if __name__ == "__main__":
-    traffic()
+    for interface, traffic in rates.items():
+        other_traffic = total_traffic - traffic  # Traffic of all other interfaces
+        if other_traffic > 0 and traffic >= 2 * other_traffic:
+            print(f"\n[⚠️ WARNING] Possible traffic loop detected on **{interface}** ({direction} traffic).")
+            print(f"  - {interface} is handling {traffic} Bps, which is ≥ 2x the traffic of all other interfaces ({other_traffic} Bps).")
+            print("  - Check for network loops, spanning-tree issues, or incorrect configurations.")
+            print("-" * 80)

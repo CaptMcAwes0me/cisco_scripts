@@ -161,5 +161,30 @@ def print_section(title, content):
     print(content)
     print(separator + "\n")
 
+
 def ip_sort_key(ip):
     return tuple(map(int, ip.split('.')))
+
+
+def convert_bps_to_readable(bps):
+    """ Converts bytes per second (Bps) into human-readable format (KBps, MBps, GBps). """
+    units = ["Bps", "KBps", "MBps", "GBps"]
+    index = 0
+    while bps >= 1024 and index < len(units) - 1:
+        bps /= 1024
+        index += 1
+    return f"{bps:.2f} {units[index]}"
+
+
+def traffic_table(headers, data):
+    """ Prints a well-formatted CLI table with consistent spacing. """
+    col_widths = [max(len(str(item)) for item in col) for col in zip(headers, *data)]
+    format_str = " | ".join(f"{{:<{w}}}" for w in col_widths)
+    border = "-+-".join("-" * w for w in col_widths)
+
+    print(border)
+    print(format_str.format(*headers))
+    print(border)
+    for row in data:
+        print(format_str.format(*row))
+    print(border)
