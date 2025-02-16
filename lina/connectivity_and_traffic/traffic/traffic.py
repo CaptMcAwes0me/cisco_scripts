@@ -26,9 +26,18 @@ def traffic_calc(output):
 
     lines = output.splitlines()
     interface = None
+    stop_processing = False
 
     for line in lines:
         line = line.strip()
+
+        # Stop processing when "Physical Interface" appears
+        if "Physical Interface" in line:
+            stop_processing = True
+            continue
+
+        if stop_processing:
+            continue  # Ignore everything after "Physical Interface"
 
         # Detect interface names
         if re.match(r'^\S+:$', line):  # Matches 'outside:', 'inside:', etc.
@@ -115,17 +124,9 @@ def traffic_calc(output):
                    total_output_5m // total_output_pps_5m if total_output_pps_5m else 0]
     ])
 
-    print("\n**Packet Size Calculation**:")
-    print("  - Formula: (Total Bytes) / (Total Packets)")
-    print(f"  - 1-Min Input: {total_input_1m} / {total_input_pps_1m} = {total_input_1m // total_input_pps_1m if total_input_pps_1m else 0} bytes")
-    print(f"  - 1-Min Output: {total_output_1m} / {total_output_pps_1m} = {total_output_1m // total_output_pps_1m if total_output_pps_1m else 0} bytes")
-
-    print("\n**Note**: The above calculations are based on the collected data and may not be accurate due to sampling intervals and packet drops.\n")
 
 def convert_bps_to_readable(bps):
-    """
-    Converts bytes per second (Bps) into human-readable format (KBps, MBps, GBps).
-    """
+    """ Converts bytes per second (Bps) into human-readable format (KBps, MBps, GBps). """
     units = ["Bps", "KBps", "MBps", "GBps"]
     index = 0
     while bps >= 1024 and index < len(units) - 1:
@@ -135,9 +136,7 @@ def convert_bps_to_readable(bps):
 
 
 def traffic_table(headers, data):
-    """
-    Prints a well-formatted CLI table with consistent spacing.
-    """
+    """ Prints a well-formatted CLI table with consistent spacing. """
     col_widths = [max(len(str(item)) for item in col) for col in zip(headers, *data)]
     format_str = " | ".join(f"{{:<{w}}}" for w in col_widths)
     border = "-+-".join("-" * w for w in col_widths)
