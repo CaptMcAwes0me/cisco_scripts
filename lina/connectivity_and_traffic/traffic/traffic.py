@@ -1,6 +1,7 @@
 import re
 from core.utils import get_and_parse_cli_output
 
+
 def traffic():
     """
     Retrieves 'show traffic' output and passes it to traffic_calc for processing.
@@ -55,10 +56,11 @@ def traffic_calc(output):
                 output_rates_5m[interface] = (int(values[0][1]), int(values[0][0]))  # (bps, pps)
 
     # Convert dictionaries to list format for table function
-    input_table_data = []
-    output_table_data = []
     total_input_1m, total_input_5m, total_input_pps_1m, total_input_pps_5m = 0, 0, 0, 0
     total_output_1m, total_output_5m, total_output_pps_1m, total_output_pps_5m = 0, 0, 0, 0
+
+    input_table_data = []
+    output_table_data = []
 
     for interface in sorted(input_rates_1m.keys() | output_rates_1m.keys()):  # Include all interfaces
         in_1m_bps, in_1m_pps = input_rates_1m.get(interface, (0, 0))
@@ -80,27 +82,49 @@ def traffic_calc(output):
         input_table_data.append([interface, in_1m_bps, in_1m_pps, in_5m_bps, in_5m_pps])
         output_table_data.append([interface, out_1m_bps, out_1m_pps, out_5m_bps, out_5m_pps])
 
-    # Add total row
-    input_table_data.append(["**Total**", total_input_1m, total_input_pps_1m, total_input_5m, total_input_pps_5m])
-    output_table_data.append(["**Total**", total_output_1m, total_output_pps_1m, total_output_5m, total_output_pps_5m])
+    # Convert Bps to human-readable format
+    total_bandwidth_data = [
+        ["Input", convert_bps_to_readable(total_input_1m), convert_bps_to_readable(total_input_5m)],
+        ["Output", convert_bps_to_readable(total_output_1m), convert_bps_to_readable(total_output_5m)],
+    ]
+
+    # Calculate average packet size
+    total_avg_packet_data = [
+        ["Input", total_input_1m // total_input_pps_1m if total_input_pps_1m > 0 else 0,
+                  total_input_5m // total_input_pps_5m if total_input_pps_5m > 0 else 0],
+        ["Output", total_output_1m // total_output_pps_1m if total_output_pps_1m > 0 else 0,
+                   total_output_5m // total_output_pps_5m if total_output_pps_5m > 0 else 0],
+    ]
 
     # Define headers
-    input_headers = ["Interface", "1-Min Input (bps)", "1-Min Input (pps)", "5-Min Input (bps)", "5-Min Input (pps)"]
-    output_headers = ["Interface", "1-Min Output (bps)", "1-Min Output (pps)", "5-Min Output (bps)", "5-Min Output (pps)"]
+    total_bandwidth_headers = ["Traffic Type", "1-Min Bandwidth (Bps)", "5-Min Bandwidth (Bps)"]
+    total_avg_packet_headers = ["Traffic Type", "1-Min Avg Packet (bytes)", "5-Min Avg Packet (bytes)"]
 
     # Print tables
-    print("\nINPUT TRAFFIC RATES:")
-    traffic_table(input_headers, input_table_data)
-    print("\nOUTPUT TRAFFIC RATES:")
-    traffic_table(output_headers, output_table_data)
+    print("\nTOTAL BANDWIDTH USAGE:")
+    traffic_table(total_bandwidth_headers, total_bandwidth_data)
+
+    print("\nAVERAGE PACKET SIZE:")
+    traffic_table(total_avg_packet_headers, total_avg_packet_data)
+
+
+def convert_bps_to_readable(bps):
+    """
+    Converts bytes per second (Bps) into human-readable format (KBps, MBps, GBps).
+    """
+    units = ["Bps", "KBps", "MBps", "GBps"]
+    index = 0
+    while bps >= 1024 and index < len(units) - 1:
+        bps /= 1024
+        index += 1
+    return f"{bps:.2f} {units[index]}"
 
 
 def traffic_table(headers, data):
     """
-    Prints a well-formatted CLI table using only native Python libraries.
+    Prints a well-formatted CLI table with consistent spacing.
     """
     col_widths = [max(len(str(item)) for item in col) for col in zip(headers, *data)]
-
     format_str = " | ".join(f"{{:<{w}}}" for w in col_widths)
     border = "-+-".join("-" * w for w in col_widths)
 
