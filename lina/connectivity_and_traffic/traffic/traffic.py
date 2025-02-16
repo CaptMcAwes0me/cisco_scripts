@@ -127,7 +127,7 @@ def detect_traffic_loop(rates, direction):
     for interface, (traffic, _) in rates.items():
         other_traffic = total_traffic - traffic
         if other_traffic > 0 and traffic >= 2 * other_traffic:
-            warnings.append(f"⚠️ WARNING - Possible traffic loop detected on **{interface}** ({direction} traffic) - WARNING ⚠️.")
+            warnings.append(f"⚠️ WARNING - Possible traffic loop detected on **{interface}** ({direction} traffic) - WARNING ⚠️")
             warnings.append(f"  - {interface} is handling {traffic} Bps, which is ≥ 2x the traffic of all other interfaces ({other_traffic} Bps).")
             warnings.append("-" * 80)
 
