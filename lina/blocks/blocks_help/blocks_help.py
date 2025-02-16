@@ -1,40 +1,50 @@
 def blocks_help():
-    """Displays help information for Blocks-related commands and their troubleshooting applications."""
+    """Displays help information for Blocks-related commands, troubleshooting techniques, and memory caveats."""
 
     blocks_help_info = {
         'command': 'Blocks Menu',
         'description': (
             "The Blocks Menu provides commands for monitoring memory block allocation and usage. "
-            "These commands are useful for diagnosing memory fragmentation, block exhaustion, "
-            "queue history, and debugging memory-related performance issues in the system."
+            "These commands help diagnose memory fragmentation, block exhaustion, "
+            "queue history, and performance-related issues affecting system stability."
         ),
         'help_sections': {
-            "1. Monitoring Block Usage": [
-                "🔹 Use `show blocks` to display current memory block allocation across different sizes.",
-                "🔹 If block exhaustion is suspected, check `show blocks exhaustion history` for past exhaustion events.",
+            "1. Understanding Memory Block Allocation": [
+                "🔹 The `show blocks` command provides insights into block sizes, maximum allocations, "
+                "minimum available counts, and current free blocks.",
+                "🔹 Output includes SIZE (block size in bytes), MAX (max allocated), LOW (lowest free count), "
+                "and CNT (current free blocks).",
                 "🔹 Example:",
                 "   1️⃣ Run: show blocks (Check current memory block allocation)",
-                "   2️⃣ Run: show blocks exhaustion history (Review past block exhaustion trends)"
+                "   2️⃣ Analyze the LOW and CNT columns for potential memory exhaustion risks.",
             ],
-            "2. Investigating Block Exhaustion": [
-                "🔹 Use `show blocks exhaustion snapshot` to capture a real-time view of block allocation states.",
+            "2. Monitoring Block Usage and Trends": [
+                "🔹 Use `show blocks exhaustion history` to review past block exhaustion events.",
+                "🔹 If LOW values consistently reach zero, the system may be experiencing memory exhaustion.",
                 "🔹 Example:",
-                "   1️⃣ Run: show blocks exhaustion snapshot (Get a snapshot of block allocation at the moment of execution)"
+                "   1️⃣ Run: show blocks exhaustion history (Review historical block depletion patterns)",
+                "   2️⃣ Compare trends over time to identify recurring memory shortages.",
             ],
-            "3. Analyzing Queue History": [
-                "🔹 Use `show blocks history core-local` to review memory usage within the core processor.",
-                "🔹 Use `show blocks queue history detail` to track detailed queue-level allocation statistics.",
+            "3. Investigating Block Exhaustion in Real-Time": [
+                "🔹 Use `show blocks exhaustion snapshot` to capture the current state of block allocations.",
+                "🔹 This helps detect sudden memory depletion issues affecting performance.",
                 "🔹 Example:",
-                "   1️⃣ Run: show blocks history core-local (Analyze block allocation in the core)",
-                "   2️⃣ Run: show blocks queue history detail (Check memory usage trends over time)"
+                "   1️⃣ Run: show blocks exhaustion snapshot (Get an immediate view of block allocation)",
             ],
-            "4. Debugging Old Block Allocations": [
-                "🔹 Use `show blocks old` to display the list of old memory blocks still in use.",
-                "🔹 Use `show blocks old dump` to view detailed hex dumps of memory blocks for debugging.",
+            "4. Debugging Old Memory Blocks": [
+                "🔹 Use `show blocks old` to view memory blocks that were assigned > 1 minute ago.",
+                "🔹 If a process is holding blocks indefinitely, use `show blocks old dump` to inspect block contents.",
                 "🔹 Example:",
-                "   1️⃣ Run: show blocks old (Check for long-lived blocks that may indicate memory retention issues)",
-                "   2️⃣ Run: show blocks old dump (Analyze memory contents of retained blocks)"
-            ]
+                "   1️⃣ Run: show blocks old (Check retained blocks affecting memory usage)",
+                "   2️⃣ Run: show blocks old dump (Examine block data for debugging purposes)",
+            ],
+            "5. Common Block Troubleshooting Commands": [
+                "🔹 `show blocks` - Displays current memory block allocations.",
+                "🔹 `show blocks old` - View memory blocks that were assigned > 1 minute ago.",
+                "🔹 `show blocks exhaustion history` - Review past block exhaustion events.",
+                "🔹 `show blocks exhaustion snapshot` - Capture the current state of block allocations.",
+                "🔹 `show blocks old dump` - Examine block data for debugging purposes.",
+            ],
         }
     }
 
@@ -49,5 +59,5 @@ def blocks_help():
             print(f"   {step}")
 
     print("\n" + "=" * 80)
-    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '3?' for Blocks Exhaustion Snapshot).")
+    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '6?' for Block Troubleshooting Commands).")
     print("=" * 80)

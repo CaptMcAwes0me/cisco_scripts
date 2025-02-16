@@ -1,46 +1,48 @@
-# Description: This script provides help documentation for Connectivity and Traffic commands.
-
 def connectivity_and_traffic_help():
-    """Displays how different Connectivity and Traffic commands relate to each other with practical examples."""
+    """Displays how different Connectivity and Traffic commands relate to each other with practical examples, troubleshooting techniques, and common caveats."""
 
     help_sections = {
         "1. Viewing ARP Table Entries": [
-            "🔹 Use `show arp` to display the ARP table, including resolved IP-to-MAC mappings.",
-            "🔹 Use `show arp | include <IP>` to filter by a specific IP address.",
-            "🔹 Example:",
-            "   1️⃣ Run: show arp (View all ARP table entries)",
-            "   2️⃣ Run: show arp | include 192.168.1.1 (Check for a specific IP entry)",
+            "🔹 **Command:** `show arp`",
+            "   - *Description:* Displays the ARP table, including resolved IP-to-MAC mappings.",
+            "   - *Example:* `show arp` (View all ARP table entries)",
+            "   - *Troubleshooting:* If an expected ARP entry is missing, verify the device's connectivity and ensure there are no VLAN mismatches.",
+            "   - *Caveat:* ARP entries are dynamic and may time out; consider static ARP entries for critical devices."
         ],
         "2. Checking Active Connections": [
-            "🔹 Use `show conn detail` to display active connections, including NAT translations and session timers.",
-            "🔹 Use `show conn address <IP>` to filter connections by a specific IP address.",
-            "🔹 Example:",
-            "   1️⃣ Run: show conn detail (Check all active connections)",
-            "   2️⃣ Run: show conn address 10.0.0.1 (Find connections for a specific host)",
+            "🔹 **Command:** `show conn detail`",
+            "   - *Description:* Displays active connections, including NAT translations and session timers.",
+            "   - *Example:* `show conn detail` (Check all active connections)",
+            "   - *Troubleshooting:* For unexpected drops, verify ACLs and NAT configurations to ensure traffic is permitted.",
+            "   - *Caveat:* High numbers of connections may indicate potential issues; monitor for unusual spikes."
         ],
         "3. Monitoring SLA Configuration & State": [
-            "🔹 Use `show sla monitor configuration` to view SLA tracking policies and settings.",
-            "🔹 Use `show sla monitor operational-state` to check if SLAs are up/down.",
-            "🔹 Example:",
-            "   1️⃣ Run: show sla monitor configuration (Verify SLA tracking settings)",
-            "   2️⃣ Run: show sla monitor operational-state (Check real-time SLA status)",
+            "🔹 **Command:** `show sla monitor configuration`",
+            "   - *Description:* Views SLA tracking policies and settings.",
+            "   - *Example:* `show sla monitor configuration` (Verify SLA tracking settings)",
+            "   - *Troubleshooting:* If SLAs are not functioning as expected, check for correct IP SLAs and ensure the monitored objects are reachable.",
+            "   - *Caveat:* Misconfigured SLAs can lead to unnecessary route changes; ensure accuracy in SLA definitions."
         ],
         "4. Analyzing Firewall Traffic": [
-            "🔹 Use `show traffic` to monitor traffic statistics, including packets per second and bandwidth usage.",
-            "🔹 Example:",
-            "   1️⃣ Run: show traffic (View global traffic statistics)",
+            "🔹 **Command:** `show traffic`",
+            "   - *Description:* Monitors traffic statistics, including packets per second and bandwidth usage.",
+            "   - *Example:* `show traffic` (View global traffic statistics)",
+            "   - *Troubleshooting:* Sudden changes in traffic patterns may indicate network issues or security events; investigate anomalies promptly.",
+            "   - *Caveat:* Regular monitoring is essential; relying solely on snapshots can miss intermittent issues."
         ],
         "5. Viewing Performance Monitoring Statistics": [
-            "🔹 Use `show perfmon` to display real-time firewall performance metrics.",
-            "🔹 Example:",
-            "   1️⃣ Run: show perfmon (Check firewall session rates, packet rates, and CPU load)",
+            "🔹 **Command:** `show perfmon`",
+            "   - *Description:* Displays real-time firewall performance metrics.",
+            "   - *Example:* `show perfmon` (Check firewall session rates, packet rates, and CPU load)",
+            "   - *Troubleshooting:* High CPU or memory usage may degrade performance; identify and address resource-intensive processes.",
+            "   - *Caveat:* Continuous high resource utilization can lead to firewall instability; proactive management is crucial."
         ],
         "6. Examining Service Policy & QoS": [
-            "🔹 Use `show service-policy` to review applied policies and their traffic handling statistics.",
-            "🔹 Use `show service-policy interface` to check QoS enforcement per interface.",
-            "🔹 Example:",
-            "   1️⃣ Run: show service-policy (View policy statistics globally)",
-            "   2️⃣ Run: show service-policy interface GigabitEthernet0/1 (Check policy for a specific interface)",
+            "🔹 **Command:** `show service-policy`",
+            "   - *Description:* Reviews applied policies and their traffic handling statistics.",
+            "   - *Example:* `show service-policy` (View policy statistics globally)",
+            "   - *Troubleshooting:* If traffic isn't matching the expected policy, verify the ACLs and class maps associated with the service policy.",
+            "   - *Caveat:* Service-policies are applied in the 'ingress' direction; ensure correct application for desired traffic."
         ],
     }
 
@@ -48,11 +50,14 @@ def connectivity_and_traffic_help():
     print("📘 Connectivity and Traffic Help: Understanding Command Relationships 📘".center(80))
     print("=" * 80)
 
-    for section, lines in help_sections.items():
+    for section, details in help_sections.items():
         print(f"\n🟢 {section}")
-        for line in lines:
-            print(f"   {line}")
+        for detail in details:
+            print(f"   {detail}")
 
     print("\n" + "=" * 80)
-    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '4?' for Traffic Monitoring).")
+    print("🔍 Tip: Use 'X?' to see help for a specific command (e.g., '4?' for Analyzing Firewall Traffic).")
     print("=" * 80)
+
+# Call the function to display the help information
+connectivity_and_traffic_help()
