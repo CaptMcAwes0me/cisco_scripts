@@ -168,7 +168,7 @@ def ip_sort_key(ip):
 
 def convert_bps_to_readable(bps):
     """ Converts bytes per second (Bps) into human-readable format (KBps, MBps, GBps). """
-    units = ["Bps", "KBps", "MBps", "GBps"]
+    units = ["bps", "Kbps", "MBps", "Gbps"]
     index = 0
     while bps >= 1024 and index < len(units) - 1:
         bps /= 1024
