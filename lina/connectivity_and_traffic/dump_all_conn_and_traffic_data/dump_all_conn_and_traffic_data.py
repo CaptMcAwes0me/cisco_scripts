@@ -4,7 +4,7 @@ from lina.connectivity_and_traffic.arp.arp import arp_dump
 from lina.connectivity_and_traffic.conn_detail.conn_detail import conn_detail_dump
 from lina.connectivity_and_traffic.sla_config.sla_config import sla_config
 from lina.connectivity_and_traffic.sla_operational_state.sla_operational_state import sla_operational_state
-from lina.connectivity_and_traffic.traffic.traffic import traffic
+from lina.connectivity_and_traffic.traffic.traffic import traffic_dump
 from lina.connectivity_and_traffic.perfmon.perfmon import perfmon
 from lina.connectivity_and_traffic.service_policy.service_policy import service_policy
 
@@ -35,7 +35,7 @@ def dump_all_conn_and_traffic_data():
             ("Conn Detail", conn_detail_dump(suppress_output=True)),
             ("SLA Config", sla_config(suppress_output=True)),
             ("SLA Operational State", sla_operational_state(suppress_output=True)),
-            ("Traffic", traffic(suppress_output=True)),
+            ("Traffic", traffic_dump(suppress_output=True)),
             ("Perfmon", perfmon(suppress_output=True)),
             ("Service Policy", service_policy(suppress_output=True))
         ]

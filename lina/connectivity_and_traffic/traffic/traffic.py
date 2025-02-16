@@ -2,10 +2,87 @@ import re
 from core.utils import get_and_parse_cli_output, traffic_table, convert_bps_to_readable
 
 
-def traffic():
+def traffic_dump(suppress_output=False):
+    """
+    Retrieves 'show traffic' output and prints it for traffic dump.
+    """
+    command = "show traffic"
+    try:
+        output = get_and_parse_cli_output(command)
+
+        if not suppress_output:
+            print("\nShow Traffic Output:")
+            print("-" * 80)
+            print(output)
+            print("-" * 80)
+
+        return output
+
+    except Exception as e:
+        error_message = f"[!] Error: {e}"
+        if not suppress_output:
+            print(error_message)
+        return error_message
+
+
+def traffic(help_requested=False):
     """
     Retrieves 'show traffic' output and passes it to traffic_calc for processing.
     """
+
+    traffic_help_info = {
+        'command': 'show traffic',
+        'description': (
+            "The 'show traffic' command provides real-time traffic statistics for all interfaces on the FTD, "
+            "including input/output rates, packet counts, and protocol-level breakdowns. This is useful for "
+            "monitoring network utilization and identifying potential congestion points."
+        ),
+        'example_output': """
+    firepower# show traffic
+    outside:
+	    received (in 182383.660 secs):
+		    142396064 packets	37156955209 bytes
+		    3 pkts/sec	203023 bytes/sec
+	    transmitted (in 182383.660 secs):
+		    4669761 packets	135571422 bytes
+		    2 pkts/sec	13 bytes/sec
+        1 minute input rate 722 pkts/sec,  201563 bytes/sec
+        1 minute output rate 0 pkts/sec,  35 bytes/sec
+        1 minute drop rate, 599 pkts/sec
+        5 minute input rate 5633 pkts/sec,  336869 bytes/sec
+        5 minute output rate 4496 pkts/sec,  125937 bytes/sec
+        5 minute drop rate, 1018 pkts/sec
+        """,
+        'notes': (
+            "Key fields in the output include:\n"
+            "  - **Interface**: The network interface where traffic is measured.\n"
+            "  - **Received/Transmitted Packets & Bytes**: Shows the total traffic processed per interface.\n"
+            "  - **Input/Output Rate**: Displays the real-time data transfer rate in kbps and packets per second (pps).\n"
+            "  - **Protocol-level breakdown**: Shows traffic statistics per protocol (not included in this example)."
+        ),
+        'related_commands': [
+            {'command': 'show conn count', 'description': 'Displays the number of active connections.'},
+            {'command': 'show xlate', 'description': 'Shows NAT translations and statistics.'},
+            {'command': 'show interface',
+             'description': 'Provides detailed statistics on FTD interfaces, including errors.'},
+            {'command': 'show service-policy', 'description': 'Displays how traffic is affected by service policies.'},
+        ]
+    }
+
+    if help_requested:
+        print("\n" + "-" * 80)
+        print(f"📖 Help for: {traffic_help_info['command']}".center(80))
+        print("-" * 80)
+        print(f"\nDescription:\n{traffic_help_info['description']}\n")
+        print("Example Output:")
+        print(traffic_help_info['example_output'])
+        print("\nNotes:")
+        print(traffic_help_info['notes'])
+        print("\nRelated Commands:")
+        for related in traffic_help_info['related_commands']:
+            print(f"  - {related['command']}: {related['description']}")
+        return None
+
     command = "show traffic"
     try:
         output = get_and_parse_cli_output(command)
