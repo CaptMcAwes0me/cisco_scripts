@@ -18,7 +18,6 @@ def traffic():
 def traffic_calc(output):
     """
     Parses the traffic output and calculates 1-minute and 5-minute input/output rates.
-    Returns structured data for printing in a CLI table.
     """
     input_rates_1m = {}
     input_rates_5m = {}
@@ -55,19 +54,19 @@ def traffic_calc(output):
             if values:
                 output_rates_5m[interface] = (int(values[0][1]), int(values[0][0]))  # (bps, pps)
 
-    # Convert dictionaries to list format for table function
-    input_table_data = []
-    output_table_data = []
+    # Accumulate totals
     total_input_1m, total_input_5m, total_input_pps_1m, total_input_pps_5m = 0, 0, 0, 0
     total_output_1m, total_output_5m, total_output_pps_1m, total_output_pps_5m = 0, 0, 0, 0
 
-    for interface in sorted(input_rates_1m.keys() | output_rates_1m.keys()):  # Include all interfaces
+    input_table_data = []
+    output_table_data = []
+
+    for interface in sorted(input_rates_1m.keys() | output_rates_1m.keys()):
         in_1m_bps, in_1m_pps = input_rates_1m.get(interface, (0, 0))
         in_5m_bps, in_5m_pps = input_rates_5m.get(interface, (0, 0))
         out_1m_bps, out_1m_pps = output_rates_1m.get(interface, (0, 0))
         out_5m_bps, out_5m_pps = output_rates_5m.get(interface, (0, 0))
 
-        # Accumulate totals
         total_input_1m += in_1m_bps
         total_input_pps_1m += in_1m_pps
         total_input_5m += in_5m_bps
@@ -81,6 +80,10 @@ def traffic_calc(output):
         input_table_data.append([interface, in_1m_bps, in_1m_pps, in_5m_bps, in_5m_pps])
         output_table_data.append([interface, out_1m_bps, out_1m_pps, out_5m_bps, out_5m_pps])
 
+    # Add total row
+    input_table_data.append(["**Total**", total_input_1m, total_input_pps_1m, total_input_5m, total_input_pps_5m])
+    output_table_data.append(["**Total**", total_output_1m, total_output_pps_1m, total_output_5m, total_output_pps_5m])
+
     # Print per-interface tables
     print("\nINPUT TRAFFIC RATES:")
     traffic_table(["Interface", "1-Min Input (Bps)", "1-Min Input (pps)", "5-Min Input (Bps)", "5-Min Input (pps)"], input_table_data)
@@ -88,38 +91,36 @@ def traffic_calc(output):
     print("\nOUTPUT TRAFFIC RATES:")
     traffic_table(["Interface", "1-Min Output (Bps)", "1-Min Output (pps)", "5-Min Output (Bps)", "5-Min Output (pps)"], output_table_data)
 
-    # Convert Bps to human-readable format
-    total_bandwidth_data = [
-        ["Input", convert_bps_to_readable(total_input_1m), convert_bps_to_readable(total_input_5m)],
-        ["Output", convert_bps_to_readable(total_output_1m), convert_bps_to_readable(total_output_5m)],
-    ]
-
-    # Print total bandwidth table
+    # Total bandwidth usage table
     print("\nTOTAL BANDWIDTH USAGE:")
-    traffic_table(["Traffic Type", "1-Min Bandwidth (Bps)", "5-Min Bandwidth (Bps)"], total_bandwidth_data)
+    traffic_table(["Traffic Type", "1-Min Bandwidth (Bps)", "5-Min Bandwidth (Bps)"], [
+        ["Input", convert_bps_to_readable(total_input_1m), convert_bps_to_readable(total_input_5m)],
+        ["Output", convert_bps_to_readable(total_output_1m), convert_bps_to_readable(total_output_5m)]
+    ])
 
-    # Print calculation explanation
+    # Show bandwidth calculation
     print("\n**Bandwidth Usage Calculation**:")
-    print("  - Bandwidth usage is calculated as follows:")
-    print("    Bandwidth (Bps) = Bytes/sec converted into human-readable format (KBps, MBps, GBps)")
+    print("  - Formula: (Total Bytes * 8) / 1024")
+    print(f"  - 1-Min Input: ({total_input_1m} * 8) / 1024 = {convert_bps_to_readable(total_input_1m)}")
+    print(f"  - 5-Min Input: ({total_input_5m} * 8) / 1024 = {convert_bps_to_readable(total_input_5m)}")
+    print(f"  - 1-Min Output: ({total_output_1m} * 8) / 1024 = {convert_bps_to_readable(total_output_1m)}")
+    print(f"  - 5-Min Output: ({total_output_5m} * 8) / 1024 = {convert_bps_to_readable(total_output_5m)}")
 
-    # Calculate average packet size
-    total_avg_packet_data = [
-        ["Input", total_input_1m // total_input_pps_1m if total_input_pps_1m > 0 else 0,
-                  total_input_5m // total_input_pps_5m if total_input_pps_5m > 0 else 0],
-        ["Output", total_output_1m // total_output_pps_1m if total_output_pps_1m > 0 else 0,
-                   total_output_5m // total_output_pps_5m if total_output_pps_5m > 0 else 0],
-    ]
-
-    # Print average packet size table
+    # Average packet size calculation
     print("\nAVERAGE PACKET SIZE:")
-    traffic_table(["Traffic Type", "1-Min Avg Packet (bytes)", "5-Min Avg Packet (bytes)"], total_avg_packet_data)
+    traffic_table(["Traffic Type", "1-Min Avg Packet (bytes)", "5-Min Avg Packet (bytes)"], [
+        ["Input", total_input_1m // total_input_pps_1m if total_input_pps_1m else 0,
+                  total_input_5m // total_input_pps_5m if total_input_pps_5m else 0],
+        ["Output", total_output_1m // total_output_pps_1m if total_output_pps_1m else 0,
+                   total_output_5m // total_output_pps_5m if total_output_pps_5m else 0]
+    ])
 
-    # Print calculation explanation
     print("\n**Packet Size Calculation**:")
-    print("  - Average packet size is calculated as follows:")
-    print("    Avg Packet Size = (Bytes/sec) / (Packets/sec) (rounded down to nearest byte)")
+    print("  - Formula: (Total Bytes) / (Total Packets)")
+    print(f"  - 1-Min Input: {total_input_1m} / {total_input_pps_1m} = {total_input_1m // total_input_pps_1m if total_input_pps_1m else 0} bytes")
+    print(f"  - 1-Min Output: {total_output_1m} / {total_output_pps_1m} = {total_output_1m // total_output_pps_1m if total_output_pps_1m else 0} bytes")
 
+    print("\n**Note**: The above calculations are based on the collected data and may not be accurate due to sampling intervals and packet drops.\n")
 
 def convert_bps_to_readable(bps):
     """
