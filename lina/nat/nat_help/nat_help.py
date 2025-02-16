@@ -41,7 +41,7 @@ def nat_help():
             "🔹 **Check if NAT is being applied** - Run `packet-tracer` and inspect NAT sections.",
             "🔹 **Monitor Connection State** - Use `show conn` to ensure translations are properly maintained.",
             "🔹 **Check Routing Issues** - Ensure correct next-hop routing for NAT-translated addresses.",
-            "🔹 **Use Debugging Carefully** - `debug nat` and `debug ip packet` can help but may be resource-intensive.",
+            "🔹 **Use Debugging Carefully** - `debug nat` can help but may be resource-intensive.",
         ],
         "7. Common NAT Caveats": [
             "🔹 **Twice NAT vs Auto NAT** - Manual NAT (Twice NAT) takes precedence over Auto NAT.",
