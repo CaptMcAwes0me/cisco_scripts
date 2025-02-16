@@ -162,9 +162,10 @@ def traffic_calc(output):
 
     # Print Total Summary
     print("\nTOTAL TRAFFIC SUMMARY:")
-    traffic_table(["Traffic Type", "1-Min Total (Bps)", "1-Min Total (pps)", "5-Min Total (Bps)", "5-Min Total (pps)"],
-                  [["Total", total_input_1m + total_output_1m, total_input_pps_1m + total_output_pps_1m,
-                    total_input_5m + total_output_5m, total_input_pps_5m + total_output_pps_5m]])
+    traffic_table(
+        ["Traffic Type", "1-Min Total (Bps)", "1-Min Total (pps)", "5-Min Total (Bps)", "5-Min Total (pps)"],
+        [["Total Input", total_input_1m, total_input_pps_1m, total_input_5m, total_input_pps_5m],
+         ["Total Output", total_output_1m, total_output_pps_1m, total_output_5m, total_output_pps_5m]])
 
     # Print Bandwidth Usage
     print("\nTOTAL BANDWIDTH USAGE:")
