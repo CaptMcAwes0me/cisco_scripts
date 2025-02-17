@@ -57,7 +57,7 @@ TCP outside 10.23.232.217:443 inside 192.168.1.3:52427, idle 0:01:02, bytes 4504
     ip_filter = input("Enter an IP address to filter by (or press enter to show all): ").strip()
 
     # Modify the command based on user input
-    command = f"show conn address {ip_filter}" if ip_filter else "show conn detail"
+    command = f"show conn address {ip_filter}" if ip_filter else "show conn"
 
     try:
         output = get_and_parse_cli_output(command)
