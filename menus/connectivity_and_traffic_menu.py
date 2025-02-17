@@ -2,7 +2,7 @@
 
 from core.utils import display_formatted_menu
 from lina.connectivity_and_traffic.arp.arp import arp
-from lina.connectivity_and_traffic.conn_detail.conn_detail import conn_detail
+from lina.connectivity_and_traffic.conn_detail.conn_detail import conn_analyzer
 from lina.connectivity_and_traffic.sla_config.sla_config import sla_config
 from lina.connectivity_and_traffic.sla_operational_state.sla_operational_state import sla_operational_state
 from lina.connectivity_and_traffic.traffic.traffic import traffic
@@ -18,7 +18,7 @@ def connectivity_and_traffic_menu():
     """
     menu_options = {
         "1": ("ARP Table", arp),
-        "2": ("Conn Detail Table", conn_detail),
+        "2": ("Conn Detail Table", conn_analyzer),
         "3": ("SLA Configuration", sla_config),
         "4": ("SLA Operational-State", sla_operational_state),
         "5": ("Traffic", traffic),
