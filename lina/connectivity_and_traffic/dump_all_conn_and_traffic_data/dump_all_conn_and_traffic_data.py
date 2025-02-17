@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 from lina.connectivity_and_traffic.arp.arp import arp_dump
-from lina.connectivity_and_traffic.conn_detail.conn_detail import conn_detail_dump
+from lina.connectivity_and_traffic.conn.conn import conn_detail_dump
 from lina.connectivity_and_traffic.sla_config.sla_config import sla_config
 from lina.connectivity_and_traffic.sla_operational_state.sla_operational_state import sla_operational_state
 from lina.connectivity_and_traffic.traffic.traffic import traffic_dump
